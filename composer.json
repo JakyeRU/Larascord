@@ -1,0 +1,19 @@
+{
+    "name": "jakyeru/larascord",
+    "description": "Larascord is a package that allows you to interact with the Discord API within your Laravel application.",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Jakyeru\\Larascord\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jakye",
+            "email": "jakyeru@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "orchestra/testbench": "^6.22"
+    }
+}
