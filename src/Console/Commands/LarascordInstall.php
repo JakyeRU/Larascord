@@ -56,23 +56,13 @@ class LarascordInstall extends Command
         // Getting the user's input
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
 
-        $this->info('');
-
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
-
-        $this->info('');
 
         $this->token = $this->ask('What is your Discord bot\'s token?');
 
-        $this->info('');
-
         $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?');
 
-        $this->info('');
-
         $this->scopes = $this->ask('What scopes do you want to use? (separated by a ampersand (&))', 'identify&email');
-
-        $this->info('');
         
         // Validating the user's input
         try {
