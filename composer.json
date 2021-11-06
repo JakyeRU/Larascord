@@ -18,6 +18,13 @@
             "email": "jakyeru@gmail.com"
         }
     ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jakyeru\\Larascord\\LarascordServiceProvider"
+            ]
+        }
+    },
     "require-dev": {
         "orchestra/testbench": "^6.22"
     }
