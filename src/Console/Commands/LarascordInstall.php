@@ -14,7 +14,7 @@ class LarascordInstall extends Command
 
     protected $description = 'Use this command to install Larascord.';
 
-    protected $availableScops = [
+    protected $availableScopes = [
         'activities.read',
         'activities.write',
         'applications.builds.read',
@@ -126,8 +126,8 @@ class LarascordInstall extends Command
 
         // make sure scopes exists in the available scopes
         foreach ($validator->validated()['scopes'] as $scope) {
-            if (!in_array($scope, $this->availableScops)) {
-                throw new \Exception('The scope '.$scope.' is not available. Available scopes: ' . implode(', ', $this->availableScops) . '.');
+            if (!in_array($scope, $this->availableScopes)) {
+                throw new \Exception('The scope '.$scope.' is not available. Available scopes: ' . implode(', ', $this->availableScopes) . '.');
             }
         }
     }
