@@ -7,6 +7,11 @@
             "Jakyeru\\Larascord\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Jakyeru\\Larascord\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Jakye",
