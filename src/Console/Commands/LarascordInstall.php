@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use \GuzzleHttp;
+use function Symfony\Component\String\s;
 
 class LarascordInstall extends Command
 {
@@ -55,15 +56,11 @@ class LarascordInstall extends Command
     {
         // Getting the user's input
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
-
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
-
         $this->token = $this->ask('What is your Discord bot\'s token?');
-
         $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?');
-
         $this->scopes = $this->ask('What scopes do you want to use? (separated by a ampersand (&))', 'identify&email');
-        
+
         // Validating the user's input
         try {
             $this->validateInput();
@@ -78,6 +75,13 @@ class LarascordInstall extends Command
         // Creating the user migration file
         (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
         (new Filesystem())->copy(__DIR__ . '/../../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
+
+        // Installing Laravel Breeze
+        $this->info('Installing Laravel Breeze...');
+        shell_exec('composer require laravel/breeze');
+        shell_exec('php artisan breeze:install');
+        $this->info('Laravel Breeze installed successfully!');
+
 
         $this->info('Larascord installed successfully!');
 
@@ -95,6 +99,9 @@ class LarascordInstall extends Command
             $this->info('You can validate the provided data through Discord API later by running the command:');
             $this->info('php artisan larascord:validate');
         }
+
+        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        $this->comment('Please run the migrations using "php artisan migrate:fresh".');
     }
 
     /**
