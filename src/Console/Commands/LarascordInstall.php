@@ -75,12 +75,19 @@ class LarascordInstall extends Command
         // Appending the secrets to the .env file
         $this->appendToEnvFile();
 
+        // Creating the user migration file
+        (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
+        (new Filesystem())->copy(__DIR__ . '/../../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
+
         $this->info('Larascord installed successfully!');
 
         if ($this->confirm('Do you want to validate the provided data through Discord API?', false)) {
             try {
                 $this->validateDiscordApi();
             } catch (\Exception $e) {
+                $this->error($e->getMessage());
+                return;
+            } catch (GuzzleHttp\Exception\GuzzleException $e) {
                 $this->error($e->getMessage());
                 return;
             }
