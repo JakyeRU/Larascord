@@ -4,10 +4,8 @@ namespace Jakyeru\Larascord\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use \GuzzleHttp;
-use function Symfony\Component\String\s;
 
 class LarascordInstall extends Command
 {
@@ -58,7 +56,7 @@ class LarascordInstall extends Command
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
         $this->token = $this->ask('What is your Discord bot\'s token?');
-        $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?');
+        $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?', 'http://localhost:8000/larascord/callback');
         $this->scopes = $this->ask('What scopes do you want to use? (separated by a ampersand (&))', 'identify&email');
 
         // Validating the user's input
@@ -75,6 +73,7 @@ class LarascordInstall extends Command
         // Creating the user migration file
         $this->createUserMigrationFile();
 
+        // Asking the user to validate the provided data through Discord API
         if ($this->confirm('Do you want to validate the provided data through Discord API?', false)) {
             try {
                 $this->validateDiscordApi();
@@ -86,10 +85,11 @@ class LarascordInstall extends Command
                 return;
             }
         } else {
-            $this->info('You can validate the provided data through Discord API later by running the command:');
-            $this->info('php artisan larascord:validate');
+            $this->comment('You can validate the provided data through Discord API later by running the command:');
+            $this->comment('php artisan larascord:validate');
         }
 
+        // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
             $this->call('migrate:fresh');
         } else {
