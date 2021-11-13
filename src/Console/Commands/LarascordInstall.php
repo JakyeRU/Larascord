@@ -215,7 +215,7 @@ class LarascordInstall extends Command
      */
     public function createRouteFiles() {
         (new Filesystem())->ensureDirectoryExists(base_path('routes'));
-        (new Filesystem())->copy(__DIR__ . '/../../routes/web.php', base_path('routes/web.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../routes', base_path('routes'));
     }
 
     /**
