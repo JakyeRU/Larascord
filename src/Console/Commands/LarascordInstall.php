@@ -76,12 +76,6 @@ class LarascordInstall extends Command
         (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
         (new Filesystem())->copy(__DIR__ . '/../../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
 
-        // Installing Laravel Breeze
-        $this->info('Installing Laravel Breeze...');
-        shell_exec('composer require laravel/breeze');
-        shell_exec('php artisan breeze:install');
-        $this->info('Laravel Breeze installed successfully!');
-
 
         $this->info('Larascord installed successfully!');
 
