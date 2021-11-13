@@ -70,8 +70,20 @@ class LarascordInstall extends Command
         // Appending the secrets to the .env file
         $this->appendToEnvFile();
 
-        // Creating the user migration file
-        $this->createUserMigrationFile();
+        // Creating the user migration files
+        $this->createUserMigrationFiles();
+
+        // Create the model files
+        $this->createModelFiles();
+
+        // Create the controller file
+        $this->createControllerFiles();
+
+        // Create the route files
+        $this->createRouteFiles();
+
+        // Create the view files
+        $this->createViewFiles();
 
         // Asking the user to validate the provided data through Discord API
         if ($this->confirm('Do you want to validate the provided data through Discord API?', false)) {
@@ -136,6 +148,8 @@ class LarascordInstall extends Command
 
     /**
      * Append the secrets to the .env file.
+     *
+     * @return void
      */
     protected function appendToEnvFile()
     {
@@ -162,17 +176,64 @@ class LarascordInstall extends Command
     }
 
     /**
-     * Create the user migration file.
+     * Create the user migration files.
+     *
+     * @return void
      */
-    public function createUserMigrationFile()
+    public function createUserMigrationFiles()
     {
         (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
-        (new Filesystem())->copy(__DIR__ . '/../../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
+        (new Filesystem())->copy(__DIR__ . '/../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
+    }
+
+    /**
+     * Create the user model files.
+     *
+     * @return void
+     */
+    public function createModelFiles()
+    {
+        (new Filesystem())->ensureDirectoryExists(app_path('Models'));
+        (new Filesystem())->copy(__DIR__ . '/../../Models/User.php', app_path('Models/User.php'));
+    }
+
+    /**
+     * Create the controller files.
+     *
+     * @return void
+     */
+    public function createControllerFiles()
+    {
+        (new Filesystem())->ensureDirectoryExists(app_path('Http/Controllers'));
+        (new Filesystem())->copy(__DIR__ . '/../../Http/Controllers/DiscordController.php', app_path('Http/Controllers/DiscordController.php'));
+    }
+
+    /**
+     * Create the route files.
+     *
+     * @return void
+     */
+    public function createRouteFiles() {
+        (new Filesystem())->ensureDirectoryExists(base_path('routes'));
+        (new Filesystem())->copy(__DIR__ . '/../../routes/web.php', base_path('routes/web.php'));
+    }
+
+    /**
+     * Create the view files.
+     *
+     * @return void
+     */
+    public function createViewFiles()
+    {
+        (new Filesystem())->ensureDirectoryExists(resource_path('views'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
     }
 
     /**
      * Validate the provided data through Discord API.
      * @throws \Exception|GuzzleHttp\Exception\GuzzleException
+     *
+     * @return void
      */
     protected function validateDiscordApi() {
 
