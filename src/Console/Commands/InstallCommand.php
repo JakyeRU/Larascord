@@ -13,38 +13,12 @@ class InstallCommand extends Command
 
     protected $description = 'Use this command to install Larascord.';
 
-    protected $availableScopes = [
-        'activities.read',
-        'activities.write',
-        'applications.builds.read',
-        'applications.builds.upload',
-        'applications.commands',
-        'applications.commands.update',
-        'applications.entitlements',
-        'applications.store.update',
-        'bot',
-        'connections',
-        'email',
-        'gdm.join',
-        'guilds.join',
-        'identify',
-        'messages.read',
-        'relationships.read',
-        'rpc',
-        'rpc.activities.write',
-        'rpc.notifications.read',
-        'rpc.voice.read',
-        'rpc.voice.write',
-        'webhook.incoming'
-    ];
-
     protected string $baseUrl = 'https://discord.com/api';
 
     private string|null $clientId;
     private string|null $clientSecret;
     private string|null $token;
     private string|null $redirectUri;
-    private string|null $scopes;
 
     /**
      * Handle the command.
@@ -57,7 +31,6 @@ class InstallCommand extends Command
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
         $this->token = $this->ask('What is your Discord bot\'s token?');
         $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?', 'http://localhost:8000/larascord/callback');
-        $this->scopes = $this->ask('What scopes do you want to use? (separated by a ampersand (&))', 'identify&email');
 
         // Validating the user's input
         try {
@@ -125,7 +98,6 @@ class InstallCommand extends Command
             'clientSecret' => ['required', 'string'],
             'token' => ['required', 'string'],
             'redirectUri' => ['required', 'url'],
-            'scopes' => ['required', 'array'],
         ];
 
         $validator = Validator::make([
@@ -133,17 +105,9 @@ class InstallCommand extends Command
             'clientSecret' => $this->clientSecret,
             'token' => $this->token,
             'redirectUri' => $this->redirectUri,
-            'scopes' => explode('&', $this->scopes),
         ], $rules);
 
         $validator->validate();
-
-        // make sure scopes exists in the available scopes
-        foreach ($validator->validated()['scopes'] as $scope) {
-            if (!in_array($scope, $this->availableScopes)) {
-                throw new \Exception('The scope '.$scope.' is not available. Available scopes: ' . implode(', ', $this->availableScopes) . '.');
-            }
-        }
     }
 
     /**
@@ -172,7 +136,7 @@ class InstallCommand extends Command
         (new Filesystem())->append('.env','DISCORD_REDIRECT_URI='.$this->redirectUri);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_SCOPE='.$this->scopes);
+        (new Filesystem())->append('.env','DISCORD_SCOPE=identify&email');
     }
 
     /**
