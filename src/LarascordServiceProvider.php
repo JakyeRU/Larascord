@@ -20,7 +20,7 @@ class LarascordServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                Console\Commands\LarascordInstall::class,
+                Console\Commands\InstallCommand::class,
             ]);
         }
     }

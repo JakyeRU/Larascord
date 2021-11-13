@@ -7,7 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Validator;
 use \GuzzleHttp;
 
-class LarascordInstall extends Command
+class InstallCommand extends Command
 {
     protected $name = 'larascord:install';
 
