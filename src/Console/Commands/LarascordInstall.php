@@ -73,11 +73,7 @@ class LarascordInstall extends Command
         $this->appendToEnvFile();
 
         // Creating the user migration file
-        (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
-        (new Filesystem())->copy(__DIR__ . '/../../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
-
-
-        $this->info('Larascord installed successfully!');
+        $this->createUserMigrationFile();
 
         if ($this->confirm('Do you want to validate the provided data through Discord API?', false)) {
             try {
@@ -94,8 +90,16 @@ class LarascordInstall extends Command
             $this->info('php artisan larascord:validate');
         }
 
-        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
-        $this->comment('Please run the migrations using "php artisan migrate:fresh".');
+        if ($this->confirm('Do you want to run the migrations?', true)) {
+            $this->call('migrate:fresh');
+        } else {
+            $this->comment('You can run the migrations later by running the command:');
+            $this->comment('php artisan migrate');
+        }
+
+        $this->info('Larascord has been successfully installed!');
+
+//        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
     }
 
     /**
@@ -155,6 +159,15 @@ class LarascordInstall extends Command
 
         (new Filesystem())->append('.env',PHP_EOL);
         (new Filesystem())->append('.env','DISCORD_SCOPE='.$this->scopes);
+    }
+
+    /**
+     * Create the user migration file.
+     */
+    public function createUserMigrationFile()
+    {
+        (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
+        (new Filesystem())->copy(__DIR__ . '/../../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
     }
 
     /**
