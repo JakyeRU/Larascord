@@ -53,30 +53,30 @@ class DiscordController extends Controller
         $client = new GuzzleHttp\Client();
 
         try {
-            $accessTokenData = $client -> post($this -> tokenURL, ["form_params" => $this -> tokenData]);
-            $accessTokenData = json_decode($accessTokenData -> getBody());
+            $accessTokenData = $client->post($this->tokenURL, ["form_params" => $this->tokenData]);
+            $accessTokenData = json_decode($accessTokenData->getBody());
         } catch (GuzzleHttp\Exception\GuzzleException $e) {
             return redirect()->guest('/')->with('error', 'Could\'t get the information from the Discord API.');
         };
 
-        $userData = Http::withToken($accessTokenData -> access_token) -> get($this -> apiURLBase);
-        if ($userData -> clientError() || $userData -> serverError()) return redirect()->guest('/')->with('error', 'Could\'t get the information from the Discord API.');
+        $userData = Http::withToken($accessTokenData->access_token)->get($this->apiURLBase);
+        if ($userData->clientError() || $userData->serverError()) return redirect()->guest('/')->with('error', 'Could\'t get the information from the Discord API.');
 
         $userData = json_decode($userData->body());
 
         $user = User::updateOrCreate(
             [
-                'id' => $userData -> id,
+                'id' => $userData->id,
             ],
             [
-                'username' => $userData -> username,
-                'discriminator' => $userData -> discriminator,
-                'email' => $userData -> email,
-                'avatar' => $userData -> avatar,
-                'verified' => $userData -> verified,
-                'locale' => $userData -> locale,
-                'mfa_enabled' => $userData -> mfa_enabled,
-                'refresh_token' => $accessTokenData -> refresh_token
+                'username' => $userData->username,
+                'discriminator' => $userData->discriminator,
+                'email' => $userData->email,
+                'avatar' => $userData->avatar,
+                'verified' => $userData->verified,
+                'locale' => $userData->locale,
+                'mfa_enabled' => $userData->mfa_enabled,
+                'refresh_token' => $accessTokenData->refresh_token
             ]
         );
 
@@ -92,7 +92,7 @@ class DiscordController extends Controller
      */
     public function logout(Request $request) {
         Auth::logout();
-        $request -> session() -> invalidate();
+        $request->session()->invalidate();
 
         return redirect('/');
     }
