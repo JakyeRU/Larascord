@@ -5,7 +5,7 @@
 [comment]: <> (Larascord is a package that allows you to interact with the Discord API within your Laravel application.)
 <p align="center">
     <a href="https://github.com/JakyeRU/Larascord" target="_blank">
-        <img src="https://raw.githubusercontent.com/JakyeRU/Larascord/main/Larascord-transparent.png" width="400">
+        <img src="https://raw.githubusercontent.com/JakyeRU/Larascord/main/Larascord-transparent.png" height=200>
     </a>
 </p>
 
