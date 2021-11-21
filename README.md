@@ -43,3 +43,13 @@ Larascord is a package that allows you to authenticate users in your Laravel app
 * The `REDIRECT URI` has to be the **same** as the one you provided in your application's OAuth2 redirect.
 
 Your application should now be able to authenticate users using Discord.
+
+---
+# Larascord Routes
+> :hint: These routes can be found in the `routes/auth.php` file.
+> 
+| Route Name | URL | Description | Action | Method |
+| ---------- | ---- | ----------- | ------ | ------ |
+| `login` | `/login` | Redirects the user to Discord's OAuth2 authorization page. | REDIRECT | `GET` |
+| `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@login` | `GET` |
+| `larascord.logout` | `/larascord/logout` | Invalidates the current session.| `DiscordController@logout` | `POST` |
