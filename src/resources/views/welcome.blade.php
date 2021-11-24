@@ -43,6 +43,12 @@
     @endif
 
     <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+        @if(session()->has('error'))
+            <div style="padding: 1rem; background-color: rgba(253, 232, 232, 1); color: rgba(200,30,30,1); margin-bottom: 1rem; border-radius: .5rem">
+                <strong>Something went wrong.</strong> {!! session()->get('error') !!}
+            </div>
+        @endif
+
         <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
             <svg viewBox="0 0 651 192" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto text-gray-700 sm:h-20">
                 <g clip-path="url(#clip0)" fill="#EF3B2D">
