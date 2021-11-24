@@ -63,6 +63,7 @@ class DiscordController extends Controller
         if ($userData->clientError() || $userData->serverError()) return redirect()->guest('/')->with('error', 'Could\'t get the information from the Discord API.');
 
         $userData = json_decode($userData->body());
+        if (!isset($userData->email)) return redirect()->guest('/')->with('error', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scope.');
 
         $user = User::updateOrCreate(
             [
