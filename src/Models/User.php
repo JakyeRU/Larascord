@@ -53,5 +53,6 @@ class User extends Authenticatable
         'verified' => 'boolean',
         'locale' => 'string',
         'mfa_enabled' => 'boolean',
+        'refresh_token' => 'encrypted',
     ];
 }
