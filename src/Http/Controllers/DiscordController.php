@@ -72,7 +72,7 @@ class DiscordController extends Controller
                 'username' => $userData->username,
                 'discriminator' => $userData->discriminator,
                 'email' => $userData->email,
-                'avatar' => $userData->avatar,
+                'avatar' => $userData->avatar ?: NULL,
                 'verified' => $userData->verified,
                 'locale' => $userData->locale,
                 'mfa_enabled' => $userData->mfa_enabled,
