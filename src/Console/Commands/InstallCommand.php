@@ -58,7 +58,12 @@ class InstallCommand extends Command
 
         // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
-            $this->call('migrate:fresh');
+            try {
+                $this->call('migrate:fresh');
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+                return;
+            }
         } else {
             $this->comment('You can run the migrations later by running the command:');
             $this->comment('php artisan migrate');
