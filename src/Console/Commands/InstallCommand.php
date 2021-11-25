@@ -28,7 +28,6 @@ class InstallCommand extends Command
         // Getting the user's input
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
-        $this->token = $this->ask('What is your Discord bot\'s token?');
         $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?', 'http://localhost:8000/larascord/callback');
 
         // Validating the user's input
@@ -77,14 +76,12 @@ class InstallCommand extends Command
         $rules = [
             'clientId' => ['required', 'numeric'],
             'clientSecret' => ['required', 'string'],
-            'token' => ['required', 'string'],
             'redirectUri' => ['required', 'url'],
         ];
 
         $validator = Validator::make([
             'clientId' => $this->clientId,
             'clientSecret' => $this->clientSecret,
-            'token' => $this->token,
             'redirectUri' => $this->redirectUri,
         ], $rules);
 
