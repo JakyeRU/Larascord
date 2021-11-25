@@ -17,7 +17,6 @@ class InstallCommand extends Command
 
     private string|null $clientId;
     private string|null $clientSecret;
-    private string|null $token;
     private string|null $redirectUri;
 
     /**
@@ -110,9 +109,6 @@ class InstallCommand extends Command
 
         (new Filesystem())->append('.env',PHP_EOL);
         (new Filesystem())->append('.env','DISCORD_GRANT_TYPE=authorization_code');
-
-        (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_BOT_TOKEN='.$this->token);
 
         (new Filesystem())->append('.env',PHP_EOL);
         (new Filesystem())->append('.env','DISCORD_REDIRECT_URI='.$this->redirectUri);
