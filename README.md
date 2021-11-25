@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+    <img src="https://img.shields.io/github/workflow/status/JakyeRU/Larascord/Run%20tests?style=for-the-badge" alt="build">
     <img src="https://img.shields.io/github/v/release/jakyeru/larascord?color=red&style=for-the-badge" alt="release">
 </p>
 
