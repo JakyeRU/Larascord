@@ -192,36 +192,4 @@ class InstallCommand extends Command
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
     }
-
-    /**
-     * Validate the provided data through Discord API.
-     * @throws \Exception|GuzzleHttp\Exception\GuzzleException
-     *
-     * @return void
-     */
-    protected function validateDiscordApi() {
-
-        $this->info('Validating the data through Discord API...');
-
-        $client = new GuzzleHttp\Client();
-
-        try {
-            $response = $client->get($this->baseUrl.'/users/@me', [
-                'headers' => [
-                    'Authorization' => 'Bot '.$this->token,
-                ],
-            ]);
-
-            $response = json_decode($response->getBody()->getContents());
-
-            if ($response->id !== $this->clientId) {
-                throw new \Exception('The provided client belongs to another application.');
-            }
-
-            $this->info('The provided data is valid!');
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->error('The provided data is not valid.');
-            return;
-        }
-    }
 }
