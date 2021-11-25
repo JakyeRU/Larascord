@@ -58,22 +58,6 @@ class InstallCommand extends Command
         // Create the view files
         $this->createViewFiles();
 
-        // Asking the user to validate the provided data through Discord API
-        if ($this->confirm('Do you want to validate the provided data through Discord API?', false)) {
-            try {
-                $this->validateDiscordApi();
-            } catch (\Exception $e) {
-                $this->error($e->getMessage());
-                return;
-            } catch (GuzzleHttp\Exception\GuzzleException $e) {
-                $this->error($e->getMessage());
-                return;
-            }
-        } else {
-            $this->comment('You can validate the provided data through Discord API later by running the command:');
-            $this->comment('php artisan larascord:validate');
-        }
-
         // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
             $this->call('migrate:fresh');
