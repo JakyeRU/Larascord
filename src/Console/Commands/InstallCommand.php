@@ -62,7 +62,8 @@ class InstallCommand extends Command
                 $this->call('migrate:fresh');
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
-                return;
+                $this->comment('You can run the migrations later by running the command:');
+                $this->comment('php artisan migrate');
             }
         } else {
             $this->comment('You can run the migrations later by running the command:');
