@@ -17,7 +17,6 @@ class InstallCommand extends Command
 
     private string|null $clientId;
     private string|null $clientSecret;
-    private string|null $token;
     private string|null $redirectUri;
 
     /**
@@ -58,22 +57,6 @@ class InstallCommand extends Command
         // Create the view files
         $this->createViewFiles();
 
-        // Asking the user to validate the provided data through Discord API
-        if ($this->confirm('Do you want to validate the provided data through Discord API?', false)) {
-            try {
-                $this->validateDiscordApi();
-            } catch (\Exception $e) {
-                $this->error($e->getMessage());
-                return;
-            } catch (GuzzleHttp\Exception\GuzzleException $e) {
-                $this->error($e->getMessage());
-                return;
-            }
-        } else {
-            $this->comment('You can validate the provided data through Discord API later by running the command:');
-            $this->comment('php artisan larascord:validate');
-        }
-
         // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
             $this->call('migrate:fresh');
@@ -83,8 +66,6 @@ class InstallCommand extends Command
         }
 
         $this->info('Larascord has been successfully installed!');
-
-//        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
     }
 
     /**
@@ -128,9 +109,6 @@ class InstallCommand extends Command
 
         (new Filesystem())->append('.env',PHP_EOL);
         (new Filesystem())->append('.env','DISCORD_GRANT_TYPE=authorization_code');
-
-        (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_BOT_TOKEN='.$this->token);
 
         (new Filesystem())->append('.env',PHP_EOL);
         (new Filesystem())->append('.env','DISCORD_REDIRECT_URI='.$this->redirectUri);
@@ -191,37 +169,5 @@ class InstallCommand extends Command
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
-    }
-
-    /**
-     * Validate the provided data through Discord API.
-     * @throws \Exception|GuzzleHttp\Exception\GuzzleException
-     *
-     * @return void
-     */
-    protected function validateDiscordApi() {
-
-        $this->info('Validating the data through Discord API...');
-
-        $client = new GuzzleHttp\Client();
-
-        try {
-            $response = $client->get($this->baseUrl.'/users/@me', [
-                'headers' => [
-                    'Authorization' => 'Bot '.$this->token,
-                ],
-            ]);
-
-            $response = json_decode($response->getBody()->getContents());
-
-            if ($response->id !== $this->clientId) {
-                throw new \Exception('The provided client belongs to another application.');
-            }
-
-            $this->info('The provided data is valid!');
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->error('The provided data is not valid.');
-            return;
-        }
     }
 }
