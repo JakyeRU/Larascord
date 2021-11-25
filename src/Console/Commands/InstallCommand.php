@@ -67,8 +67,6 @@ class InstallCommand extends Command
         }
 
         $this->info('Larascord has been successfully installed!');
-
-//        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
     }
 
     /**
