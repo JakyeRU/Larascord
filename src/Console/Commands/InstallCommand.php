@@ -5,15 +5,12 @@ namespace Jakyeru\Larascord\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Validator;
-use \GuzzleHttp;
 
 class InstallCommand extends Command
 {
     protected $name = 'larascord:install';
 
     protected $description = 'Use this command to install Larascord.';
-
-    protected string $baseUrl = 'https://discord.com/api';
 
     private string|null $clientId;
     private string|null $clientSecret;
