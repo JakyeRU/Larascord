@@ -19,9 +19,6 @@ Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])
     ->middleware('auth')
     ->name('password.confirm');
 
-//Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store'])
-//    ->middleware('auth');
-
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
@@ -31,7 +28,5 @@ Route::group(['prefix' => 'larascord'], function() {
         ->middleware('guest')
         ->name('larascord.login');
 
-    Route::get('/refresh-token', [DiscordController::class, 'refresh_token'])
-        ->middleware('auth')
-        ->name('larascord.refresh_token');
+    Route::redirect('/refresh-token', route('login'));
 });
