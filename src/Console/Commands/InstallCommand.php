@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\Validator;
 
 class InstallCommand extends Command
 {
-    protected $name = 'larascord:install';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'larascord:install
+                            {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     protected $description = 'Use this command to install Larascord.';
 
