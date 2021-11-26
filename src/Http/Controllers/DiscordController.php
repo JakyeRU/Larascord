@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use \GuzzleHttp;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 
 class DiscordController extends Controller
 {
