@@ -49,7 +49,6 @@ class DiscordController extends Controller
             $this->tokenData['code'] = $request->code;
         }
 
-
         $client = new GuzzleHttp\Client();
 
         try {
@@ -84,5 +83,15 @@ class DiscordController extends Controller
         Auth::login($user);
 
         return redirect('/');
+    }
+
+    /**
+     * Handle the confirmation request.
+     */
+    public function refresh_token(Request $request)
+    {
+        $request->session()->put('auth.password_confirmed_at', time());
+
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 }
