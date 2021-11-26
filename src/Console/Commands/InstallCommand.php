@@ -137,7 +137,7 @@ class InstallCommand extends Command
     public function createUserMigrationFiles()
     {
         (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
-        (new Filesystem())->copy(__DIR__ . '/../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../database/migrations/', database_path('migrations/'));
     }
 
     /**
@@ -148,7 +148,7 @@ class InstallCommand extends Command
     public function createModelFiles()
     {
         (new Filesystem())->ensureDirectoryExists(app_path('Models'));
-        (new Filesystem())->copy(__DIR__ . '/../../Models/User.php', app_path('Models/User.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../Models/', app_path('Models/'));
     }
 
     /**
@@ -159,7 +159,7 @@ class InstallCommand extends Command
     public function createControllerFiles()
     {
         (new Filesystem())->ensureDirectoryExists(app_path('Http/Controllers'));
-        (new Filesystem())->copy(__DIR__ . '/../../Http/Controllers/DiscordController.php', app_path('Http/Controllers/DiscordController.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../Http/Controllers/', app_path('Http/Controllers/'));
     }
 
     /**
