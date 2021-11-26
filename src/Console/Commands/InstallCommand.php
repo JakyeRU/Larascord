@@ -16,6 +16,11 @@ class InstallCommand extends Command
     protected $signature = 'larascord:install
                             {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
     protected $description = 'Use this command to install Larascord.';
 
     private string|null $clientId;
