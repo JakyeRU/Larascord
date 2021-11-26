@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use \GuzzleHttp;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Validation\ValidationException;
 
 class DiscordController extends Controller
 {
@@ -36,65 +37,111 @@ class DiscordController extends Controller
     }
 
     /**
-     * Handle the login request.
+     * Handles the Discord OAuth2 login.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
      */
-    public function login(Request $request)
+    public function handle(Request $request): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
     {
-        if ($request->missing('code') && $request->missing('access_token')) return redirect()->guest('/')->with('error', 'The code or access token is missing.');
-        if (Auth::check()) return redirect()->guest('/')->with('error', 'You are already logged in.');
-
-        if ($request->has('code')) {
-            $this->tokenData['code'] = $request->code;
-        }
-
-
-        $client = new GuzzleHttp\Client();
+        if ($request->missing('code')) return redirect('/')->with('error', 'The code is missing.');
 
         try {
-            $accessTokenData = $client->post($this->tokenURL, ["form_params" => $this->tokenData]);
-            $accessTokenData = json_decode($accessTokenData->getBody());
-        } catch (GuzzleHttp\Exception\GuzzleException $e) {
-            return redirect()->guest('/')->with('error', 'Couldn\'t get the access token from Discord.');
-        };
+            $accessToken = $this->getDiscordAccessToken($request->get('code'));
+        } catch (\Exception $e) {
+            return redirect('/')->with('error', 'There was an error while trying to get the access token.');
+        }
 
-        $userData = Http::withToken($accessTokenData->access_token)->get($this->apiURLBase);
-        if ($userData->clientError() || $userData->serverError()) return redirect()->guest('/')->with('error', 'Couldn\'t get the user data from Discord.');
+        try {
+            $user = $this->getDiscordUser($accessToken->access_token);
+        } catch (\Exception $e) {
+            return redirect('/')->with('error', 'There was an error while trying to get the user data.');
+        }
 
-        $userData = json_decode($userData->body());
-        if (!isset($userData->email)) return redirect()->guest('/')->with('error', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scope.');
+        if (Auth::check()) {
+            if (Auth::id() !== $user->id) {
+                Auth::logout();
+                return redirect('/')->with('error', 'The user ID does not match the logged in user.');
+            }
 
-        $user = User::updateOrCreate(
-            [
-                'id' => $userData->id,
-            ],
-            [
-                'username' => $userData->username,
-                'discriminator' => $userData->discriminator,
-                'email' => $userData->email,
-                'avatar' => $userData->avatar ?: NULL,
-                'verified' => $userData->verified,
-                'locale' => $userData->locale,
-                'mfa_enabled' => $userData->mfa_enabled,
-                'refresh_token' => $accessTokenData->refresh_token
-            ]
-        );
+            $request->session()->put('auth.password_confirmed_at', time());
+
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+
+        try {
+            $user = $this->createOrUpdateUser($user, $accessToken->refresh_token);
+        } catch (\Exception $e) {
+            return redirect('/')->with('error', 'There was an error while trying to create or update the user.');
+        }
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
-     * Handle the logout request.
+     * Handles the Discord OAuth2 callback.
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @param string $code
+     * @return object
+     * @throws \Illuminate\Http\Client\RequestException
      */
-    public function logout(Request $request) {
-        Auth::logout();
-        $request->session()->invalidate();
+    private function getDiscordAccessToken(string $code): object
+    {
+        $this->tokenData['code'] = $code;
 
-        return redirect('/');
+        $response = Http::asForm()->post($this->tokenURL, $this->tokenData);
+
+        $response->throw();
+
+        return json_decode($response->body());
+    }
+
+    /**
+     * Handles the Discord OAuth2 login.
+     *
+     * @param string $access_token
+     * @return object
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    private function getDiscordUser(string $access_token): object
+    {
+        $response = Http::withToken($access_token)->get($this->apiURLBase);
+
+        $response->throw();
+
+        return json_decode($response->body());
+    }
+
+    /**
+     * Handles the creation or update of the user.
+     *
+     * @param object $user
+     * @param string $refresh_token
+     * @return User
+     * @throws \Exception
+     */
+    private function createOrUpdateUser(object $user, string $refresh_token): User
+    {
+        if (!isset($user->id)) {
+            throw new \Exception('Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scope.');
+        }
+
+        return User::updateOrCreate(
+            [
+                'id' => $user->id,
+            ],
+            [
+                'username' => $user->username,
+                'discriminator' => $user->discriminator,
+                'email' => $user->email,
+                'avatar' => $user->avatar ?: NULL,
+                'verified' => $user->verified,
+                'locale' => $user->locale,
+                'mfa_enabled' => $user->mfa_enabled,
+                'refresh_token' => $refresh_token
+            ]
+        );
     }
 }

@@ -5,23 +5,33 @@ namespace Jakyeru\Larascord\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Validator;
-use \GuzzleHttp;
+use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
-    protected $name = 'larascord:install';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'larascord:install
+                            {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
     protected $description = 'Use this command to install Larascord.';
-
-    protected string $baseUrl = 'https://discord.com/api';
 
     private string|null $clientId;
     private string|null $clientSecret;
     private string|null $redirectUri;
 
     /**
-     * Handle the command.
-     * @throws \Exception
+     * Execute the console command.
+     *
+     * @return void
      */
     public function handle()
     {
@@ -31,12 +41,11 @@ class InstallCommand extends Command
         $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?', 'http://localhost:8000/larascord/callback');
 
         // Validating the user's input
-        try {
-            $this->validateInput();
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-            return;
-        }
+        try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
+
+        // Installing laravel/breeze
+        $this->requireComposerPackages('laravel/breeze:^1.4');
+        shell_exec('php artisan breeze:install');
 
         // Appending the secrets to the .env file
         $this->appendToEnvFile();
@@ -55,6 +64,19 @@ class InstallCommand extends Command
 
         // Create the view files
         $this->createViewFiles();
+
+        // Asking the user to build the assets
+        if ($this->confirm('Do you want to build the assets?', true)) {
+            try {
+                shell_exec('npm install');
+                shell_exec('npm run dev');
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+                $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+            }
+        } else {
+            $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        }
 
         // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
@@ -128,7 +150,7 @@ class InstallCommand extends Command
     public function createUserMigrationFiles()
     {
         (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
-        (new Filesystem())->copy(__DIR__ . '/../../database/migrations/2014_10_12_000000_create_users_table.php', database_path('migrations/2014_10_12_000000_create_users_table.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../database/migrations/', database_path('migrations/'));
     }
 
     /**
@@ -139,7 +161,7 @@ class InstallCommand extends Command
     public function createModelFiles()
     {
         (new Filesystem())->ensureDirectoryExists(app_path('Models'));
-        (new Filesystem())->copy(__DIR__ . '/../../Models/User.php', app_path('Models/User.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../Models/', app_path('Models/'));
     }
 
     /**
@@ -150,7 +172,7 @@ class InstallCommand extends Command
     public function createControllerFiles()
     {
         (new Filesystem())->ensureDirectoryExists(app_path('Http/Controllers'));
-        (new Filesystem())->copy(__DIR__ . '/../../Http/Controllers/DiscordController.php', app_path('Http/Controllers/DiscordController.php'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../Http/Controllers/', app_path('Http/Controllers/'));
     }
 
     /**
@@ -172,5 +194,31 @@ class InstallCommand extends Command
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
+    }
+
+    /**
+     * Installs the given Composer Packages into the application.
+     *
+     * @param  mixed  $packages
+     * @return void
+     */
+    protected function requireComposerPackages($packages)
+    {
+        $composer = $this->option('composer');
+
+        if ($composer !== 'global') {
+            $command = ['php', $composer, 'require'];
+        }
+
+        $command = array_merge(
+            $command ?? ['composer', 'require'],
+            is_array($packages) ? $packages : func_get_args()
+        );
+
+        (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
+            ->setTimeout(null)
+            ->run(function ($type, $output) {
+                $this->output->write($output);
+            });
     }
 }
