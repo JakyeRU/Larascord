@@ -95,7 +95,7 @@ class DiscordController extends Controller
 
         $response->throw();
 
-        return json_decode($response->json());
+        return json_decode($response->body());
     }
 
     /**
@@ -111,7 +111,7 @@ class DiscordController extends Controller
 
         $response->throw();
 
-        return json_decode($response->json());
+        return json_decode($response->body());
     }
 
     /**
