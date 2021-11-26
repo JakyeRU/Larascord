@@ -44,7 +44,7 @@ class InstallCommand extends Command
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
 
         // Installing laravel/breeze
-        $this->requireComposerPackages('laravel/breeze^1.4');
+        $this->requireComposerPackages('laravel/breeze:^1.4');
         shell_exec('php artisan breeze:install');
 
         // Appending the secrets to the .env file
