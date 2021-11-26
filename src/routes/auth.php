@@ -24,7 +24,6 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 Route::group(['prefix' => 'larascord'], function() {
     Route::get('/callback', [DiscordController::class, 'handle'])
-        ->middleware('guest')
         ->name('larascord.login');
 
     Route::redirect('/refresh-token', '/login')
