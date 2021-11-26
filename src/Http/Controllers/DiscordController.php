@@ -99,6 +99,8 @@ class DiscordController extends Controller
 //            ]);
 //        }
 
+        // TODO: Implement refresh_token() method.
+
         $request->session()->put('auth.password_confirmed_at', time());
 
         return redirect()->intended(RouteServiceProvider::HOME);
