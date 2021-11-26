@@ -85,16 +85,4 @@ class DiscordController extends Controller
 
         return redirect('/');
     }
-
-    /**
-     * Handle the logout request.
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function logout(Request $request) {
-        Auth::logout();
-        $request->session()->invalidate();
-
-        return redirect('/');
-    }
 }

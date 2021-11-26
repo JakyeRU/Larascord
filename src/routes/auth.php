@@ -28,5 +28,4 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 Route::group(['prefix' => 'larascord'], function() {
     Route::get('/callback', [DiscordController::class, 'login'])->name('larascord.login');
-    Route::post('/logout', [DiscordController::class, 'logout'])->name('larascord.logout');
 });
