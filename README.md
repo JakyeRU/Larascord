@@ -43,8 +43,6 @@ Larascord is a package that allows you to authenticate users in your Laravel app
 ### Step 3: Follow Larascord's instructions
 * You can get your Discord application's `CLIENT ID` and `CLIENT SECRET` from the "OAuth2" tab of your application.
   * ![](https://i.imgur.com/YJnM4H5.png)
-* You can get your Discord application's bot `TOKEN` from the "Bot" tab of your application. (_this is used only to validate the data you provided with Discord_)
-  * ![](https://i.imgur.com/ppLVjRY.png)
 * The `REDIRECT URI` has to be the **same** as the one you provided in your application's OAuth2 redirect.
 
 Your application should now be able to authenticate users using Discord.
@@ -57,4 +55,5 @@ Your application should now be able to authenticate users using Discord.
 | ---------- | ---- | ----------- | ------ | ------ |
 | `login` | `/login` | Redirects the user to Discord's OAuth2 authorization page. | REDIRECT | `GET` |
 | `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@login` | `GET` |
-| `larascord.logout` | `/larascord/logout` | Invalidates the current session.| `DiscordController@logout` | `POST` |
+| `larascord.logout` | `/larascord/logout` | Invalidates the current session. | `DiscordController@logout` | `POST` |
+| `larascord.refresh_token` | `/larascord/refresh-token` | Redirects to the login page. | REDIRECT | `GET` |
