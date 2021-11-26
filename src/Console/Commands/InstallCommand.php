@@ -79,6 +79,14 @@ class InstallCommand extends Command
             $this->comment('php artisan migrate');
         }
 
+        // Asking the user to build the assets
+        if ($this->ask('Do you want to build the assets?', true)) {
+            shell_exec('npm install');
+            shell_exec('npm run dev');
+        } else {
+            $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        }
+
         $this->info('Larascord has been successfully installed!');
     }
 
