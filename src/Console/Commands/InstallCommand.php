@@ -65,6 +65,19 @@ class InstallCommand extends Command
         // Create the view files
         $this->createViewFiles();
 
+        // Asking the user to build the assets
+        if ($this->confirm('Do you want to build the assets?', true)) {
+            try {
+                shell_exec('npm install');
+                shell_exec('npm run dev');
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+                $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+            }
+        } else {
+            $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
+        }
+
         // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
             try {
@@ -77,14 +90,6 @@ class InstallCommand extends Command
         } else {
             $this->comment('You can run the migrations later by running the command:');
             $this->comment('php artisan migrate');
-        }
-
-        // Asking the user to build the assets
-        if ($this->ask('Do you want to build the assets?', true)) {
-            shell_exec('npm install');
-            shell_exec('npm run dev');
-        } else {
-            $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
         }
 
         $this->info('Larascord has been successfully installed!');
