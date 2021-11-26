@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use \GuzzleHttp;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
-use App\Http\Controllers\RouteServiceProvider;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Validation\ValidationException;
 
 // TODO: Refactor this file.
