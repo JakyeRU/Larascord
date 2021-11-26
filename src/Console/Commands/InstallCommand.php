@@ -40,7 +40,7 @@ class InstallCommand extends Command
         $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?', 'http://localhost:8000/larascord/callback');
 
         // Validating the user's input
-        try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return; }
+        try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
 
         // Appending the secrets to the .env file
         $this->appendToEnvFile();
