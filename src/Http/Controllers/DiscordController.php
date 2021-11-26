@@ -77,7 +77,7 @@ class DiscordController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
