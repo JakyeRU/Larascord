@@ -28,8 +28,9 @@ class InstallCommand extends Command
     private string|null $redirectUri;
 
     /**
-     * Handle the command.
-     * @throws \Exception
+     * Execute the console command.
+     *
+     * @return void
      */
     public function handle()
     {
