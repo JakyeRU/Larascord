@@ -28,5 +28,5 @@ Route::group(['prefix' => 'larascord'], function() {
         ->name('larascord.login');
 
     Route::redirect('/refresh-token', '/login')
-        ->name('larascord.refresh-token');
+        ->name('larascord.refresh_token');
 });
