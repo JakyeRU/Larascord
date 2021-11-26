@@ -124,7 +124,7 @@ class DiscordController extends Controller
      */
     private function createOrUpdateUser(object $user, string $refresh_token): User
     {
-        if (!$user->email) {
+        if (!isset($user->id)) {
             throw new \Exception('Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scope.');
         }
 
