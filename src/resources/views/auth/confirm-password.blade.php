@@ -13,7 +13,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-        <form method="POST" action="{{ route('larascord.refresh_token') }}">
+        <form method="GET" action="{{ route('larascord.refresh_token') }}">
             @csrf
 
             <div class="flex justify-end mt-4">

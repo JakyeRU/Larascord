@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use \GuzzleHttp;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
+use Illuminate\Validation\ValidationException;
+
+// TODO: Refactor this file.
 
 class DiscordController extends Controller
 {
@@ -91,6 +93,35 @@ class DiscordController extends Controller
      */
     public function refresh_token(Request $request)
     {
+
+        if ($request->missing('code') && $request->missing('access_token')) return redirect()->guest('/')->with('error', 'The code or access token is missing.');
+        if (Auth::check()) return redirect()->guest('/')->with('error', 'You are already logged in.');
+
+        if ($request->has('code')) {
+            $this->tokenData['code'] = $request->code;
+        }
+
+        $client = new GuzzleHttp\Client();
+
+        try {
+            $accessTokenData = $client->post($this->tokenURL, ["form_params" => $this->tokenData]);
+            $accessTokenData = json_decode($accessTokenData->getBody());
+        } catch (GuzzleHttp\Exception\GuzzleException $e) {
+            return redirect()->guest('/')->with('error', 'Couldn\'t get the access token from Discord.');
+        };
+
+        $userData = Http::withToken($accessTokenData->access_token)->get($this->apiURLBase);
+        if ($userData->clientError() || $userData->serverError()) return redirect()->guest('/')->with('error', 'Couldn\'t get the user data from Discord.');
+
+        $userData = json_decode($userData->body());
+        if (!isset($userData->email)) return redirect()->guest('/')->with('error', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scope.');
+
+        if ($userData->id !== Auth::id()) {
+            throw ValidationException::withMessages([
+                'password' => __('auth.password'),
+            ]);
+        }
+
         $request->session()->put('auth.password_confirmed_at', time());
 
         return redirect()->intended(RouteServiceProvider::HOME);
