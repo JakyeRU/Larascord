@@ -46,7 +46,7 @@ Your application should now be able to authenticate users using Discord.
 # Larascord Routes
 > 💡 These routes can be found in the `routes/auth.php` file.
 
-| Route Name | URL | Description | Action | Method |
+| Route Name | URI | Description | Action | Method |
 | ---------- | ---- | ----------- | ------ | ------ |
 | `login` | `/login` | Redirects the user to Discord's OAuth2 authorization page. | REDIRECT | `GET` |
 | `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@login` | `GET` |
