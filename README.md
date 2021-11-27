@@ -51,4 +51,4 @@ Your application should now be able to authenticate users using Discord.
 | `login` | `/login` | Redirects the user to Discord's OAuth2 authorization page. | REDIRECT | `GET` |
 | `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@login` | `GET` |
 | `larascord.logout` | `/larascord/logout` | Invalidates the current session. | `DiscordController@logout` | `POST` |
-| `larascord.refresh_token` | `/larascord/refresh-token` | Redirects to the login page. | REDIRECT | `GET` |
+| `larascord.refresh_token` | `/larascord/refresh-token` | Redirects to the login page. (Used to access secure parts of the application through the middleware `password.confirm`.) | REDIRECT | `GET` |
