@@ -1,8 +1,3 @@
-[comment]: <> (# Larascord)
-
-[comment]: <> (> :warning: This project is under heavy development and is not ready for use.)
-
-[comment]: <> (Larascord is a package that allows you to interact with the Discord API within your Laravel application.)
 <p align="center">
     <a href="https://github.com/JakyeRU/Larascord" target="_blank">
         <img src="https://raw.githubusercontent.com/JakyeRU/Larascord/main/Larascord-transparent.png" height=200>
@@ -51,9 +46,9 @@ Your application should now be able to authenticate users using Discord.
 # Larascord Routes
 > 💡 These routes can be found in the `routes/auth.php` file.
 
-| Route Name | URL | Description | Action | Method |
+| Route Name | URI | Description | Action | Method |
 | ---------- | ---- | ----------- | ------ | ------ |
 | `login` | `/login` | Redirects the user to Discord's OAuth2 authorization page. | REDIRECT | `GET` |
-| `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@login` | `GET` |
-| `larascord.logout` | `/larascord/logout` | Invalidates the current session. | `DiscordController@logout` | `POST` |
-| `larascord.refresh_token` | `/larascord/refresh-token` | Redirects to the login page. | REDIRECT | `GET` |
+| `logout` | `/logout` | Invalidates the current session. | `AuthenticatedSessionController@destroy` | `POST` |
+| `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@handle` | `GET` |
+| `larascord.refresh_token` | `/larascord/refresh-token` | Redirects to the login page. (Used to access secure parts of the application through the middleware `password.confirm`.) | REDIRECT | `GET` |
