@@ -1,8 +1,3 @@
-[comment]: <> (# Larascord)
-
-[comment]: <> (> :warning: This project is under heavy development and is not ready for use.)
-
-[comment]: <> (Larascord is a package that allows you to interact with the Discord API within your Laravel application.)
 <p align="center">
     <a href="https://github.com/JakyeRU/Larascord" target="_blank">
         <img src="https://raw.githubusercontent.com/JakyeRU/Larascord/main/Larascord-transparent.png" height=200>
