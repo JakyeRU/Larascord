@@ -63,6 +63,11 @@ class DiscordController extends Controller
             return redirect('/')->with('error', 'There was an error while trying to get the user data.');
         }
 
+        // Making sure the user has an email.
+        if (empty($user->email)) {
+            return redirect('/')->with('error', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.');
+        }
+
         // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
         if (Auth::check() && (Auth::id() !== $user->id)) {
             Auth::logout();
@@ -134,10 +139,6 @@ class DiscordController extends Controller
      */
     private function createOrUpdateUser(object $user, string $refresh_token): User
     {
-        if (!isset($user->id)) {
-            throw new \Exception('Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scope.');
-        }
-
         return User::updateOrCreate(
             [
                 'id' => $user->id,
