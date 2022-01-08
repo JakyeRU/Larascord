@@ -44,37 +44,49 @@ class DiscordController extends Controller
      */
     public function handle(Request $request): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
     {
-        if ($request->missing('code')) return redirect('/')->with('error', 'The code is missing.');
+        // Checking if the authorization code is present in the request.
+        if ($request->missing('code')) {
+            return redirect('/')->with('error', 'The code is missing.');
+        }
 
+        // Getting the access_token from the Discord API.
         try {
             $accessToken = $this->getDiscordAccessToken($request->get('code'));
         } catch (\Exception $e) {
             return redirect('/')->with('error', 'There was an error while trying to get the access token.');
         }
 
+        // Using the access_token to get the user's Discord ID.
         try {
             $user = $this->getDiscordUser($accessToken->access_token);
         } catch (\Exception $e) {
             return redirect('/')->with('error', 'There was an error while trying to get the user data.');
         }
 
-        if (Auth::check()) {
-            if (Auth::id() !== $user->id) {
-                Auth::logout();
-                return redirect('/')->with('error', 'The user ID does not match the logged in user.');
-            }
+        // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
+        if (Auth::check() && (Auth::id() !== $user->id)) {
+            Auth::logout();
+            return redirect('/')->with('error', 'The user ID does not match the logged in user.');
+        }
 
+        // Confirming the session in case the user was redirected from the password.confirm middleware.
+        if (Auth::check()) {
             $request->session()->put('auth.password_confirmed_at', time());
         }
 
+        // Trying to create or update the user in the database.
         try {
             $user = $this->createOrUpdateUser($user, $accessToken->refresh_token);
         } catch (\Exception $e) {
             return redirect('/')->with('error', 'There was an error while trying to create or update the user.');
         }
 
-        Auth::login($user);
+        // Authenticating the user if the user is not logged in.
+        if (!Auth::check()) {
+            Auth::login($user);
+        }
 
+        // Redirecting the user to the intended page or to the home page.
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
