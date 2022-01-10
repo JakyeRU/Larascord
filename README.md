@@ -32,9 +32,13 @@ Larascord is a package that allows you to authenticate users in your Laravel app
 ## Laravel
 > :warning: You must use this package in a fresh Laravel application otherwise unexpected behavior may occur.
 ### Step 1: Install Larascord
-* `composer require jakyeru/larascord`
+```shell
+composer require jakyeru/larascord
+```
 ### Step 2: Run the installation command
-* `php artisan larascord:install`
+```shell
+php artisan larascord:install
+```
 ### Step 3: Follow Larascord's instructions
 * You can get your Discord application's `CLIENT ID` and `CLIENT SECRET` from the "OAuth2" tab of your application.
   * ![](https://i.imgur.com/YJnM4H5.png)
@@ -42,8 +46,11 @@ Larascord is a package that allows you to authenticate users in your Laravel app
 
 Your application should now be able to authenticate users using Discord.
 
+## Configuration
 You can publish Larascord's configuration using the following command:
-* `php artisan vendor:publish --provider="JakyeRU\Larascord\LarascordServiceProvider" --tag="config"`
+```shell
+php artisan vendor:publish --provider="JakyeRU\Larascord\LarascordServiceProvider" --tag="config"
+```
 
 ---
 # Larascord Routes
