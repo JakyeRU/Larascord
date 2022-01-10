@@ -8,7 +8,10 @@ class LarascordServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->registerCommands();
+        if ($this->app->runningInConsole()) {
+            $this->registerCommands();
+            $this->registerConfiguration();
+        }
     }
 
     public function boot()
@@ -18,10 +21,15 @@ class LarascordServiceProvider extends ServiceProvider
 
     protected function registerCommands()
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                Console\Commands\InstallCommand::class,
-            ]);
-        }
+        $this->commands([
+            Console\Commands\InstallCommand::class,
+        ]);
+    }
+
+    protected function registerConfiguration()
+    {
+        $this->publishes([
+            __DIR__.'/../config/larascord.php' => config_path('larascord.php'),
+        ], 'config');
     }
 }

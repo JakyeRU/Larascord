@@ -42,6 +42,9 @@ Larascord is a package that allows you to authenticate users in your Laravel app
 
 Your application should now be able to authenticate users using Discord.
 
+You can publish Larascord's configuration using the following command:
+* `php artisan vendor:publish --provider="JakyeRU\Larascord\LarascordServiceProvider" --tag="config"`
+
 ---
 # Larascord Routes
 > 💡 These routes can be found in the `routes/auth.php` file.
