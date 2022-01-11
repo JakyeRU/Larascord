@@ -24,11 +24,11 @@ Route::redirect('/login', 'https://discord.com/oauth2/authorize?client_id=' . co
     ->name('login');
 
 Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])
-    ->middleware('auth')
+    ->middleware(['web', 'auth'])
     ->name('password.confirm');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
+    ->middleware(['web', 'auth'])
     ->name('logout');
 
 Route::group(['prefix' => config('larascord.prefix'), 'middleware' => ['web']], function() {
