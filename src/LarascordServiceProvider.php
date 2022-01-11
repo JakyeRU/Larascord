@@ -19,6 +19,8 @@ class LarascordServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->registerConfiguration();
         }
+
+        $this->registerRoutes();
     }
 
     protected function registerCommands()
@@ -34,5 +36,10 @@ class LarascordServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'./config/config.php' => config_path('larascord.php'),
         ], 'config');
+    }
+
+    protected function registerRoutes()
+    {
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
     }
 }
