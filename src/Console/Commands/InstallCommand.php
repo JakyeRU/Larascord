@@ -24,9 +24,9 @@ class InstallCommand extends Command
      */
     protected $description = 'Use this command to install Larascord.';
 
-    private string|null $clientId;
-    private string|null $clientSecret;
-    private string|null $redirectUri;
+    private ?string $clientId;
+    private ?string $clientSecret;
+    private ?string $prefix;
 
     /**
      * Execute the console command.
@@ -38,13 +38,14 @@ class InstallCommand extends Command
         // Getting the user's input
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
-        $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?', 'http://localhost:8000/larascord/callback');
+        $this->prefix = $this->ask('What route prefix should Larascord use?', 'larascord');
 
         // Validating the user's input
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
 
         // Installing laravel/breeze
-        $this->requireComposerPackages('laravel/breeze:^1.4');
+        $this->info('Please wait while we install Larascord...');
+        $this->requireComposerPackages('laravel/breeze:^1.4', '-q');
         shell_exec('php artisan breeze:install');
 
         // Appending the secrets to the .env file
@@ -56,20 +57,17 @@ class InstallCommand extends Command
         // Create the model files
         $this->createModelFiles();
 
-        // Create the controller file
-        $this->createControllerFiles();
-
-        // Create the route files
-        $this->createRouteFiles();
-
         // Create the view files
         $this->createViewFiles();
+
+        // Remove Laravel Breeze routes
+        $this->replaceBreezeRoutes();
 
         // Asking the user to build the assets
         if ($this->confirm('Do you want to build the assets?', true)) {
             try {
-                shell_exec('npm install');
-                shell_exec('npm run dev');
+                shell_exec('npm install --silent');
+                shell_exec('npm run dev --silent');
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
                 $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
@@ -92,6 +90,12 @@ class InstallCommand extends Command
             $this->comment('php artisan migrate');
         }
 
+        // Automatically publishing the configuration file
+        $this->call('larascord:publish');
+
+        $this->alert('Please make sure you add "' . env('APP_URL', 'http://localhost:8000') . '/' . env('LARASCORD_PREFIX', 'larascord') . '/callback' . '" to your Discord application\'s redirect urls in the OAuth2 tab.');
+        $this->warn('If the domain doesn\'t match your current environment\'s domain you need to set it manually in the .env file. (APP_URL)');
+
         $this->info('Larascord has been successfully installed!');
     }
 
@@ -104,13 +108,13 @@ class InstallCommand extends Command
         $rules = [
             'clientId' => ['required', 'numeric'],
             'clientSecret' => ['required', 'string'],
-            'redirectUri' => ['required', 'url'],
+            'prefix' => ['required', 'string'],
         ];
 
         $validator = Validator::make([
             'clientId' => $this->clientId,
             'clientSecret' => $this->clientSecret,
-            'redirectUri' => $this->redirectUri,
+            'prefix' => $this->prefix,
         ], $rules);
 
         $validator->validate();
@@ -127,19 +131,19 @@ class InstallCommand extends Command
         (new Filesystem())->append('.env',PHP_EOL);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_CLIENT_ID='.$this->clientId);
+        (new Filesystem())->append('.env','LARASCORD_CLIENT_ID='.$this->clientId);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_CLIENT_SECRET='.$this->clientSecret);
+        (new Filesystem())->append('.env','LARASCORD_CLIENT_SECRET='.$this->clientSecret);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_GRANT_TYPE=authorization_code');
+        (new Filesystem())->append('.env','LARASCORD_GRANT_TYPE=authorization_code');
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_REDIRECT_URI='.$this->redirectUri);
+        (new Filesystem())->append('.env','LARASCORD_PREFIX='.$this->prefix);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_SCOPE=identify&email');
+        (new Filesystem())->append('.env','LARASCORD_SCOPE=identify&email');
     }
 
     /**
@@ -165,27 +169,6 @@ class InstallCommand extends Command
     }
 
     /**
-     * Create the controller files.
-     *
-     * @return void
-     */
-    public function createControllerFiles()
-    {
-        (new Filesystem())->ensureDirectoryExists(app_path('Http/Controllers'));
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../Http/Controllers/', app_path('Http/Controllers/'));
-    }
-
-    /**
-     * Create the route files.
-     *
-     * @return void
-     */
-    public function createRouteFiles() {
-        (new Filesystem())->ensureDirectoryExists(base_path('routes'));
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../routes', base_path('routes'));
-    }
-
-    /**
      * Create the view files.
      *
      * @return void
@@ -194,6 +177,17 @@ class InstallCommand extends Command
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
+    }
+
+    /**
+     * Removes Laravel Breeze's default routes and replaces them with Larascord's routes.
+     * @return void
+     */
+    public function replaceBreezeRoutes()
+    {
+        (new Filesystem())->ensureDirectoryExists(resource_path('routes'));
+        (new Filesystem())->copy(__DIR__ . '/../../routes/web.php', base_path('routes/web.php'));
+        (new Filesystem())->delete(base_path('routes/auth.php'));
     }
 
     /**

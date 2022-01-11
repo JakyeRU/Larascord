@@ -8,20 +8,38 @@ class LarascordServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->registerCommands();
+        if ($this->app->runningInConsole()) {
+            $this->registerCommands();
+            $this->registerConfiguration();
+        }
     }
 
     public function boot()
     {
-//        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        if ($this->app->runningInConsole()) {
+            $this->registerConfiguration();
+        }
+
+        $this->registerRoutes();
     }
 
     protected function registerCommands()
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                Console\Commands\InstallCommand::class,
-            ]);
-        }
+        $this->commands([
+            Console\Commands\InstallCommand::class,
+            Console\Commands\PublishCommand::class,
+        ]);
+    }
+
+    protected function registerConfiguration()
+    {
+        $this->publishes([
+            __DIR__.'./config/config.php' => config_path('larascord.php'),
+        ], 'config');
+    }
+
+    protected function registerRoutes()
+    {
+        $this->loadRoutesFrom(__DIR__.'/routes/larascord.php');
     }
 }

@@ -32,23 +32,48 @@ Larascord is a package that allows you to authenticate users in your Laravel app
 ## Laravel
 > :warning: You must use this package in a fresh Laravel application otherwise unexpected behavior may occur.
 ### Step 1: Install Larascord
-* `composer require jakyeru/larascord`
+```shell
+composer require jakyeru/larascord
+```
 ### Step 2: Run the installation command
-* `php artisan larascord:install`
+```shell
+php artisan larascord:install
+```
 ### Step 3: Follow Larascord's instructions
 * You can get your Discord application's `CLIENT ID` and `CLIENT SECRET` from the "OAuth2" tab of your application.
-  * ![](https://i.imgur.com/YJnM4H5.png)
-* The `REDIRECT URI` has to be the **same** as the one you provided in your application's OAuth2 redirect.
+![](https://i.imgur.com/YJnM4H5.png)
 
 Your application should now be able to authenticate users using Discord.
 
+## Configuration
+#### You can publish Larascord's configuration using the following commands:
+```shell
+php artisan larascord:publish
+```
+```shell
+php artisan vendor:publish --provider="Jakyeru\Larascord\LarascordServiceProvider" --tag="config"
+```
+#### You can also forcefully publish Larascord's configuration, overwriting any existing configuration:
+```shell
+php artisan larascord:publish --force
+```
+_You shouldn't need these commands as the configuration is automatically published when the package is installed._
+
 ---
 # Larascord Routes
-> 💡 These routes can be found in the `routes/auth.php` file.
-
 | Route Name | URI | Description | Action | Method |
 | ---------- | ---- | ----------- | ------ | ------ |
 | `login` | `/login` | Redirects the user to Discord's OAuth2 authorization page. | REDIRECT | `GET` |
 | `logout` | `/logout` | Invalidates the current session. | `AuthenticatedSessionController@destroy` | `POST` |
 | `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@handle` | `GET` |
 | `larascord.refresh_token` | `/larascord/refresh-token` | Redirects to the login page. (Used to access secure parts of the application through the middleware `password.confirm`.) | REDIRECT | `GET` |
+
+# Possible Errors
+## `Invalid OAuth2 redirect_uri`
+This error occurs when your `redirect_uri` is not listed in your application's OAuth2 redirects.
+
+If you are sure your `redirect_uri` is correct, make sure that `APP_URL` is correct in `config/app.php`.
+
+---
+
+If you encounter any other error(s), please open an issue on [GitHub](https://github.com/JakyeRU/Larascord/issues/new/choose).
