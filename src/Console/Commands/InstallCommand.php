@@ -89,19 +89,8 @@ class InstallCommand extends Command
             $this->comment('php artisan migrate');
         }
 
-        // Asking the user to publish Larascord's configuration
-        if ($this->confirm('Do you want to publish the Larascord\'s configuration?', true)) {
-            try {
-                $this->call('larascord:publish');
-            } catch (\Exception $e) {
-                $this->error($e->getMessage());
-                $this->comment('You can publish the Larascord\'s configuration later by running the command:');
-                $this->comment('php artisan larascord:publish');
-            }
-        } else {
-            $this->comment('You can publish the Larascord\'s configuration later by running the command:');
-            $this->comment('php artisan larascord:publish');
-        }
+        // Automatically publishing the configuration file
+        $this->call('larascord:publish');
 
         $this->alert('Please make sure you add "' . config('larascord.redirect_uri') . '" to your Discord application\'s redirect urls in the OAuth2 tab.');
 
