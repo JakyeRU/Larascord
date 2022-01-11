@@ -183,7 +183,8 @@ class InstallCommand extends Command
      */
     public function replaceBreezeRoutes()
     {
-        (new Filesystem())->copy(__DIR__ . '../../routes/web.php', base_path('routes/web.php'));
+        (new Filesystem())->ensureDirectoryExists(resource_path('routes'));
+        (new Filesystem())->copy(__DIR__ . '/../../routes/web.php', base_path('routes/web.php'));
         (new Filesystem())->delete(base_path('routes/auth.php'));
     }
 
