@@ -26,7 +26,7 @@ class InstallCommand extends Command
 
     private ?string $clientId;
     private ?string $clientSecret;
-    private ?string $redirectUri;
+    private ?string $prefix;
 
     /**
      * Execute the console command.
@@ -38,7 +38,7 @@ class InstallCommand extends Command
         // Getting the user's input
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
-        $this->redirectUri = $this->ask('What is your Discord application\'s redirect uri?', 'http://localhost:8000/larascord/callback');
+        $this->prefix = $this->ask('What route prefix should Larascord use?', 'larascord');
 
         // Validating the user's input
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
@@ -104,13 +104,13 @@ class InstallCommand extends Command
         $rules = [
             'clientId' => ['required', 'numeric'],
             'clientSecret' => ['required', 'string'],
-            'redirectUri' => ['required', 'url'],
+            'redirectUri' => ['required', 'string'],
         ];
 
         $validator = Validator::make([
             'clientId' => $this->clientId,
             'clientSecret' => $this->clientSecret,
-            'redirectUri' => $this->redirectUri,
+            'prefix' => $this->prefix,
         ], $rules);
 
         $validator->validate();
@@ -136,7 +136,7 @@ class InstallCommand extends Command
         (new Filesystem())->append('.env','DISCORD_GRANT_TYPE=authorization_code');
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_REDIRECT_URI='.$this->redirectUri);
+        (new Filesystem())->append('.env','DISCORD_PREFIX='.$this->prefix);
 
         (new Filesystem())->append('.env',PHP_EOL);
         (new Filesystem())->append('.env','DISCORD_SCOPE=identify&email');
