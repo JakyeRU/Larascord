@@ -44,7 +44,7 @@ class InstallCommand extends Command
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
 
         // Installing laravel/breeze
-        $this->requireComposerPackages('laravel/breeze:^1.4');
+        $this->requireComposerPackages('laravel/breeze:^1.4', '-q');
         shell_exec('php artisan breeze:install');
 
         // Appending the secrets to the .env file
@@ -65,8 +65,8 @@ class InstallCommand extends Command
         // Asking the user to build the assets
         if ($this->confirm('Do you want to build the assets?', true)) {
             try {
-                shell_exec('npm install');
-                shell_exec('npm run dev');
+                shell_exec('npm install --silent');
+                shell_exec('npm run dev --silent');
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
                 $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
