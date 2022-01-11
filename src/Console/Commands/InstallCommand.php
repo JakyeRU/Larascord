@@ -56,14 +56,11 @@ class InstallCommand extends Command
         // Create the model files
         $this->createModelFiles();
 
-        // Create the controller file
-        $this->createControllerFiles();
-
-        // Create the route files
-        $this->createRouteFiles();
-
         // Create the view files
         $this->createViewFiles();
+
+        // Remove Laravel Breeze routes
+        $this->replaceBreezeRoutes();
 
         // Asking the user to build the assets
         if ($this->confirm('Do you want to build the assets?', true)) {
@@ -92,6 +89,22 @@ class InstallCommand extends Command
             $this->comment('php artisan migrate');
         }
 
+        // Asking the user to publish Larascord's configuration
+        if ($this->confirm('Do you want to publish the Larascord\'s configuration?', true)) {
+            try {
+                $this->call('larascord:publish');
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+                $this->comment('You can publish the Larascord\'s configuration later by running the command:');
+                $this->comment('php artisan larascord:publish');
+            }
+        } else {
+            $this->comment('You can publish the Larascord\'s configuration later by running the command:');
+            $this->comment('php artisan larascord:publish');
+        }
+
+        $this->alert('Please make sure you add "' . config('larascord.redirect_uri') . '" to your Discord application\'s redirect urls in the OAuth2 tab.');
+
         $this->info('Larascord has been successfully installed!');
     }
 
@@ -104,7 +117,7 @@ class InstallCommand extends Command
         $rules = [
             'clientId' => ['required', 'numeric'],
             'clientSecret' => ['required', 'string'],
-            'redirectUri' => ['required', 'string'],
+            'prefix' => ['required', 'string'],
         ];
 
         $validator = Validator::make([
@@ -165,27 +178,6 @@ class InstallCommand extends Command
     }
 
     /**
-     * Create the controller files.
-     *
-     * @return void
-     */
-    public function createControllerFiles()
-    {
-        (new Filesystem())->ensureDirectoryExists(app_path('Http/Controllers'));
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../Http/Controllers/', app_path('Http/Controllers/'));
-    }
-
-    /**
-     * Create the route files.
-     *
-     * @return void
-     */
-    public function createRouteFiles() {
-        (new Filesystem())->ensureDirectoryExists(base_path('routes'));
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../routes', base_path('routes'));
-    }
-
-    /**
      * Create the view files.
      *
      * @return void
@@ -194,6 +186,16 @@ class InstallCommand extends Command
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
+    }
+
+    /**
+     * Removes Laravel Breeze's default routes and replaces them with Larascord's routes.
+     * @return void
+     */
+    public function replaceBreezeRoutes()
+    {
+        (new Filesystem())->copy(__DIR__ . '../../routes/web.php', base_path('routes/web.php'));
+        (new Filesystem())->delete(base_path('routes/auth.php'));
     }
 
     /**
