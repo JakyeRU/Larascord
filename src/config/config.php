@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'redirect_uri' => env('APP_URL', 'http://localhost:8000') . '/' . config('larascord.prefix') . '/callback',
+    'redirect_uri' => env('APP_URL', 'http://localhost:8000') . env('DISCORD_PREFIX', 'larascord') . '/callback',
 
     /*
     |--------------------------------------------------------------------------
@@ -67,6 +67,6 @@ return [
     |
     */
 
-    'prefix' => 'larascord',
+    'prefix' => env('DISCORD_PREFIX', 'larascord'),
 
 ];
