@@ -92,7 +92,7 @@ class InstallCommand extends Command
         // Automatically publishing the configuration file
         $this->call('larascord:publish');
 
-        $this->alert('Please make sure you add "' . config('larascord.redirect_uri') . '" to your Discord application\'s redirect urls in the OAuth2 tab.');
+        $this->alert('Please make sure you add "' . env('APP_URL', 'http://localhost:8000') . '/' . env('LARASCORD_PREFIX', 'larascord') . '/callback' . '" to your Discord application\'s redirect urls in the OAuth2 tab.');
 
         $this->info('Larascord has been successfully installed!');
     }
