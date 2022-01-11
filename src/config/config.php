@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'scopes' => env('DISCORD_SCOPES', 'identify&email'),
+    'scopes' => 'identify&email',
 
     /*
     |--------------------------------------------------------------------------
