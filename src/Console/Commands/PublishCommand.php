@@ -3,9 +3,6 @@
 namespace Jakyeru\Larascord\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Validator;
-use Symfony\Component\Process\Process;
 
 class PublishCommand extends Command
 {
