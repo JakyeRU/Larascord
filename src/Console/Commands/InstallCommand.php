@@ -94,6 +94,7 @@ class InstallCommand extends Command
         $this->call('larascord:publish');
 
         $this->alert('Please make sure you add "' . env('APP_URL', 'http://localhost:8000') . '/' . env('LARASCORD_PREFIX', 'larascord') . '/callback' . '" to your Discord application\'s redirect urls in the OAuth2 tab.');
+        $this->warn('If the domain doesn\'t match your current environment\'s domain you need to set it manually in the .env file. (APP_URL)');
 
         $this->info('Larascord has been successfully installed!');
     }
