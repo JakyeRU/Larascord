@@ -47,7 +47,10 @@ php artisan larascord:install
 Your application should now be able to authenticate users using Discord.
 
 ## Configuration
-You can publish Larascord's configuration using the following command:
+You can publish Larascord's configuration using the following commands:
+```shell
+php artisan larascord:publish
+```
 ```shell
 php artisan vendor:publish --provider="Jakyeru\Larascord\LarascordServiceProvider" --tag="config"
 ```
