@@ -127,19 +127,19 @@ class InstallCommand extends Command
         (new Filesystem())->append('.env',PHP_EOL);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_CLIENT_ID='.$this->clientId);
+        (new Filesystem())->append('.env','LARASCORD_CLIENT_ID='.$this->clientId);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_CLIENT_SECRET='.$this->clientSecret);
+        (new Filesystem())->append('.env','LARASCORD_CLIENT_SECRET='.$this->clientSecret);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_GRANT_TYPE=authorization_code');
+        (new Filesystem())->append('.env','LARASCORD_GRANT_TYPE=authorization_code');
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_PREFIX='.$this->prefix);
+        (new Filesystem())->append('.env','LARASCORD_PREFIX='.$this->prefix);
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','DISCORD_SCOPE=identify&email');
+        (new Filesystem())->append('.env','LARASCORD_SCOPE=identify&email');
     }
 
     /**

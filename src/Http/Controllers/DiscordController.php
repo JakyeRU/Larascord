@@ -28,11 +28,11 @@ class DiscordController extends Controller
      */
     public function __construct()
     {
-        $this->tokenData['client_id'] = env('DISCORD_CLIENT_ID');
-        $this->tokenData['client_secret'] = env('DISCORD_CLIENT_SECRET');
-        $this->tokenData['grant_type'] = env('DISCORD_GRANT_TYPE');
-        $this->tokenData['redirect_uri'] = env('DISCORD_REDIRECT_URI');
-        $this->tokenData['scope'] = env('DISCORD_SCOPE');
+        $this->tokenData['client_id'] = config('larascord.client_id');
+        $this->tokenData['client_secret'] = config('larascord.client_secret');
+        $this->tokenData['grant_type'] = config('larascord.grant_type');
+        $this->tokenData['redirect_uri'] = config('larascord.redirect_uri');
+        $this->tokenData['scope'] = config('larascord.scopes');
     }
 
     /**

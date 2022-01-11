@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'client_id' => env('DISCORD_CLIENT_ID', null),
+    'client_id' => env('LARASCORD_CLIENT_ID', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     |
     */
 
-    'client_secret' => env('DISCORD_CLIENT_SECRET', null),
+    'client_secret' => env('LARASCORD_CLIENT_SECRET', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'grant_type' => env('DISCORD_GRANT_TYPE', 'authorization_code'),
+    'grant_type' => env('LARASCORD_GRANT_TYPE', 'authorization_code'),
 
     /*
     |--------------------------------------------------------------------------
@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'redirect_uri' => env('APP_URL', 'http://localhost:8000') . '/' . env('DISCORD_PREFIX', 'larascord') . '/callback',
+    'redirect_uri' => env('APP_URL', 'http://localhost:8000') . '/' . env('LARASCORD_PREFIX', 'larascord') . '/callback',
 
     /*
     |--------------------------------------------------------------------------
@@ -67,6 +67,6 @@ return [
     |
     */
 
-    'prefix' => env('DISCORD_PREFIX', 'larascord'),
+    'prefix' => env('LARASCORD_PREFIX', 'larascord'),
 
 ];
