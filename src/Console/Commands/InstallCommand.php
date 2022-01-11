@@ -24,9 +24,9 @@ class InstallCommand extends Command
      */
     protected $description = 'Use this command to install Larascord.';
 
-    private string|null $clientId;
-    private string|null $clientSecret;
-    private string|null $redirectUri;
+    private ?string $clientId;
+    private ?string $clientSecret;
+    private ?string $redirectUri;
 
     /**
      * Execute the console command.
