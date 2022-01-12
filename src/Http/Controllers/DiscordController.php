@@ -45,32 +45,32 @@ class DiscordController extends Controller
     {
         // Checking if the authorization code is present in the request.
         if ($request->missing('code')) {
-            return redirect('/')->with('error', 'The code is missing.');
+            return redirect('/')->with('error', config('larascord.error_messages.missing_code', 'The authorization code is missing.'));
         }
 
         // Getting the access_token from the Discord API.
         try {
             $accessToken = $this->getDiscordAccessToken($request->get('code'));
         } catch (\Exception $e) {
-            return redirect('/')->with('error', 'There was an error while trying to get the access token.');
+            return redirect('/')->with('error', config('larascord.error_messages.invalid_code', 'The authorization code is invalid.'));
         }
 
         // Using the access_token to get the user's Discord ID.
         try {
             $user = $this->getDiscordUser($accessToken->access_token);
         } catch (\Exception $e) {
-            return redirect('/')->with('error', 'There was an error while trying to get the user data.');
+            return redirect('/')->with('error', config('larascord.error_messages.authorization_failed', 'The authorization failed.'));
         }
 
         // Making sure the user has an email.
         if (empty($user->email)) {
-            return redirect('/')->with('error', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.');
+            return redirect('/')->with('error', config('larascord.error_messages.missing_email', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.'));
         }
 
         // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
         if (Auth::check() && (Auth::id() !== $user->id)) {
             Auth::logout();
-            return redirect('/')->with('error', 'The user ID does not match the logged in user.');
+            return redirect('/')->with('error', config('larascord.error_messages.invalid_user', 'The user ID doesn\'t match the logged-in user.'));
         }
 
         // Confirming the session in case the user was redirected from the password.confirm middleware.
@@ -82,7 +82,7 @@ class DiscordController extends Controller
         try {
             $user = $this->createOrUpdateUser($user, $accessToken->refresh_token);
         } catch (\Exception $e) {
-            return redirect('/')->with('error', 'There was an error while trying to create or update the user.');
+            return redirect('/')->with('error', config('larascord.error_messages.database_error', 'There was an error with the database. Please try again later.'));
         }
 
         // Authenticating the user if the user is not logged in.

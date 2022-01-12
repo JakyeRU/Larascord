@@ -83,4 +83,22 @@ return [
 
     'prompt' => 'none',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Error Messages
+    |--------------------------------------------------------------------------
+    |
+    | These are the error messages that will be display to the user if there is an error.
+    |
+    */
+
+    'error_messages' => [
+        'missing_code' => 'The authorization code is missing.',
+        'invalid_code' => 'The authorization code is invalid.',
+        'authorization_failed' => 'The authorization failed.',
+        'missing_email' => 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.',
+        'invalid_user' => 'The user ID doesn\'t match the logged-in user.',
+        'database_error' => 'There was an error with the database. Please try again later.',
+    ],
+
 ];
