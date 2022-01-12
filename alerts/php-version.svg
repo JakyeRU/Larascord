@@ -65,7 +65,7 @@
                         <g> </g>
                         <g> </g>
                     </svg>
-                    <span class="message">Larascord requires version PHP 8.x.x or higher!</span>
+                    <span class="message">Larascord requires PHP version 8.x.x or higher.</span>
                 </div>
             </div>
         </div>
