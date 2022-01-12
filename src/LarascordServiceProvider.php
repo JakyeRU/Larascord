@@ -34,7 +34,7 @@ class LarascordServiceProvider extends ServiceProvider
     protected function registerConfiguration()
     {
         $this->publishes([
-            __DIR__.'./config/config.php' => config_path('larascord.php'),
+            __DIR__.'/config/config.php' => config_path('larascord.php'),
         ], 'config');
     }
 
