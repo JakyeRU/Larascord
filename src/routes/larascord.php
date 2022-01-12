@@ -20,7 +20,7 @@ use Jakyeru\Larascord\Http\Controllers\DiscordController;
 Route::redirect('/login', 'https://discord.com/oauth2/authorize?client_id=' . config('larascord.client_id')
     . '&redirect_uri=' . config('larascord.redirect_uri')
     . '&response_type=code&scope=' . implode('%20', explode('&', config('larascord.scopes')))
-    . '&prompt=none')
+    . '&prompt=' . config('larascord.prompt'))
     ->name('login');
 
 Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])

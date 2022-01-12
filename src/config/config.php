@@ -69,4 +69,18 @@ return [
 
     'prefix' => env('LARASCORD_PREFIX', 'larascord'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | OAuth2 Prompt - "none" or "consent"
+    |--------------------------------------------------------------------------
+    |
+    | The prompt controls how the authorization flow handles existing authorizations.
+    | If a user has previously authorized your application with the requested scopes and prompt is set to consent,
+    | it will request them to re-approve their authorization.
+    | If set to none, it will skip the authorization screen and redirect them back to your redirect URI without requesting their authorization.
+    |
+    */
+
+    'prompt' => 'none',
+
 ];
