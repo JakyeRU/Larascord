@@ -74,7 +74,7 @@ _You shouldn't need these commands as the configuration is automatically publish
 ## `Invalid OAuth2 redirect_uri`
 This error occurs when your `redirect_uri` is not listed in your application's OAuth2 redirects.
 
-If you are sure your `redirect_uri` is correct, make sure that `APP_URL` is correct in `config/app.php`.
+If you are sure your `redirect_uri` is correct, make sure that `APP_URL` is correct in `.env`.
 
 ---
 
