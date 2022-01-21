@@ -39,27 +39,50 @@ class DiscordController extends Controller
      * Handles the Discord OAuth2 login.
      *
      * @param Request $request
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
+//     * @return \Illuminate\Http\JsonResponse
      */
-    public function handle(Request $request): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse
+    public function handle(Request $request)//: \Illuminate\Http\JsonResponse
     {
         // Checking if the authorization code is present in the request.
         if ($request->missing('code')) {
-            return redirect('/')->with('error', config('larascord.error_messages.missing_code', 'The authorization code is missing.'));
+            if (env('APP_DEBUG')) {
+                return response()->json([
+                    'larascord_message' => config('larascord.error_messages.missing_code', 'The authorization code is missing.'),
+                    'code' => 400
+                ]);
+            } else {
+                return redirect('/')->with('error', config('larascord.error_messages.missing_code', 'The authorization code is missing.'));
+            }
         }
 
         // Getting the access_token from the Discord API.
         try {
             $accessToken = $this->getDiscordAccessToken($request->get('code'));
         } catch (\Exception $e) {
-            return redirect('/')->with('error', config('larascord.error_messages.invalid_code', 'The authorization code is invalid.'));
+            if (env('APP_DEBUG')) {
+                return response()->json([
+                    'larascord_message' => config('larascord.error_messages.invalid_code', 'The authorization code is invalid.'),
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ]);
+            } else {
+                return redirect('/')->with('error', config('larascord.error_messages.invalid_code', 'The authorization code is invalid.'));
+            }
         }
 
         // Using the access_token to get the user's Discord ID.
         try {
             $user = $this->getDiscordUser($accessToken->access_token);
         } catch (\Exception $e) {
-            return redirect('/')->with('error', config('larascord.error_messages.authorization_failed', 'The authorization failed.'));
+            if (env('APP_DEBUG')) {
+                return response()->json([
+                    'larascord_message' => config('larascord.error_messages.authorization_failed', 'The authorization failed.'),
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ]);
+            } else {
+                return redirect('/')->with('error', config('larascord.error_messages.authorization_failed', 'The authorization failed.'));
+            }
         }
 
         // Making sure the user has an email.
@@ -82,7 +105,15 @@ class DiscordController extends Controller
         try {
             $user = $this->createOrUpdateUser($user, $accessToken->refresh_token);
         } catch (\Exception $e) {
-            return redirect('/')->with('error', config('larascord.error_messages.database_error', 'There was an error with the database. Please try again later.'));
+            if (env('APP_DEBUG')) {
+                return response()->json([
+                    'larascord_message' => config('larascord.error_messages.database_error', 'There was an error while trying to create or update the user.'),
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ]);
+            } else {
+                return redirect('/')->with('error', config('larascord.error_messages.database_error', 'There was an error while trying to create or update the user.'));
+            }
         }
 
         // Authenticating the user if the user is not logged in.
