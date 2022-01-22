@@ -76,6 +76,9 @@ This error occurs when your `redirect_uri` is not listed in your application's O
 
 If you are sure your `redirect_uri` is correct, make sure that `APP_URL` is correct in `.env`.
 
+## `cURL error 60: SSL certificate problem: unable to get local issuer certificate`
+This issue is not caused by Larascord. You can find a fix in [#27](https://github.com/JakyeRU/Larascord/issues/27).
+
 ---
 
 If you encounter any other error(s), please open an issue on [GitHub](https://github.com/JakyeRU/Larascord/issues/new/choose).
