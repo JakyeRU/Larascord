@@ -85,9 +85,11 @@ class DiscordController extends Controller
             }
         }
 
-        // Making sure the user has an email.
-        if (empty($user->email)) {
-            return redirect('/')->with('error', config('larascord.error_messages.missing_email', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.'));
+        // Making sure the user has an email if the email scope is set.
+        if (in_array('email', explode('&', config('larascord.scopes')))) {
+            if (empty($user->email)) {
+                return redirect('/')->with('error', config('larascord.error_messages.missing_email', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.'));
+            }
         }
 
         // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
@@ -176,9 +178,9 @@ class DiscordController extends Controller
             [
                 'username' => $user->username,
                 'discriminator' => $user->discriminator,
-                'email' => $user->email,
+                'email' => $user->email ?? NULL,
                 'avatar' => $user->avatar ?: NULL,
-                'verified' => $user->verified,
+                'verified' => $user->verified ?? FALSE,
                 'locale' => $user->locale,
                 'mfa_enabled' => $user->mfa_enabled,
                 'refresh_token' => $refresh_token

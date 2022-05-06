@@ -96,7 +96,7 @@ return [
         'missing_code' => 'The authorization code is missing.',
         'invalid_code' => 'The authorization code is invalid.',
         'authorization_failed' => 'The authorization failed.',
-        'missing_email' => 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.',
+        'missing_email' => 'Couldn\'t get your e-mail address.',
         'invalid_user' => 'The user ID doesn\'t match the logged-in user.',
         'database_error' => 'There was an error with the database. Please try again later.',
     ],
