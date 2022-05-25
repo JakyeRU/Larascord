@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('username');
             $table->string('discriminator');
 
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('avatar')->nullable();
 
             $table->boolean('verified');
