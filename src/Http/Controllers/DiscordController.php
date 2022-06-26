@@ -55,6 +55,18 @@ class DiscordController extends Controller
             }
         }
 
+        // Making sure the "guilds" scope was added to .env if "guild_only" is set to true.
+        if (!in_array('guilds', explode('&', config('larascord.scopes'))) && config('larascord.guild_only')) {
+            if (env('APP_DEBUG')) {
+                return response()->json([
+                    'larascord_message' => config('larascord.error_messages.missing_guilds_scope', 'The "guilds" scope is required.'),
+                    'code' => 400
+                ]);
+            } else {
+                return redirect('/')->with('error', config('larascord.error_messages.missing_guilds_scope', 'The "guilds" scope is required.'));
+            }
+        }
+
         // Getting the access_token from the Discord API.
         try {
             $accessToken = $this->getDiscordAccessToken($request->get('code'));
@@ -186,5 +198,10 @@ class DiscordController extends Controller
                 'refresh_token' => $refresh_token
             ]
         );
+    }
+
+    private function getUserGuilds()
+    {
+        
     }
 }
