@@ -110,7 +110,8 @@ return [
         'missing_email' => 'Couldn\'t get your e-mail address.',
         'invalid_user' => 'The user ID doesn\'t match the logged-in user.',
         'database_error' => 'There was an error with the database. Please try again later.',
-        'missing_guilds_scope' => 'The "guilds" scope is required.'
+        'missing_guilds_scope' => 'The "guilds" scope is required.',
+        'authorization_failed_guilds' => 'Couldn\'t get the servers you\'re in.'
     ],
 
 ];
