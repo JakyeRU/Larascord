@@ -55,7 +55,19 @@ class DiscordController extends Controller
             }
         }
 
-        // Getting the access_token from the Discord API.
+        // Making sure the "guilds" scope was added to .env if "guild_only" is set to true.
+        if (!in_array('guilds', explode('&', config('larascord.scopes'))) && config('larascord.guild_only')) {
+            if (env('APP_DEBUG')) {
+                return response()->json([
+                    'larascord_message' => config('larascord.error_messages.missing_guilds_scope', 'The "guilds" scope is required.'),
+                    'code' => 400
+                ]);
+            } else {
+                return redirect('/')->with('error', config('larascord.error_messages.missing_guilds_scope', 'The "guilds" scope is required.'));
+            }
+        }
+
+        // Getting the accessToken from the Discord API.
         try {
             $accessToken = $this->getDiscordAccessToken($request->get('code'));
         } catch (\Exception $e) {
@@ -70,7 +82,7 @@ class DiscordController extends Controller
             }
         }
 
-        // Using the access_token to get the user's Discord ID.
+        // Using the accessToken to get the user's Discord ID.
         try {
             $user = $this->getDiscordUser($accessToken->access_token);
         } catch (\Exception $e) {
@@ -82,6 +94,45 @@ class DiscordController extends Controller
                 ]);
             } else {
                 return redirect('/')->with('error', config('larascord.error_messages.authorization_failed', 'The authorization failed.'));
+            }
+        }
+
+        // Verifying if the user is in any of "larascord.guilds" if "larascord.guild_only" is true.
+        if (config('larascord.guild_only')) {
+            try {
+                $guilds = $this->getUserGuilds($accessToken->access_token);
+
+                $isMember = call_user_func(function () use ($guilds) {
+                    foreach ($guilds as $guild) {
+                        if (in_array($guild->id, config('larascord.guilds'))) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+
+                if (!$isMember) {
+                    if (env('APP_DEBUG')) {
+                        return response()->json([
+                            'larascord_message' => config('larascord.error_messages.not_member_guild_only', 'You are not allowed to login.'),
+                            'message' => NULL,
+                            'code' => NULL
+                        ]);
+                    } else {
+                        return redirect('/')->with('error', config('larascord.error_messages.not_member_guild_only', 'You are not allowed to login.'));
+                    }
+                }
+
+            } catch (\Exception $e) {
+                if (env('APP_DEBUG')) {
+                    return response()->json([
+                        'larascord_message' => config('larascord.error_messages.authorization_failed_guilds', 'Couldn\'t get the servers you\'re in.'),
+                        'message' => $e->getMessage(),
+                        'code' => $e->getCode()
+                    ]);
+                } else {
+                    return redirect('/')->with('error', config('larascord.error_messages.authorization_failed_guilds', 'Couldn\'t get the servers you\'re in.'));
+                }
             }
         }
 
@@ -148,13 +199,22 @@ class DiscordController extends Controller
     /**
      * Handles the Discord OAuth2 login.
      *
-     * @param string $access_token
+     * @param string $accessToken
      * @return object
      * @throws \Illuminate\Http\Client\RequestException
      */
-    private function getDiscordUser(string $access_token): object
+    private function getDiscordUser(string $accessToken): object
     {
-        $response = Http::withToken($access_token)->get($this->apiURLBase);
+        $response = Http::withToken($accessToken)->get($this->apiURLBase);
+
+        $response->throw();
+
+        return json_decode($response->body());
+    }
+
+    private function getUserGuilds($accessToken)
+    {
+        $response = Http::withToken($accessToken)->get($this->apiURLBase . '/guilds');
 
         $response->throw();
 
