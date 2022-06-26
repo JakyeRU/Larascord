@@ -111,7 +111,8 @@ return [
         'invalid_user' => 'The user ID doesn\'t match the logged-in user.',
         'database_error' => 'There was an error with the database. Please try again later.',
         'missing_guilds_scope' => 'The "guilds" scope is required.',
-        'authorization_failed_guilds' => 'Couldn\'t get the servers you\'re in.'
+        'authorization_failed_guilds' => 'Couldn\'t get the servers you\'re in.',
+        'not_member_guild_only' => 'You are not allowed to login.'
     ],
 
 ];
