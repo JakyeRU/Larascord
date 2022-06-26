@@ -85,6 +85,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Guild-Only Login
+    |--------------------------------------------------------------------------
+    |
+    | This setting allows users to use the application only if they are a member of specific guilds.
+    |
+    */
+    'guild_only' => false,
+    'guilds' => [],
+
+    /*
+    |--------------------------------------------------------------------------
     | Error Messages
     |--------------------------------------------------------------------------
     |
@@ -99,6 +110,9 @@ return [
         'missing_email' => 'Couldn\'t get your e-mail address.',
         'invalid_user' => 'The user ID doesn\'t match the logged-in user.',
         'database_error' => 'There was an error with the database. Please try again later.',
+        'missing_guilds_scope' => 'The "guilds" scope is required.',
+        'authorization_failed_guilds' => 'Couldn\'t get the servers you\'re in.',
+        'not_member_guild_only' => 'You are not allowed to login.'
     ],
 
 ];
