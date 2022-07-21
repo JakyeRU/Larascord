@@ -70,6 +70,7 @@ _You shouldn't need these commands as the configuration is automatically publish
 | `larascord.login` | `/larascord/callback` | Callback route for Discord OAuth2 authentication. | `DiscordController@handle` | `GET` |
 | `larascord.refresh_token` | `/larascord/refresh-token` | Redirects to the login page. (Used to access secure parts of the application through the middleware `password.confirm`.) | REDIRECT | `GET` |
 
+---
 # Possible Errors
 ## `Invalid OAuth2 redirect_uri`
 This error occurs when your `redirect_uri` is not listed in your application's OAuth2 redirects.
@@ -78,6 +79,13 @@ If you are sure your `redirect_uri` is correct, make sure that `APP_URL` is corr
 
 ## `cURL error 60: SSL certificate problem: unable to get local issuer certificate`
 This issue is not caused by Larascord. You can find a fix in [#27](https://github.com/JakyeRU/Larascord/issues/27).
+
+---
+# Version Compatibility
+| Laravel Version | Larascord Version   |
+|-----------------|---------------------|
+| 8               | 1.X.X, 2.X.X, 3.X.X |
+| 9               | 4.X.X               |
 
 ---
 
