@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Events\UserWasCreated;
+use App\Events\UserWasUpdated;
 
 class DiscordController extends Controller
 {
@@ -231,7 +233,7 @@ class DiscordController extends Controller
      */
     private function createOrUpdateUser(object $user, string $refresh_token): User
     {
-        return User::updateOrCreate(
+        $user = User::updateOrCreate(
             [
                 'id' => $user->id,
             ],
@@ -246,5 +248,13 @@ class DiscordController extends Controller
                 'refresh_token' => $refresh_token
             ]
         );
+
+        if ($user->wasRecentlyCreated) {
+            event(new UserWasCreated($user));
+        } else {
+            event(new UserWasUpdated($user));
+        }
+
+        return $user;
     }
 }
