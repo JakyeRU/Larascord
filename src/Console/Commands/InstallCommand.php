@@ -60,21 +60,11 @@ class InstallCommand extends Command
         // Create the view files
         $this->createViewFiles();
 
+        // Create the event files
+        $this->createEventFiles();
+
         // Remove Laravel Breeze routes
         $this->replaceBreezeRoutes();
-
-        // Asking the user to build the assets
-        if ($this->confirm('Do you want to build the assets?', true)) {
-            try {
-                shell_exec('npm install --silent');
-                shell_exec('npm run dev --silent');
-            } catch (\Exception $e) {
-                $this->error($e->getMessage());
-                $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
-            }
-        } else {
-            $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
-        }
 
         // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
@@ -97,6 +87,8 @@ class InstallCommand extends Command
         $this->warn('If the domain doesn\'t match your current environment\'s domain you need to set it manually in the .env file. (APP_URL)');
 
         $this->info('Larascord has been successfully installed!');
+
+        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
     }
 
     /**
@@ -177,6 +169,17 @@ class InstallCommand extends Command
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
+    }
+
+    /**
+     * Create the event files.
+     *
+     * @return void
+     */
+    public function createEventFiles()
+    {
+        (new Filesystem())->ensureDirectoryExists(app_path('Events'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../Events/', app_path('Events/'));
     }
 
     /**
