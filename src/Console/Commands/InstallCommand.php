@@ -60,6 +60,9 @@ class InstallCommand extends Command
         // Create the view files
         $this->createViewFiles();
 
+        // Create the event files
+        $this->createEventFiles();
+
         // Remove Laravel Breeze routes
         $this->replaceBreezeRoutes();
 
@@ -166,6 +169,17 @@ class InstallCommand extends Command
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
+    }
+
+    /**
+     * Create the event files.
+     *
+     * @return void
+     */
+    public function createEventFiles()
+    {
+        (new Filesystem())->ensureDirectoryExists(app_path('Events'));
+        (new Filesystem())->copyDirectory(__DIR__ . '/../../Events/', app_path('Events/'));
     }
 
     /**
