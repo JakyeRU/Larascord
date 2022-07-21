@@ -63,19 +63,6 @@ class InstallCommand extends Command
         // Remove Laravel Breeze routes
         $this->replaceBreezeRoutes();
 
-        // Asking the user to build the assets
-        if ($this->confirm('Do you want to build the assets?', true)) {
-            try {
-                shell_exec('npm install --silent');
-                shell_exec('npm run dev --silent');
-            } catch (\Exception $e) {
-                $this->error($e->getMessage());
-                $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
-            }
-        } else {
-            $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
-        }
-
         // Asking the user to migrate the database
         if ($this->confirm('Do you want to run the migrations?', true)) {
             try {
@@ -97,6 +84,8 @@ class InstallCommand extends Command
         $this->warn('If the domain doesn\'t match your current environment\'s domain you need to set it manually in the .env file. (APP_URL)');
 
         $this->info('Larascord has been successfully installed!');
+
+        $this->comment('Please execute the "npm install && npm run dev" command to build your assets.');
     }
 
     /**
