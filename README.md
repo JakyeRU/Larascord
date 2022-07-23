@@ -9,7 +9,9 @@
     <img src="https://img.shields.io/github/v/release/jakyeru/larascord?color=blue&style=for-the-badge" alt="release">
 </p>
 
-![](./alerts/php-version.svg)
+<div align="center">
+    <img src="./alerts/php-version.svg" alt="php-version-alert">
+</div>
 
 # About Larascord
 Larascord is a package that allows you to authenticate users in your Laravel application using Discord.
