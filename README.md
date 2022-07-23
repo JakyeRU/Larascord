@@ -32,7 +32,8 @@ Larascord is a package that allows you to authenticate users in your Laravel app
 
 
 ## Laravel
-> :warning: You must use this package in a fresh Laravel application otherwise unexpected behavior may occur.
+> **Warning** <br>
+> You must use this package in a fresh Laravel application otherwise unexpected behavior may occur.
 ### Step 1: Install Larascord
 ```shell
 composer require jakyeru/larascord
