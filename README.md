@@ -25,6 +25,16 @@ Please read our [Installation Wiki](https://github.com/JakyeRU/Larascord/wiki/In
 | 8               | 1.X.X, 2.X.X, 3.X.X |
 | 9               | 4.X.X               |
 
-If you encounter any other error(s), please open an issue on [GitHub](https://github.com/JakyeRU/Larascord/issues/new/choose).
+# Contributing
+Thank you for considering contributing to Larascord! You can read the contribution guide [here](https://github.com/JakyeRU/Larascord/blob/main/CONTRIBUTING.md).
 
+# Code of Conduct
+In order to ensure that the community is welcoming to everyone, please review and abide by the [Code of Conduct](https://github.com/JakyeRU/Larascord/blob/main/CODE_OF_CONDUCT.md).
+
+# Security Vulnerabilities
 If you need to report a security vulnerability please read our [Security Policy](https://github.com/JakyeRU/Larascord/blob/main/SECURITY.md).
+
+# License
+ Larascord is open-sourced software licensed under the [MIT](https://github.com/JakyeRU/Larascord/blob/main/LICENSE) license.
+
+If you encounter any other error(s), please open an issue on [GitHub](https://github.com/JakyeRU/Larascord/issues/new/choose).
