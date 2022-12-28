@@ -45,7 +45,7 @@ class InstallCommand extends Command
 
         // Installing laravel/breeze
         $this->info('Installing Larascord...');
-        $this->requireComposerPackages('laravel/breeze:^1.4', '-q');
+        $this->requireComposerPackages('laravel/breeze:^1.16', '-q');
         shell_exec('php artisan breeze:install');
 
         // Appending the secrets to the .env file
