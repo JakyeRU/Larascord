@@ -44,7 +44,7 @@ class InstallCommand extends Command
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
 
         // Installing laravel/breeze
-        $this->info('Please wait while we install Larascord...');
+        $this->info('Installing Larascord...');
         $this->requireComposerPackages('laravel/breeze:^1.4', '-q');
         shell_exec('php artisan breeze:install');
 
