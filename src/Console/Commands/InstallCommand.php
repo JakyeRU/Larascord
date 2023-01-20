@@ -240,10 +240,9 @@ class InstallCommand extends Command
 
         (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
-            ->run(function ($type, $output) use ($packages) {
+            ->run(function ($type, $output) {
                 if ($type === Process::ERR) {
                     $this->error(trim($output));
-                    exit(1);
                 } else {
                     $this->output->write($output);
                 }
