@@ -243,6 +243,7 @@ class InstallCommand extends Command
             ->run(function ($type, $output) {
                 if ($type === Process::ERR) {
                     $this->error(trim($output));
+                    exit(1);
                 } else {
                     $this->output->write($output);
                 }
