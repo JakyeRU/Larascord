@@ -29,6 +29,6 @@
         "orchestra/testbench": "^7.1"
     },
     "require": {
-        "guzzlehttp/guzzle": "^7.4"
+        "guzzlehttp/guzzle": "^7.5"
     }
 }
