@@ -29,6 +29,7 @@
         "orchestra/testbench": "^7.1"
     },
     "require": {
+        "laravel/framework": "^9.*",
         "guzzlehttp/guzzle": "^7.5"
     }
 }
