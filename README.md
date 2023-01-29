@@ -5,8 +5,9 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/github/actions/workflow/status/JakyeRU/Larascord/run-tests.yml?branch=main&style=for-the-badge" alt="build">
-    <img src="https://img.shields.io/github/v/release/jakyeru/larascord?color=blue&style=for-the-badge" alt="release">
+    <img src="https://img.shields.io/github/actions/workflow/status/JakyeRU/Larascord/run-tests.yml?logo=github&branch=main&style=for-the-badge" alt="build">
+    <img src="https://img.shields.io/packagist/dt/jakyeru/larascord?logo=packagist&style=for-the-badge" alt="downloads">
+    <img src="https://img.shields.io/github/v/release/jakyeru/larascord?logo=github&color=blue&style=for-the-badge" alt="release">
 </p>
 
 # About Larascord
