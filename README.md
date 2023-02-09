@@ -22,8 +22,8 @@ Please read our [Installation Wiki](https://github.com/JakyeRU/Larascord/wiki/In
 | Laravel Version |  Larascord Version  | PHP Version | Active Support | Security Fixes |
 |:---------------:|:-------------------:|:-----------:|:--------------:|:--------------:|
 |       10        |        4.1.0        |   8.1-8.2   |       ✅        |       ✅      |
-|        9        |     4.0.0-4.0.3     |    >=8.0    |       ❌        |       ✅      |
-|        8        | 1.X.X, 2.X.X, 3.X.X |    >=8.0    |       ❌        |       ❌      |
+|        9        |     4.0.0-4.0.3     |   8.0-8.1   |       ❌        |       ✅      |
+|        8        | 1.X.X, 2.X.X, 3.X.X |     8.0     |       ❌        |       ❌      |
 
 # Contributing
 Thank you for considering contributing to Larascord! You can read the contribution guide [here](https://github.com/JakyeRU/Larascord/blob/main/.github/CONTRIBUTING.md).
