@@ -5,6 +5,7 @@ namespace Jakyeru\Larascord\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
@@ -27,6 +28,7 @@ class InstallCommand extends Command
     private ?string $clientId;
     private ?string $clientSecret;
     private ?string $prefix;
+    private ?bool $darkMode;
     private ?string $accessToken;
 
     /**
@@ -40,6 +42,8 @@ class InstallCommand extends Command
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
         $this->prefix = $this->ask('What route prefix should Larascord use?', 'larascord');
+        $this->darkMode = $this->confirm('Do you want to install laravel/breeze with dark mode?', true);
+
         if ($this->confirm('Do you want to provide an access token for your Discord bot now? (It is required to use the roles feature.)', false)) {
             $this->accessToken = $this->ask('What is your access token?');
         } else {
@@ -51,9 +55,13 @@ class InstallCommand extends Command
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
 
         // Installing laravel/breeze
-        $this->info('Please wait while we install Larascord...');
-        $this->requireComposerPackages('laravel/breeze:^1.4', '-q');
-        shell_exec('php artisan breeze:install');
+        $this->info('Installing Larascord...');
+        $this->requireComposerPackages('laravel/breeze:^1.18', '-q');
+        if ($this->darkMode) {
+            shell_exec('php artisan breeze:install blade --dark');
+        } else {
+            shell_exec('php artisan breeze:install blade');
+        }
 
         // Appending the secrets to the .env file
         $this->appendToEnvFile();
@@ -215,6 +223,14 @@ class InstallCommand extends Command
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
+
+        if (!$this->darkMode) {
+            $this->removeDarkClasses((new Finder())
+                ->in(resource_path('views'))
+                ->name('*.blade.php')
+                ->notName('welcome.blade.php')
+            );
+        }
     }
 
     /**
@@ -261,7 +277,25 @@ class InstallCommand extends Command
         (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
             ->run(function ($type, $output) {
-                $this->output->write($output);
+                if ($type === Process::ERR) {
+                    $this->error(trim($output));
+                    exit(1);
+                } else {
+                    $this->output->write($output);
+                }
             });
+    }
+
+    /**
+     * Remove Tailwind dark classes from the given files.
+     *
+     * @param  \Symfony\Component\Finder\Finder  $finder
+     * @return void
+     */
+    protected function removeDarkClasses(Finder $finder)
+    {
+        foreach ($finder as $file) {
+            file_put_contents($file->getPathname(), preg_replace('/\sdark:[^\s"\']+/', '', $file->getContents()));
+        }
     }
 }
