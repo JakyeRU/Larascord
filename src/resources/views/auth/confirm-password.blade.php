@@ -17,9 +17,9 @@
             @csrf
 
             <div class="flex justify-end mt-4">
-                <x-button>
+                <x-primary-button>
                     {{ __('Confirm') }}
-                </x-button>
+                </x-primary-button>
             </div>
         </form>
     </x-auth-card>
