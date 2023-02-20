@@ -38,3 +38,5 @@ Route::group(['prefix' => config('larascord.prefix'), 'middleware' => ['web']], 
     Route::redirect('/refresh-token', '/login')
         ->name('larascord.refresh_token');
 });
+
+Route::delete('/profile', [DiscordController::class, 'destroy'])->middleware(['web', 'password.confirm'])->name('profile.destroy');
