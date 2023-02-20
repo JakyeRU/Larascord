@@ -38,6 +38,18 @@
             </svg>
         </div>
 
+        @if (session()->has('error'))
+            <div class="w-full my-3">
+                <div class="dark:bg-red-800/20 rounded-lg p-4 mb-4 text-sm mt-16" style="color: rgba(247, 0, 0, 0.7); padding: 15px 15px;" role="alert">
+                    <svg class="w-5 h-5 inline-flex mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+
+                    <span class="font-medium">
+                    <strong>Something went wrong!</strong>
+                </span> {!! session()->get('error') !!}
+                </div>
+            </div>
+        @endif
+
         <div class="mt-16">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                 <a href="https://laravel.com/docs" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
