@@ -29,7 +29,8 @@ return [
     | Grant Type
     |--------------------------------------------------------------------------
     |
-    | This is the grant type of your Discord application. It must be set to "authorization_code".
+    | This is the grant type of your Discord application. It must be set to
+    | "authorization_code".
     |
     */
 
@@ -40,7 +41,8 @@ return [
     | Redirect URI
     |--------------------------------------------------------------------------
     |
-    | This is the URI that Discord will redirect to after the user authorizes your application.
+    | This is the URI that Discord will redirect to after the user authorizes
+    | your application.
     |
     */
 
@@ -62,8 +64,9 @@ return [
     | Route Prefix
     |--------------------------------------------------------------------------
     |
-    | This is the prefix that Larascord will use for its routes.
-    | For example, the prefix "larascord" will result in the route "https://domain.com/larascord/login".
+    | This is the prefix that Larascord will use for its routes. For example,
+    | the prefix "larascord" will result in the route
+    | "https://domain.com/larascord/login".
     |
     */
 
@@ -75,9 +78,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | The prompt controls how the authorization flow handles existing authorizations.
-    | If a user has previously authorized your application with the requested scopes and prompt is set to consent,
-    | it will request them to re-approve their authorization.
-    | If set to none, it will skip the authorization screen and redirect them back to your redirect URI without requesting their authorization.
+    | If a user has previously authorized your application with the requested scopes
+    | and prompt is set to consent,it will request them to re-approve their
+    | authorization. If set to none, it will skip the authorization screen
+    | and redirect them back to your redirect URI without requesting
+    | their authorization.
     |
     */
 
@@ -88,18 +93,39 @@ return [
     | Guild-Only Login
     |--------------------------------------------------------------------------
     |
-    | This setting allows users to use the application only if they are a member of specific guilds.
+    | This setting allows users to use the application only if they are a member
+    | of specific guilds.
     |
     */
+
     'guild_only' => false,
     'guilds' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Guild-Only Roles
+    |--------------------------------------------------------------------------
+    |
+    | This setting allows users to use the application only if they have
+    | specific roles in specific guilds.
+    |
+    */
+
+    'guild_roles_enabled' => false,
+    'guild_roles' => [
+        // 'guild_id' => [
+        //     'role_id',
+        //     'role_id',
+        // ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
     | Error Messages
     |--------------------------------------------------------------------------
     |
-    | These are the error messages that will be display to the user if there is an error.
+    | These are the error messages that will be displayed to the user if there
+    | is an error.
     |
     */
 
@@ -120,7 +146,8 @@ return [
     | Success Messages
     |--------------------------------------------------------------------------
     |
-    | These are the success messages that will be display to the user if there is no error.
+    | These are the success messages that will be displayed to the user if there
+    | is no error.
     |
     */
 
