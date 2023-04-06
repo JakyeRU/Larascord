@@ -272,7 +272,7 @@ class DiscordController extends Controller
                 'code' => $exception?->getCode()
             ]);
         } else {
-            return redirect('/')->with('error', config('larascord.error_messages.' . $message));
+            return redirect('/')->with('error', config('larascord.error_messages.' . $message, 'An error occurred while trying to log you in.'));
         }
     }
 
