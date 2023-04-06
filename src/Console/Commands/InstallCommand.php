@@ -215,7 +215,7 @@ class InstallCommand extends Command
         (new Filesystem())->append('.env','LARASCORD_SCOPE=identify&email');
 
         (new Filesystem())->append('.env',PHP_EOL);
-        (new Filesystem())->append('.env','LARASCORD_DISCORD_TOKEN='.$this->accessToken);
+        (new Filesystem())->append('.env','LARASCORD_ACCESS_TOKEN='.$this->accessToken);
     }
 
     /**
