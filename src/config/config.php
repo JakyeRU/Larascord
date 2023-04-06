@@ -152,6 +152,7 @@ return [
         'not_member_guild_only' => 'You are not allowed to login.',
         'missing_access_token' => 'The access token is missing.',
         'authorization_failed_roles' => 'Couldn\'t get the roles you have.',
+        'missing_role' => 'You are not allowed to login.',
     ],
 
     /*
