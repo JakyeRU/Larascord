@@ -131,6 +131,12 @@ class DiscordController extends Controller
                 foreach (config('larascord.guild_roles') as $guild => $roles) {
                     $guildMember = $this->getGuildMemberInfo($guild, $user->id, config('larascord.access_token'));
 
+                    // Updating the user's roles in the database.
+                    $updatedRoles = $user->roles;
+                    $updatedRoles[$guild] = $guildMember->roles;
+                    $user->roles = $updatedRoles;
+                    $user->save();
+
                     $hasRole = call_user_func(function () use ($guildMember, $roles) {
                         foreach ($guildMember->roles as $role) {
                             if (in_array($role, $roles)) {
