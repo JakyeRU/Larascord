@@ -150,6 +150,8 @@ return [
         'missing_guilds_scope' => 'The "guilds" scope is required.',
         'authorization_failed_guilds' => 'Couldn\'t get the servers you\'re in.',
         'not_member_guild_only' => 'You are not allowed to login.',
+        'missing_access_token' => 'The access token is missing.',
+        'authorization_failed_roles' => 'Couldn\'t get the roles you have.',
     ],
 
     /*
