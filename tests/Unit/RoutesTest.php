@@ -49,13 +49,13 @@ class RoutesTest extends TestCase
 
         $request->assertStatus(302);
 
-        $request->assertSessionHas('error', 'The authorization code is missing.');
+        $request->assertSessionHas('error', 'An error occurred while trying to log you in.');
 
 
         $request = $this->get('/callback?code=0000000000000000');
 
         $request->assertStatus(302);
 
-        $request->assertSessionHas('error', 'The authorization code is invalid.');
+        $request->assertSessionHas('error', 'An error occurred while trying to log you in.');
     }
 }
