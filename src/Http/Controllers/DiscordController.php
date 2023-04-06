@@ -119,6 +119,37 @@ class DiscordController extends Controller
             return $this->throwError('database_error', $e);
         }
 
+        // Verifying if the user has the required roles if "larascord.roles" is set.
+        if (config('larascord.guild_roles_enabled')) {
+            // Verifying if an access token is set.
+            if (!config('larascord.access_token')) {
+                return $this->throwError('missing_access_token');
+            }
+
+            // Verifying if the user has the required roles.
+            try {
+                foreach (config('larascord.guild_roles') as $guild => $roles) {
+                    $guildMember = $this->getGuildMemberInfo($guild, $user->id, config('larascord.access_token'));
+
+                    $hasRole = call_user_func(function () use ($guildMember, $roles) {
+                        foreach ($guildMember->roles as $role) {
+                            if (in_array($role, $roles)) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    });
+
+                    if (!$hasRole) {
+                        return $this->throwError('missing_role');
+                    }
+                }
+            } catch (\Exception $e) {
+                return $this->throwError('authorization_failed_roles', $e);
+            }
+        }
+
         // Authenticating the user if the user is not logged in.
         if (!Auth::check()) {
             Auth::login($user);
@@ -181,7 +212,7 @@ class DiscordController extends Controller
      */
     private function getGuildMemberInfo(string $guildId, string $userId, string $accessToken)
     {
-        $response = Http::withToken($accessToken)->get($this->baseApi . '/guilds/' . $guildId . '/members/' . $userId);
+        $response = Http::withToken($accessToken, 'Bot')->get($this->baseApi . '/guilds/' . $guildId . '/members/' . $userId);
 
         $response->throw();
 
