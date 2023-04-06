@@ -6,7 +6,17 @@ use Illuminate\Support\ServiceProvider;
 
 class LarascordServiceProvider extends ServiceProvider
 {
-    public function register()
+    /*
+     * The current version of Larascord.
+     *
+     * @var string
+     */
+    const VERSION = '4.1.2';
+
+    /*
+     * Register the application services.
+     */
+    public function register(): void
     {
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
@@ -14,7 +24,10 @@ class LarascordServiceProvider extends ServiceProvider
         }
     }
 
-    public function boot()
+    /*
+     * Bootstrap the application services.
+     */
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->registerConfiguration();
@@ -23,7 +36,10 @@ class LarascordServiceProvider extends ServiceProvider
         $this->registerRoutes();
     }
 
-    protected function registerCommands()
+    /*
+     * Register the package commands.
+     */
+    protected function registerCommands(): void
     {
         $this->commands([
             Console\Commands\InstallCommand::class,
@@ -31,7 +47,10 @@ class LarascordServiceProvider extends ServiceProvider
         ]);
     }
 
-    protected function registerConfiguration()
+    /*
+     * Register the package configuration.
+     */
+    protected function registerConfiguration(): void
     {
         $this->publishes([
             __DIR__.'/config/config.php' => config_path('larascord.php'),
@@ -42,7 +61,10 @@ class LarascordServiceProvider extends ServiceProvider
         ], 'migrations');
     }
 
-    protected function registerRoutes()
+    /*
+     * Register the package routes.
+     */
+    protected function registerRoutes(): void
     {
         $this->loadRoutesFrom(__DIR__.'/routes/larascord.php');
     }

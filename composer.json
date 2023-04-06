@@ -26,10 +26,11 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "^6.22"
+        "orchestra/testbench": "^8"
     },
     "require": {
-        "guzzlehttp/guzzle": "^7.4",
-      "ext-json": "*"
+        "php": "^8.1|^8.2",
+        "laravel/framework": "^10",
+        "guzzlehttp/guzzle": "^7.5"
     }
 }

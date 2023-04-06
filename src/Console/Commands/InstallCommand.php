@@ -25,18 +25,45 @@ class InstallCommand extends Command
      */
     protected $description = 'Use this command to install Larascord.';
 
+    /*
+     * The Discord application's client id.
+     *
+     * @var string|null
+     */
     private ?string $clientId;
+
+    /*
+     * The Discord application's client secret.
+     *
+     * @var string|null
+     */
     private ?string $clientSecret;
+
+    /*
+     * The route prefix.
+     *
+     * @var string|null
+     */
     private ?string $prefix;
-    private ?bool $darkMode;
+
+    /*
+     * The Discord bot's access token.
+     *
+     * @var string|null
+     */
     private ?string $accessToken;
+
+    /*
+     * Whether dark mode should be enabled.
+     *
+     * @var bool|null
+     */
+    private ?bool $darkMode;
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         // Getting the user's input
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
@@ -56,7 +83,7 @@ class InstallCommand extends Command
 
         // Installing laravel/breeze
         $this->info('Installing Larascord...');
-        $this->requireComposerPackages('laravel/breeze:^1.18', '-q');
+        $this->requireComposerPackages('laravel/breeze:^1.19', '-q');
         if ($this->darkMode) {
             shell_exec('php artisan breeze:install blade --dark');
         } else {
@@ -119,9 +146,10 @@ class InstallCommand extends Command
 
     /**
      * Validate the user's input.
+     *
      * @throws \Exception
      */
-    protected function validateInput()
+    protected function validateInput(): void
     {
         $rules = [
             'clientId' => ['required', 'numeric'],
@@ -165,10 +193,8 @@ class InstallCommand extends Command
 
     /**
      * Append the secrets to the .env file.
-     *
-     * @return void
      */
-    protected function appendToEnvFile()
+    protected function appendToEnvFile(): void
     {
 
         (new Filesystem())->append('.env',PHP_EOL);
@@ -194,10 +220,8 @@ class InstallCommand extends Command
 
     /**
      * Create the user migration files.
-     *
-     * @return void
      */
-    public function createUserMigrationFiles()
+    public function createUserMigrationFiles(): void
     {
         (new Filesystem())->ensureDirectoryExists(database_path('migrations'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../database/migrations/', database_path('migrations/'));
@@ -205,10 +229,8 @@ class InstallCommand extends Command
 
     /**
      * Create the user model files.
-     *
-     * @return void
      */
-    public function createModelFiles()
+    public function createModelFiles(): void
     {
         (new Filesystem())->ensureDirectoryExists(app_path('Models'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../Models/', app_path('Models/'));
@@ -216,10 +238,8 @@ class InstallCommand extends Command
 
     /**
      * Create the view files.
-     *
-     * @return void
      */
-    public function createViewFiles()
+    public function createViewFiles(): void
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('views'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../resources/views', resource_path('views'));
@@ -235,10 +255,8 @@ class InstallCommand extends Command
 
     /**
      * Create the event files.
-     *
-     * @return void
      */
-    public function createEventFiles()
+    public function createEventFiles(): void
     {
         (new Filesystem())->ensureDirectoryExists(app_path('Events'));
         (new Filesystem())->copyDirectory(__DIR__ . '/../../Events/', app_path('Events/'));
@@ -246,9 +264,8 @@ class InstallCommand extends Command
 
     /**
      * Removes Laravel Breeze's default routes and replaces them with Larascord's routes.
-     * @return void
      */
-    public function replaceBreezeRoutes()
+    public function replaceBreezeRoutes(): void
     {
         (new Filesystem())->ensureDirectoryExists(resource_path('routes'));
         (new Filesystem())->copy(__DIR__ . '/../../routes/web.php', base_path('routes/web.php'));
@@ -257,11 +274,8 @@ class InstallCommand extends Command
 
     /**
      * Installs the given Composer Packages into the application.
-     *
-     * @param  mixed  $packages
-     * @return void
      */
-    protected function requireComposerPackages($packages)
+    protected function requireComposerPackages(mixed $packages): void
     {
         $composer = $this->option('composer');
 
@@ -288,11 +302,8 @@ class InstallCommand extends Command
 
     /**
      * Remove Tailwind dark classes from the given files.
-     *
-     * @param  \Symfony\Component\Finder\Finder  $finder
-     * @return void
      */
-    protected function removeDarkClasses(Finder $finder)
+    protected function removeDarkClasses(Finder $finder): void
     {
         foreach ($finder as $file) {
             file_put_contents($file->getPathname(), preg_replace('/\sdark:[^\s"\']+/', '', $file->getContents()));

@@ -257,4 +257,16 @@ class DiscordController extends Controller
 
         return $user;
     }
+
+    /**
+     * Handles the deletion of the user.
+     */
+    public function destroy()
+    {
+        $user = Auth::user();
+
+        $user->delete();
+
+        return redirect('/')->with('success', config('larascord.success_messages.user_deleted', 'Your account has been deleted.'));
+    }
 }
