@@ -54,5 +54,6 @@ class User extends Authenticatable
         'locale' => 'string',
         'mfa_enabled' => 'boolean',
         'refresh_token' => 'encrypted',
+        'roles' =>'array',
     ];
 }
