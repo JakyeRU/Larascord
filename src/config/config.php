@@ -26,10 +26,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Access Token
+    |--------------------------------------------------------------------------
+    |
+    | This is the access token of your Discord application.
+    |
+    */
+
+    'access_token' => env('LARASCORD_ACCESS_TOKEN', null),
+
+    /*
+    |--------------------------------------------------------------------------
     | Grant Type
     |--------------------------------------------------------------------------
     |
-    | This is the grant type of your Discord application. It must be set to "authorization_code".
+    | This is the grant type of your Discord application. It must be set to
+    | "authorization_code".
     |
     */
 
@@ -40,7 +52,8 @@ return [
     | Redirect URI
     |--------------------------------------------------------------------------
     |
-    | This is the URI that Discord will redirect to after the user authorizes your application.
+    | This is the URI that Discord will redirect to after the user authorizes
+    | your application.
     |
     */
 
@@ -62,8 +75,9 @@ return [
     | Route Prefix
     |--------------------------------------------------------------------------
     |
-    | This is the prefix that Larascord will use for its routes.
-    | For example, the prefix "larascord" will result in the route "https://domain.com/larascord/login".
+    | This is the prefix that Larascord will use for its routes. For example,
+    | the prefix "larascord" will result in the route
+    | "https://domain.com/larascord/login".
     |
     */
 
@@ -75,9 +89,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | The prompt controls how the authorization flow handles existing authorizations.
-    | If a user has previously authorized your application with the requested scopes and prompt is set to consent,
-    | it will request them to re-approve their authorization.
-    | If set to none, it will skip the authorization screen and redirect them back to your redirect URI without requesting their authorization.
+    | If a user has previously authorized your application with the requested scopes
+    | and prompt is set to consent,it will request them to re-approve their
+    | authorization. If set to none, it will skip the authorization screen
+    | and redirect them back to your redirect URI without requesting
+    | their authorization.
     |
     */
 
@@ -88,18 +104,44 @@ return [
     | Guild-Only Login
     |--------------------------------------------------------------------------
     |
-    | This setting allows users to use the application only if they are a member of specific guilds.
+    | This setting allows users to use the application only if they are a member
+    | of specific guilds.
     |
     */
+
     'guild_only' => false,
     'guilds' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Guild-Only Roles
+    |--------------------------------------------------------------------------
+    |
+    | This setting allows users to use the application only if they have
+    | specific roles in specific guilds.
+    |
+    */
+
+    // WARNING: This feature makes one request to the Discord API for each guild you specify. (Because you need to fetch the roles for each guild)
+    // At the moment the database is not checked for roles when the user logs in. It will always fetch the roles from the Discord API.
+    // Currently, the roles are only updated in the database when the user logs in. The roles from the database can be used in a middleware.
+    // I'm working on a better way to do this, but for now, this should work.
+
+    'guild_roles_enabled' => false,
+    'guild_roles' => [
+        // 'guild_id' => [
+        //     'role_id',
+        //     'role_id',
+        // ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
     | Error Messages
     |--------------------------------------------------------------------------
     |
-    | These are the error messages that will be display to the user if there is an error.
+    | These are the error messages that will be displayed to the user if there
+    | is an error.
     |
     */
 
@@ -113,6 +155,9 @@ return [
         'missing_guilds_scope' => 'The "guilds" scope is required.',
         'authorization_failed_guilds' => 'Couldn\'t get the servers you\'re in.',
         'not_member_guild_only' => 'You are not allowed to login.',
+        'missing_access_token' => 'The access token is missing.',
+        'authorization_failed_roles' => 'Couldn\'t get the roles you have.',
+        'missing_role' => 'You are not allowed to login.',
     ],
 
     /*
@@ -120,7 +165,8 @@ return [
     | Success Messages
     |--------------------------------------------------------------------------
     |
-    | These are the success messages that will be display to the user if there is no error.
+    | These are the success messages that will be displayed to the user if there
+    | is no error.
     |
     */
 

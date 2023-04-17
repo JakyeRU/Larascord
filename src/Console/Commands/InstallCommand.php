@@ -47,6 +47,13 @@ class InstallCommand extends Command
     private ?string $prefix;
 
     /*
+     * The Discord bot's access token.
+     *
+     * @var string|null
+     */
+    private ?string $accessToken;
+
+    /*
      * Whether dark mode should be enabled.
      *
      * @var bool|null
@@ -62,7 +69,14 @@ class InstallCommand extends Command
         $this->clientId = $this->ask('What is your Discord application\'s client id?');
         $this->clientSecret = $this->ask('What is your Discord application\'s client secret?');
         $this->prefix = $this->ask('What route prefix should Larascord use?', 'larascord');
-        $this->darkMode = $this->confirm('Do you want to use the dark mode theme?', true);
+        $this->darkMode = $this->confirm('Do you want to install laravel/breeze with dark mode?', true);
+
+        if ($this->confirm('Do you want to provide an access token for your Discord bot now? (It is required to use the roles feature.)', false)) {
+            $this->accessToken = $this->ask('What is your access token?');
+        } else {
+            $this->accessToken = null;
+            $this->warn('You can provide an access token later by setting the LARASCORD_DISCORD_TOKEN variable in your .env file.');
+        }
 
         // Validating the user's input
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
@@ -150,6 +164,31 @@ class InstallCommand extends Command
         ], $rules);
 
         $validator->validate();
+
+        if ($this->accessToken) {
+            $client = new \GuzzleHttp\Client();
+
+            try {
+                $response = $client->get('https://discord.com/api/users/@me', [
+                    'headers' => [
+                        'authorization' => 'Bot ' . $this->accessToken
+                    ],
+                ]);
+
+                $tokenData = json_decode($response->getBody()->getContents(), true);
+
+                if (!$this->confirm('The provided access token belongs to the bot "' . $tokenData['username'] . '#' . $tokenData['discriminator'] . '" (ID: ' . $tokenData['id'] .'). Is this correct?', true)) {
+                    $this->error('Installation aborted.');
+                    exit(1);
+                }
+            } catch (\Exception $e) {
+                if ($e->getCode() === 401) {
+                    throw new \Exception('The provided access token is invalid.');
+                } else {
+                    throw new \Exception('The provided access token is invalid or the Discord API is currently unavailable.');
+                }
+            }
+        }
     }
 
     /**
@@ -174,6 +213,9 @@ class InstallCommand extends Command
 
         (new Filesystem())->append('.env',PHP_EOL);
         (new Filesystem())->append('.env','LARASCORD_SCOPE=identify&email');
+
+        (new Filesystem())->append('.env',PHP_EOL);
+        (new Filesystem())->append('.env','LARASCORD_ACCESS_TOKEN='.$this->accessToken);
     }
 
     /**

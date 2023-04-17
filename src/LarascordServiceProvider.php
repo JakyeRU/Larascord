@@ -55,6 +55,10 @@ class LarascordServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/config.php' => config_path('larascord.php'),
         ], 'config');
+
+        $this->publishes([
+            __DIR__.'/database/migrations/' => database_path('migrations'),
+        ], 'migrations');
     }
 
     /*

@@ -2,6 +2,8 @@
 
 namespace Jakyeru\Larascord\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -13,7 +15,7 @@ use App\Events\UserWasUpdated;
 class DiscordController extends Controller
 {
     protected string $tokenURL = "https://discord.com/api/oauth2/token";
-    protected string $apiURLBase = "https://discord.com/api/users/@me";
+    protected string $baseApi = "https://discord.com/api";
     protected array $tokenData = [
         "client_id" => NULL,
         "client_secret" => NULL,
@@ -47,56 +49,26 @@ class DiscordController extends Controller
     {
         // Checking if the authorization code is present in the request.
         if ($request->missing('code')) {
-            if (env('APP_DEBUG')) {
-                return response()->json([
-                    'larascord_message' => config('larascord.error_messages.missing_code', 'The authorization code is missing.'),
-                    'code' => 400
-                ]);
-            } else {
-                return redirect('/')->with('error', config('larascord.error_messages.missing_code', 'The authorization code is missing.'));
-            }
+            return $this->throwError('missing_code');
         }
 
         // Making sure the "guilds" scope was added to .env if "guild_only" is set to true.
         if (!in_array('guilds', explode('&', config('larascord.scopes'))) && config('larascord.guild_only')) {
-            if (env('APP_DEBUG')) {
-                return response()->json([
-                    'larascord_message' => config('larascord.error_messages.missing_guilds_scope', 'The "guilds" scope is required.'),
-                    'code' => 400
-                ]);
-            } else {
-                return redirect('/')->with('error', config('larascord.error_messages.missing_guilds_scope', 'The "guilds" scope is required.'));
-            }
+            return $this->throwError('missing_guilds_scope');
         }
 
         // Getting the accessToken from the Discord API.
         try {
             $accessToken = $this->getDiscordAccessToken($request->get('code'));
         } catch (\Exception $e) {
-            if (env('APP_DEBUG')) {
-                return response()->json([
-                    'larascord_message' => config('larascord.error_messages.invalid_code', 'The authorization code is invalid.'),
-                    'message' => $e->getMessage(),
-                    'code' => $e->getCode()
-                ]);
-            } else {
-                return redirect('/')->with('error', config('larascord.error_messages.invalid_code', 'The authorization code is invalid.'));
-            }
+            return $this->throwError('invalid_code', $e);
         }
 
         // Using the accessToken to get the user's Discord ID.
         try {
             $user = $this->getDiscordUser($accessToken->access_token);
         } catch (\Exception $e) {
-            if (env('APP_DEBUG')) {
-                return response()->json([
-                    'larascord_message' => config('larascord.error_messages.authorization_failed', 'The authorization failed.'),
-                    'message' => $e->getMessage(),
-                    'code' => $e->getCode()
-                ]);
-            } else {
-                return redirect('/')->with('error', config('larascord.error_messages.authorization_failed', 'The authorization failed.'));
-            }
+            return $this->throwError('authorization_failed', $e);
         }
 
         // Verifying if the user is in any of "larascord.guilds" if "larascord.guild_only" is true.
@@ -114,41 +86,25 @@ class DiscordController extends Controller
                 });
 
                 if (!$isMember) {
-                    if (env('APP_DEBUG')) {
-                        return response()->json([
-                            'larascord_message' => config('larascord.error_messages.not_member_guild_only', 'You are not allowed to login.'),
-                            'message' => NULL,
-                            'code' => NULL
-                        ]);
-                    } else {
-                        return redirect('/')->with('error', config('larascord.error_messages.not_member_guild_only', 'You are not allowed to login.'));
-                    }
+                    return $this->throwError('not_member_guild_only');
                 }
 
             } catch (\Exception $e) {
-                if (env('APP_DEBUG')) {
-                    return response()->json([
-                        'larascord_message' => config('larascord.error_messages.authorization_failed_guilds', 'Couldn\'t get the servers you\'re in.'),
-                        'message' => $e->getMessage(),
-                        'code' => $e->getCode()
-                    ]);
-                } else {
-                    return redirect('/')->with('error', config('larascord.error_messages.authorization_failed_guilds', 'Couldn\'t get the servers you\'re in.'));
-                }
+                return $this->throwError('authorization_failed_guilds', $e);
             }
         }
 
         // Making sure the user has an email if the email scope is set.
         if (in_array('email', explode('&', config('larascord.scopes')))) {
             if (empty($user->email)) {
-                return redirect('/')->with('error', config('larascord.error_messages.missing_email', 'Couldn\'t get your e-mail address. Make sure you are using the <strong>identify&email</strong> scopes.'));
+                return $this->throwError('missing_email');
             }
         }
 
         // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
         if (Auth::check() && (Auth::id() !== $user->id)) {
             Auth::logout();
-            return redirect('/')->with('error', config('larascord.error_messages.invalid_user', 'The user ID doesn\'t match the logged-in user.'));
+            return $this->throwError('invalid_user');
         }
 
         // Confirming the session in case the user was redirected from the password.confirm middleware.
@@ -160,14 +116,43 @@ class DiscordController extends Controller
         try {
             $user = $this->createOrUpdateUser($user, $accessToken->refresh_token);
         } catch (\Exception $e) {
-            if (env('APP_DEBUG')) {
-                return response()->json([
-                    'larascord_message' => config('larascord.error_messages.database_error', 'There was an error while trying to create or update the user.'),
-                    'message' => $e->getMessage(),
-                    'code' => $e->getCode()
-                ]);
-            } else {
-                return redirect('/')->with('error', config('larascord.error_messages.database_error', 'There was an error while trying to create or update the user.'));
+            return $this->throwError('database_error', $e);
+        }
+
+        // Verifying if the user has the required roles if "larascord.roles" is set.
+        if (config('larascord.guild_roles_enabled')) {
+            // Verifying if an access token is set.
+            if (!config('larascord.access_token')) {
+                return $this->throwError('missing_access_token');
+            }
+
+            // Verifying if the user has the required roles.
+            try {
+                foreach (config('larascord.guild_roles') as $guild => $roles) {
+                    $guildMember = $this->getGuildMemberInfo($guild, $user->id, config('larascord.access_token'));
+
+                    // Updating the user's roles in the database.
+                    $updatedRoles = $user->roles;
+                    $updatedRoles[$guild] = $guildMember->roles;
+                    $user->roles = $updatedRoles;
+                    $user->save();
+
+                    $hasRole = call_user_func(function () use ($guildMember, $roles) {
+                        foreach ($guildMember->roles as $role) {
+                            if (in_array($role, $roles)) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    });
+
+                    if (!$hasRole) {
+                        return $this->throwError('missing_role');
+                    }
+                }
+            } catch (\Exception $e) {
+                return $this->throwError('authorization_failed_roles', $e);
             }
         }
 
@@ -207,7 +192,7 @@ class DiscordController extends Controller
      */
     private function getDiscordUser(string $accessToken): object
     {
-        $response = Http::withToken($accessToken)->get($this->apiURLBase);
+        $response = Http::withToken($accessToken)->get($this->baseApi . '/users/@me');
 
         $response->throw();
 
@@ -216,7 +201,24 @@ class DiscordController extends Controller
 
     private function getUserGuilds($accessToken)
     {
-        $response = Http::withToken($accessToken)->get($this->apiURLBase . '/guilds');
+        $response = Http::withToken($accessToken)->get($this->baseApi . '/users/@me/guilds');
+
+        $response->throw();
+
+        return json_decode($response->body());
+    }
+
+    /**
+     * Handles the retrieval of the user's roles in a guild.
+     *
+     * @param string $guildId
+     * @param string $accessToken
+     * @return mixed
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    private function getGuildMemberInfo(string $guildId, string $userId, string $accessToken)
+    {
+        $response = Http::withToken($accessToken, 'Bot')->get($this->baseApi . '/guilds/' . $guildId . '/members/' . $userId);
 
         $response->throw();
 
@@ -256,6 +258,22 @@ class DiscordController extends Controller
         }
 
         return $user;
+    }
+
+    /**
+     * Handles the throwing of an error.
+     */
+    private function throwError(string $message, \Exception $exception = NULL): RedirectResponse | JsonResponse
+    {
+        if (app()->hasDebugModeEnabled()) {
+            return response()->json([
+                'larascord_message' => config('larascord.error_messages.' . $message),
+                'message' => $exception?->getMessage(),
+                'code' => $exception?->getCode()
+            ]);
+        } else {
+            return redirect('/')->with('error', config('larascord.error_messages.' . $message, 'An error occurred while trying to log you in.'));
+        }
     }
 
     /**
