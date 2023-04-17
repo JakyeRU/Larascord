@@ -146,18 +146,54 @@ return [
     */
 
     'error_messages' => [
-        'missing_code' => 'The authorization code is missing.',
-        'invalid_code' => 'The authorization code is invalid.',
-        'authorization_failed' => 'The authorization failed.',
-        'missing_email' => 'Couldn\'t get your e-mail address.',
-        'invalid_user' => 'The user ID doesn\'t match the logged-in user.',
-        'database_error' => 'There was an error with the database. Please try again later.',
-        'missing_guilds_scope' => 'The "guilds" scope is required.',
-        'authorization_failed_guilds' => 'Couldn\'t get the servers you\'re in.',
-        'not_member_guild_only' => 'You are not allowed to login.',
-        'missing_access_token' => 'The access token is missing.',
-        'authorization_failed_roles' => 'Couldn\'t get the roles you have.',
-        'missing_role' => 'You are not allowed to login.',
+        'missing_code' => [
+            'message' => 'The authorization code is missing.',
+            'redirect' => '/'
+        ],
+        'invalid_code' => [
+            'message' => 'The authorization code is invalid.',
+            'redirect' => '/'
+        ],
+        'authorization_failed' => [
+            'message' => 'The authorization failed.',
+            'redirect' => '/'
+        ],
+        'missing_email' => [
+            'message' => 'Couldn\'t get your e-mail address.',
+            'redirect' => '/'
+        ],
+        'invalid_user' => [
+            'message' => 'The user ID doesn\'t match the logged-in user.',
+            'redirect' => '/'
+        ],
+        'database_error' => [
+            'message' => 'There was an error with the database. Please try again later.',
+            'redirect' => '/'
+        ],
+        'missing_guilds_scope' => [
+            'message' => 'The "guilds" scope is required.',
+            'redirect' => '/'
+        ],
+        'authorization_failed_guilds' => [
+            'message' => 'Couldn\'t get the servers you\'re in.',
+            'redirect' => '/'
+        ],
+        'not_member_guild_only' => [
+            'message' => 'You are not a member of the required guilds.',
+            'redirect' => '/'
+        ],
+        'missing_access_token' => [
+            'message' => 'The access token is missing.',
+            'redirect' => '/'
+        ],
+        'authorization_failed_roles' => [
+            'message' => 'Couldn\'t get the roles you have.',
+            'redirect' => '/'
+        ],
+        'missing_role' => [
+            'message' => 'You don\'t have the required roles.',
+            'redirect' => '/'
+        ],
     ],
 
     /*
