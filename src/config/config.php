@@ -81,7 +81,7 @@ return [
     |
     */
 
-    'prefix' => env('LARASCORD_PREFIX', 'larascord'),
+    'route_prefix' => env('LARASCORD_PREFIX', 'larascord'),
 
     /*
     |--------------------------------------------------------------------------
