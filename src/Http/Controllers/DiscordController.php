@@ -148,7 +148,7 @@ class DiscordController extends Controller
         }
 
         // Verifying if the user has the required roles if "larascord.roles" is set.
-        if (config('larascord.guild_roles_enabled')) {
+        if (count(config('larascord.guild_roles'))) {
             // Verifying if an access token is set.
             if (!config('larascord.access_token')) {
                 return $this->throwError('missing_access_token');
