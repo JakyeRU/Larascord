@@ -53,7 +53,7 @@ class DiscordController extends Controller
         }
 
         // Making sure the "guilds" scope was added to .env if "guild_only" is set to true.
-        if (!in_array('guilds', explode('&', config('larascord.scopes'))) && config('larascord.guild_only')) {
+        if (!in_array('guilds', explode('&', config('larascord.scopes'))) && count(config('larascord.guilds'))) {
             return $this->throwError('missing_guilds_scope');
         }
 
@@ -71,10 +71,38 @@ class DiscordController extends Controller
             return $this->throwError('authorization_failed', $e);
         }
 
-        // Verifying if the user is in any of "larascord.guilds" if "larascord.guild_only" is true.
-        if (config('larascord.guild_only')) {
+        // Verifying if the user is in any of "larascord.guilds" if there are any guilds specified in "larascord.guilds"
+        // TODO: Needs to be refactored.
+        if (count(config('larascord.guilds'))) {
             try {
                 $guilds = $this->getUserGuilds($accessToken->access_token);
+
+                if (config('larascord.guilds_strict')) {
+                    $isMember = call_user_func(function () use ($guilds) {
+                        $requiredGuilds = config('larascord.guilds');
+
+                        foreach ($requiredGuilds as $requiredGuild) {
+                            $isMember = false;
+
+                            foreach ($guilds as $guild) {
+                                if ($guild->id === $requiredGuild) {
+                                    $isMember = true;
+                                    break;
+                                }
+                            }
+
+                            if (!$isMember) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    });
+
+                    if (!$isMember) {
+                        return $this->throwError('not_member_guild_only');
+                    }
+                }
 
                 $isMember = call_user_func(function () use ($guilds) {
                     foreach ($guilds as $guild) {

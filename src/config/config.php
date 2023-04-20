@@ -101,16 +101,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Guild-Only Login
+    | Restrict Access to Specific Guilds
     |--------------------------------------------------------------------------
     |
-    | This setting allows users to use the application only if they are a member
-    | of specific guilds.
+    | This option restricts access to the application to users who are members
+    | of specific Discord guilds. Users who are not members of the specified
+    | guilds will not be able to use the application.
     |
     */
 
-    'guild_only' => false,
     'guilds' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Restrict Access to Specific Guilds - Strict Mode
+    |--------------------------------------------------------------------------
+    |
+    | Enabling this option will require the user to be a member of ALL the
+    | aforementioned guilds. If this option is disabled, the user will
+    | only need to be a member of at least ONE of the guilds.
+    |
+    */
+
+    'guilds_strict' => false,
 
     /*
     |--------------------------------------------------------------------------
