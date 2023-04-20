@@ -25,6 +25,8 @@ class RoutesTest extends TestCase
         $app['config']->set('larascord.client_secret', env('LARASCORD_CLIENT_SECRET'));
         $app['config']->set('larascord.redirect_uri', env('APP_URL', 'http://localhost:8000') . '/' . env('LARASCORD_PREFIX', 'larascord') . '/callback',);
         $app['config']->set('larascord.scopes', env('LARASCORD_SCOPE'));
+        $app['config']->set('larascord.guilds', []);
+        $app['config']->set('larascord.guild_roles', []);
     }
 
     public function test_login_route_redirect()

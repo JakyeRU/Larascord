@@ -81,7 +81,7 @@ return [
     |
     */
 
-    'prefix' => env('LARASCORD_PREFIX', 'larascord'),
+    'route_prefix' => env('LARASCORD_PREFIX', 'larascord'),
 
     /*
     |--------------------------------------------------------------------------
@@ -101,33 +101,45 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Guild-Only Login
+    | Restrict Access to Specific Guilds
     |--------------------------------------------------------------------------
     |
-    | This setting allows users to use the application only if they are a member
-    | of specific guilds.
+    | This option restricts access to the application to users who are members
+    | of specific Discord guilds. Users who are not members of the specified
+    | guilds will not be able to use the application.
     |
     */
 
-    'guild_only' => false,
     'guilds' => [],
 
     /*
     |--------------------------------------------------------------------------
-    | Guild-Only Roles
+    | Restrict Access to Specific Guilds - Strict Mode
     |--------------------------------------------------------------------------
     |
-    | This setting allows users to use the application only if they have
-    | specific roles in specific guilds.
+    | Enabling this option will require the user to be a member of ALL the
+    | aforementioned guilds. If this option is disabled, the user will
+    | only need to be a member of at least ONE of the guilds.
+    |
+    */
+
+    'guilds_strict' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Restrict Access to Specific Roles
+    |--------------------------------------------------------------------------
+    |
+    | When this option is enabled, the user will only be able to use the
+    | application if they have at least one of the specified roles.
     |
     */
 
     // WARNING: This feature makes one request to the Discord API for each guild you specify. (Because you need to fetch the roles for each guild)
     // At the moment the database is not checked for roles when the user logs in. It will always fetch the roles from the Discord API.
     // Currently, the roles are only updated in the database when the user logs in. The roles from the database can be used in a middleware.
-    // I'm working on a better way to do this, but for now, this should work.
+    // I'm working on a better way to do this, but for now, this will work.
 
-    'guild_roles_enabled' => false,
     'guild_roles' => [
         // 'guild_id' => [
         //     'role_id',
