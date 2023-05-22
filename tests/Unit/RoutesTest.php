@@ -51,8 +51,9 @@ class RoutesTest extends TestCase
 
         $request->assertStatus(302);
 
-        $request->assertSessionHas('error', 'An error occurred while trying to log you in.');
-
+        $request->assertSessionHasErrors([
+            'code' => 'The code field is required.'
+        ]);
 
         $request = $this->get('/callback?code=0000000000000000');
 
