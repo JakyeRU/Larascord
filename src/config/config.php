@@ -221,6 +221,10 @@ return [
             'message' => 'You don\'t have the required roles.',
             'redirect' => '/'
         ],
+        'revoke_token_failed' => [
+            'message' => 'An error occurred while trying to revoke your access token.',
+            'redirect' => '/'
+        ],
     ],
 
     /*
