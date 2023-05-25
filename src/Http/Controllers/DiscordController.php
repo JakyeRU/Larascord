@@ -4,7 +4,6 @@ namespace Jakyeru\Larascord\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Jakyeru\Larascord\Http\Requests\StoreUserRequest;
 use Jakyeru\Larascord\Services\UserService;
