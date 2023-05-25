@@ -134,6 +134,10 @@ class DiscordController extends Controller
     {
         auth()->user()->delete();
 
-        return redirect('/')->with('success', config('larascord.success_messages.user_deleted', 'Your account has been deleted.'));
+        if (config('larascord.success_messages.user_deleted.redirect')) {
+            return redirect(config('larascord.success_messages.user_deleted.redirect'))->with('success', config('larascord.success_messages.user_deleted.message', 'Your account has been deleted.'));
+        } else {
+            return redirect('/')->with('success', config('larascord.success_messages.user_deleted', 'Your account has been deleted.'));
+        }
     }
 }
