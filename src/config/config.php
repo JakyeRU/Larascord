@@ -186,6 +186,10 @@ return [
             'message' => 'The "guilds" scope is required.',
             'redirect' => '/'
         ],
+        'missing_guilds_members_read_scope' => [
+            'message' => 'The "guilds" and "guilds.members.read" scopes are required.',
+            'redirect' => '/'
+        ],
         'authorization_failed_guilds' => [
             'message' => 'Couldn\'t get the servers you\'re in.',
             'redirect' => '/'
