@@ -130,10 +130,19 @@ class DiscordController extends Controller
     /**
      * Handles the deletion of the user.
      */
-    public function destroy(): RedirectResponse
+    public function destroy(): RedirectResponse | JsonResponse
     {
+        // Revoking the OAuth2 access token.
+        try {
+            (new UserService())->revokeAccessToken(auth()->user()->refresh_token);
+        } catch (\Exception $e) {
+            return $this->throwError('revoke_token_failed', $e);
+        }
+
+        // Deleting the user from the database.
         auth()->user()->delete();
 
+        // Showing the success message.
         if (config('larascord.success_messages.user_deleted.redirect')) {
             return redirect(config('larascord.success_messages.user_deleted.redirect'))->with('success', config('larascord.success_messages.user_deleted.message', 'Your account has been deleted.'));
         } else {
