@@ -223,7 +223,10 @@ return [
     */
 
     'success_messages' => [
-        'user_deleted' => 'Your account has been deleted.',
+        'user_deleted' => [
+            'message' => 'Your account has been deleted.',
+            'redirect' => '/'
+        ],
     ],
 
 ];
