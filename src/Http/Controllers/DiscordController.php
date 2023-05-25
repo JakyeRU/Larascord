@@ -100,7 +100,7 @@ class DiscordController extends Controller
 
         // Authenticating the user if the user is not logged in.
         if (!auth()->check()) {
-            auth()->login($user);
+            auth()->login($user, config('larascord.remember_me', false));
         }
 
         // Redirecting the user to the intended page or to the home page.
