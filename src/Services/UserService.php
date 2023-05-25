@@ -151,4 +151,22 @@ class UserService
         // Verify if the user has any of the specified roles.
         return !empty(array_intersect($roles, $guildMember->roles));
     }
+
+    /**
+     * Revoke the user's access token.
+     *
+     * @throws RequestException
+     */
+    public function revokeAccessToken(string $accessToken): object
+    {
+        $response = Http::asForm()->post($this->tokenURL . '/revoke', [
+            'token' => $accessToken,
+            'client_id' => config('larascord.client_id'),
+            'client_secret' => config('larascord.client_secret'),
+        ]);
+
+        $response->throw();
+
+        return json_decode($response->body());
+    }
 }
