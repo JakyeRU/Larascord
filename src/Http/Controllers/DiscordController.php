@@ -41,51 +41,13 @@ class DiscordController extends Controller
         }
 
         // Verifying if the user is in any of "larascord.guilds" if there are any guilds specified in "larascord.guilds"
-        // TODO: Needs to be refactored.
         if (count(config('larascord.guilds'))) {
             try {
                 $guilds = $userService->getDiscordUserGuilds($accessToken->access_token);
 
-                if (config('larascord.guilds_strict')) {
-                    $isMember = call_user_func(function () use ($guilds) {
-                        $requiredGuilds = config('larascord.guilds');
-
-                        foreach ($requiredGuilds as $requiredGuild) {
-                            $isMember = false;
-
-                            foreach ($guilds as $guild) {
-                                if ($guild->id === $requiredGuild) {
-                                    $isMember = true;
-                                    break;
-                                }
-                            }
-
-                            if (!$isMember) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    });
-
-                    if (!$isMember) {
-                        return $this->throwError('not_member_guild_only');
-                    }
-                }
-
-                $isMember = call_user_func(function () use ($guilds) {
-                    foreach ($guilds as $guild) {
-                        if (in_array($guild->id, config('larascord.guilds'))) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-
-                if (!$isMember) {
+                if (!$userService->isUserInGuilds($guilds)) {
                     return $this->throwError('not_member_guild_only');
                 }
-
             } catch (\Exception $e) {
                 return $this->throwError('authorization_failed_guilds', $e);
             }

@@ -131,4 +131,18 @@ class UserService
 
         return $user;
     }
+
+    /**
+     * Verify if the user is in the specified guild(s).
+     */
+    public function isUserInGuilds(array $guilds): bool
+    {
+        // Verify if the user is in all the specified guilds if strict mode is enabled.
+        if (config('larascord.guilds_strict')) {
+            return empty(array_diff(config('larascord.guilds'), array_column($guilds, 'id')));
+        }
+
+        // Verify if the user is in any of the specified guilds if strict mode is disabled.
+        return !empty(array_intersect(config('larascord.guilds'), array_column($guilds, 'id')));
+    }
 }
