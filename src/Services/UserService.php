@@ -2,8 +2,6 @@
 
 namespace Jakyeru\Larascord\Services;
 
-use App\Events\UserWasCreated;
-use App\Events\UserWasUpdated;
 use App\Models\User;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -19,7 +17,6 @@ class UserService
      * The Discord API base URL.
      */
     protected string $baseApi = "https://discord.com/api";
-
     /**
      * The required data for the token request.
      */
@@ -122,12 +119,6 @@ class UserService
                 'refresh_token' => $refresh_token
             ]
         );
-
-        if ($user->wasRecentlyCreated) {
-            event(new UserWasCreated($user));
-        } else {
-            event(new UserWasUpdated($user));
-        }
 
         return $user;
     }
