@@ -7,6 +7,7 @@ use App\Events\UserWasUpdated;
 use App\Models\User;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -93,9 +94,9 @@ class UserService
      *
      * @throws RequestException
      */
-    public function getDiscordGuildMember(string $accessToken, string $guildId, string $userId): object
+    public function getDiscordGuildMember(string $accessToken, string $guildId): object
     {
-        $response = Http::withToken($accessToken, 'Bot')->get($this->baseApi . '/guilds/' . $guildId . '/members/' . $userId);
+        $response = Http::withToken($accessToken, 'Bearer')->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
 
         $response->throw();
 
