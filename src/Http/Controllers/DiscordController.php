@@ -60,14 +60,14 @@ class DiscordController extends Controller
             }
         }
 
-        // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
-        if (Auth::check() && (Auth::id() !== $user->id)) {
-            Auth::logout();
-            return $this->throwError('invalid_user');
-        }
+        if (auth()->check()) {
+            // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
+            if (auth()->id() !== $user->id) {
+                auth()->logout();
+                return $this->throwError('invalid_user');
+            }
 
-        // Confirming the session in case the user was redirected from the password.confirm middleware.
-        if (Auth::check()) {
+            // Confirming the session in case the user was redirected from the password.confirm middleware.
             $request->session()->put('auth.password_confirmed_at', time());
         }
 
@@ -116,8 +116,8 @@ class DiscordController extends Controller
         }
 
         // Authenticating the user if the user is not logged in.
-        if (!Auth::check()) {
-            Auth::login($user);
+        if (!auth()->check()) {
+            auth()->login($user);
         }
 
         // Redirecting the user to the intended page or to the home page.
