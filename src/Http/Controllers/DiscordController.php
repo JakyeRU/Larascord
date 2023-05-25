@@ -61,7 +61,7 @@ class DiscordController extends Controller
 
         if (auth()->check()) {
             // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
-            if (auth()->id() !== $user->id) {
+            if (auth()->id() !== (int)$user->id) {
                 auth()->logout();
                 return $this->throwError('invalid_user');
             }
