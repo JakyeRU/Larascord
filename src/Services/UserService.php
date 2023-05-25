@@ -159,7 +159,7 @@ class UserService
      */
     public function revokeAccessToken(string $accessToken): object
     {
-        $response = Http::asForm()->post($this->baseApi . '/oauth2/token/revoke', [
+        $response = Http::asForm()->post($this->tokenURL . '/revoke', [
             'token' => $accessToken,
             'client_id' => config('larascord.client_id'),
             'client_secret' => config('larascord.client_secret'),
