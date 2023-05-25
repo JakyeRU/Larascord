@@ -146,4 +146,19 @@ class UserService
         // Verify if the user is in any of the specified guilds if strict mode is disabled.
         return !empty(array_intersect(config('larascord.guilds'), array_column($guilds, 'id')));
     }
+
+    /**
+     * Verify if the user has the specified role(s) in the specified guild.
+     */
+    public function hasRoleInGuild(User $user, object $guildMember, int $guildId, array $roles): bool
+    {
+        // Updating the user's roles in the database.
+        $updatedRoles = $user->roles;
+        $updatedRoles[$guildId] = $guildMember->roles;
+        $user->roles = $updatedRoles;
+        $user->save();
+
+        // Verify if the user has any of the specified roles.
+        return !empty(array_intersect($roles, $guildMember->roles));
+    }
 }

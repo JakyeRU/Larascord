@@ -81,32 +81,16 @@ class DiscordController extends Controller
         // Verifying if the user has the required roles if "larascord.roles" is set.
         if (count(config('larascord.guild_roles'))) {
             // Verifying if an access token is set.
-            if (!config('larascord.access_token')) {
-                return $this->throwError('missing_access_token');
+            if (!in_array('guilds', explode('&', config('larascord.scopes'))) || !in_array('guilds.members.read', explode('&', config('larascord.scopes')))) {
+                return $this->throwError('missing_guilds_members_read_scope');
             }
 
             // Verifying if the user has the required roles.
             try {
                 foreach (config('larascord.guild_roles') as $guild => $roles) {
-                    $guildMember = $this->getGuildMemberInfo($guild, $user->id, config('larascord.access_token'));
+                    $guildMember = $userService->getDiscordGuildMember($accessToken->access_token, $guild);
 
-                    // Updating the user's roles in the database.
-                    $updatedRoles = $user->roles;
-                    $updatedRoles[$guild] = $guildMember->roles;
-                    $user->roles = $updatedRoles;
-                    $user->save();
-
-                    $hasRole = call_user_func(function () use ($guildMember, $roles) {
-                        foreach ($guildMember->roles as $role) {
-                            if (in_array($role, $roles)) {
-                                return true;
-                            }
-                        }
-
-                        return false;
-                    });
-
-                    if (!$hasRole) {
+                    if (!$userService->hasRoleInGuild($user, $guildMember, $guild, $roles)) {
                         return $this->throwError('missing_role');
                     }
                 }
