@@ -25,6 +25,7 @@ class RoutesTest extends TestCase
         $app['config']->set('larascord.client_secret', env('LARASCORD_CLIENT_SECRET'));
         $app['config']->set('larascord.redirect_uri', env('APP_URL', 'http://localhost:8000') . '/' . env('LARASCORD_PREFIX', 'larascord') . '/callback',);
         $app['config']->set('larascord.scopes', env('LARASCORD_SCOPE'));
+        $app['config']->set('larascord.route_prefix', 'larascord');
         $app['config']->set('larascord.guilds', []);
         $app['config']->set('larascord.guild_roles', []);
     }
@@ -38,7 +39,7 @@ class RoutesTest extends TestCase
         $request->assertHeader('Location', 'https://discord.com/oauth2/authorize?client_id=0000000000000000&redirect_uri=http://localhost:8000/larascord/callback&response_type=code&scope=identify%20email&prompt=none');
 
 
-        $request = $this->get('/refresh-token');
+        $request = $this->get(config('larascord.route_prefix') . '/refresh-token');
 
         $request->assertStatus(302);
 
@@ -47,7 +48,7 @@ class RoutesTest extends TestCase
 
     public function test_callback_route()
     {
-        $request = $this->get('/callback');
+        $request = $this->get(config('larascord.route_prefix') . '/callback');
 
         $request->assertStatus(302);
 
@@ -55,7 +56,7 @@ class RoutesTest extends TestCase
             'code' => 'The code field is required.'
         ]);
 
-        $request = $this->get('/callback?code=0000000000000000');
+        $request = $this->get(config('larascord.route_prefix') . '/callback?code=0000000000000000');
 
         $request->assertStatus(302);
 
