@@ -7,7 +7,6 @@ use App\Events\UserWasUpdated;
 use App\Models\User;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class UserService
 {
