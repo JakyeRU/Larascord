@@ -43,7 +43,7 @@ class DiscordController extends Controller
         // Verifying if the user is in any of "larascord.guilds" if there are any guilds specified in "larascord.guilds"
         if (count(config('larascord.guilds'))) {
             try {
-                $guilds = $discordService->getDiscordUserGuilds($accessToken->access_token);
+                $guilds = $discordService->getCurrentUserGuilds($accessToken->access_token);
 
                 if (!$discordService->isUserInGuilds($guilds)) {
                     return $this->throwError('not_member_guild_only');

@@ -77,7 +77,7 @@ class DiscordService
      *
      * @throws RequestException
      */
-    public function getDiscordUserGuilds(string $accessToken): array
+    public function getCurrentUserGuilds(string $accessToken): array
     {
         $response = Http::withToken($accessToken)->get($this->baseApi . '/users/@me/guilds');
 
