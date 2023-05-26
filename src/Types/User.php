@@ -70,6 +70,11 @@ class User
     public ?int $public_flags;
 
     /**
+     * The user's access token.
+     */
+    public ?AccessToken $access_token;
+
+    /**
      * User constructor.
      */
     public function __construct(object $data)
@@ -86,5 +91,6 @@ class User
         $this->locale = $data->locale;
         $this->mfa_enabled = $data->mfa_enabled;
         $this->premium_type = $data->premium_type ?? NULL;
-        $this->public_flags = $data->public_flags ?? NULL;    }
+        $this->public_flags = $data->public_flags ?? NULL;
+    }
 }
