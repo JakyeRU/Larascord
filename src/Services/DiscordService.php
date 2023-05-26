@@ -5,6 +5,7 @@ namespace Jakyeru\Larascord\Services;
 use App\Models\User;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Jakyeru\Larascord\Types\AccessToken;
 
 class DiscordService
 {
@@ -46,7 +47,7 @@ class DiscordService
      *
      * @throws RequestException
      */
-    public function getAccessTokenFromCode(string $code): object
+    public function getAccessTokenFromCode(string $code): AccessToken
     {
         $this->tokenData['code'] = $code;
 
@@ -54,7 +55,7 @@ class DiscordService
 
         $response->throw();
 
-        return json_decode($response->body());
+        return new AccessToken(json_decode($response->body()));
     }
 
     /**

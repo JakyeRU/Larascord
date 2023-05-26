@@ -27,7 +27,7 @@ class DiscordController extends Controller
 
         // Getting the accessToken from the Discord API.
         try {
-            $accessToken = $discordService->getAccessTokenFromCode($request->get('code'));
+            $accessToken = (new DiscordService())->getAccessTokenFromCode($request->get('code'));
         } catch (\Exception $e) {
             return $this->throwError('invalid_code', $e);
         }
