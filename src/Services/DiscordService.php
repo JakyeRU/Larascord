@@ -3,10 +3,13 @@
 namespace Jakyeru\Larascord\Services;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Jakyeru\Larascord\Types\AccessToken;
+use Jakyeru\Larascord\Types\GuildMember;
 
-class UserService
+class DiscordService
 {
     /**
      * The Discord OAuth2 token URL.
@@ -46,7 +49,7 @@ class UserService
      *
      * @throws RequestException
      */
-    public function getDiscordAccessToken(string $code): object
+    public function getAccessTokenFromCode(string $code): AccessToken
     {
         $this->tokenData['code'] = $code;
 
@@ -54,7 +57,7 @@ class UserService
 
         $response->throw();
 
-        return json_decode($response->body());
+        return new AccessToken(json_decode($response->body()));
     }
 
     /**
@@ -62,13 +65,13 @@ class UserService
      *
      * @throws RequestException
      */
-    public function getDiscordUser(string $accessToken): object
+    public function getCurrentUser(AccessToken $accessToken): \Jakyeru\Larascord\Types\User
     {
-        $response = Http::withToken($accessToken)->get($this->baseApi . '/users/@me');
+        $response = Http::withToken($accessToken->access_token)->get($this->baseApi . '/users/@me');
 
         $response->throw();
 
-        return json_decode($response->body());
+        return new \Jakyeru\Larascord\Types\User(json_decode($response->body()));
     }
 
     /**
@@ -76,9 +79,9 @@ class UserService
      *
      * @throws RequestException
      */
-    public function getDiscordUserGuilds(string $accessToken): array
+    public function getCurrentUserGuilds(AccessToken $accessToken): array
     {
-        $response = Http::withToken($accessToken)->get($this->baseApi . '/users/@me/guilds');
+        $response = Http::withToken($accessToken->access_token)->get($this->baseApi . '/users/@me/guilds');
 
         $response->throw();
 
@@ -90,37 +93,32 @@ class UserService
      *
      * @throws RequestException
      */
-    public function getDiscordGuildMember(string $accessToken, string $guildId): object
+    public function getGuildMember(AccessToken $accessToken, string $guildId): GuildMember
     {
-        $response = Http::withToken($accessToken, 'Bearer')->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
+        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
 
         $response->throw();
 
-        return json_decode($response->body());
+        return new GuildMember(json_decode($response->body()));
     }
 
     /**
      * Create or update a user in the database.
+     *
+     * @throws Exception
      */
-    public function createOrUpdateUser(object $user, string $refresh_token): User
+    public function createOrUpdateUser(\Jakyeru\Larascord\Types\User $user): User
     {
-        $user = User::updateOrCreate(
+        if (!$user->getAccessToken()) {
+            throw new Exception('User access token is missing.');
+        }
+
+        return User::updateOrCreate(
             [
                 'id' => $user->id,
             ],
-            [
-                'username' => $user->username,
-                'discriminator' => $user->discriminator,
-                'email' => $user->email ?? NULL,
-                'avatar' => $user->avatar ?: NULL,
-                'verified' => $user->verified ?? FALSE,
-                'locale' => $user->locale,
-                'mfa_enabled' => $user->mfa_enabled,
-                'refresh_token' => $refresh_token
-            ]
+            $user->toArray(),
         );
-
-        return $user;
     }
 
     /**
@@ -140,7 +138,7 @@ class UserService
     /**
      * Verify if the user has the specified role(s) in the specified guild.
      */
-    public function hasRoleInGuild(User $user, object $guildMember, int $guildId, array $roles): bool
+    public function hasRoleInGuild(User $user, GuildMember $guildMember, int $guildId, array $roles): bool
     {
         // Updating the user's roles in the database.
         $updatedRoles = $user->roles;
