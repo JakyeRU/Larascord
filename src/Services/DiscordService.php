@@ -3,6 +3,7 @@
 namespace Jakyeru\Larascord\Services;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Jakyeru\Larascord\Types\AccessToken;
@@ -102,26 +103,21 @@ class DiscordService
 
     /**
      * Create or update a user in the database.
+     *
+     * @throws Exception
      */
-    public function createOrUpdateUser(object $user, string $refresh_token): User
+    public function createOrUpdateUser(\Jakyeru\Larascord\Types\User $user): User
     {
-        $user = User::updateOrCreate(
+        if (!$user->getAccessToken()) {
+            throw new Exception('User access token is missing.');
+        }
+
+        return User::updateOrCreate(
             [
                 'id' => $user->id,
             ],
-            [
-                'username' => $user->username,
-                'discriminator' => $user->discriminator,
-                'email' => $user->email ?? NULL,
-                'avatar' => $user->avatar ?: NULL,
-                'verified' => $user->verified ?? FALSE,
-                'locale' => $user->locale,
-                'mfa_enabled' => $user->mfa_enabled,
-                'refresh_token' => $refresh_token
-            ]
+            $user->toArray(),
         );
-
-        return $user;
     }
 
     /**
