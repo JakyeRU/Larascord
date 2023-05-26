@@ -97,6 +97,14 @@ class User
     }
 
     /**
+     * Get the user's access token.
+     */
+    public function getAccessToken(): ?AccessToken
+    {
+        return $this->access_token;
+    }
+
+    /**
      * Set the user's access token.
      */
     public function setAccessToken(AccessToken $accessToken): self
