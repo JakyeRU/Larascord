@@ -95,4 +95,14 @@ class User
 
         return $this;
     }
+
+    /**
+     * Set the user's access token.
+     */
+    public function setAccessToken(AccessToken $accessToken): self
+    {
+        $this->access_token = $accessToken;
+
+        return $this;
+    }
 }
