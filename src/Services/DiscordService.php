@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
-class UserService
+class DiscordService
 {
     /**
      * The Discord OAuth2 token URL.

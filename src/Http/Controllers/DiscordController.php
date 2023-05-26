@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
 use Jakyeru\Larascord\Http\Requests\StoreUserRequest;
-use Jakyeru\Larascord\Services\UserService;
+use Jakyeru\Larascord\Services\DiscordService;
 
 class DiscordController extends Controller
 {
@@ -23,18 +23,18 @@ class DiscordController extends Controller
         }
 
         // Creating a new instance of the UserService.
-        $userService = new UserService();
+        $discordService = new DiscordService();
 
         // Getting the accessToken from the Discord API.
         try {
-            $accessToken = $userService->getDiscordAccessToken($request->get('code'));
+            $accessToken = $discordService->getDiscordAccessToken($request->get('code'));
         } catch (\Exception $e) {
             return $this->throwError('invalid_code', $e);
         }
 
         // Get the user from the Discord API.
         try {
-            $user = $userService->getDiscordUser($accessToken->access_token);
+            $user = $discordService->getDiscordUser($accessToken->access_token);
         } catch (\Exception $e) {
             return $this->throwError('authorization_failed', $e);
         }
@@ -42,9 +42,9 @@ class DiscordController extends Controller
         // Verifying if the user is in any of "larascord.guilds" if there are any guilds specified in "larascord.guilds"
         if (count(config('larascord.guilds'))) {
             try {
-                $guilds = $userService->getDiscordUserGuilds($accessToken->access_token);
+                $guilds = $discordService->getDiscordUserGuilds($accessToken->access_token);
 
-                if (!$userService->isUserInGuilds($guilds)) {
+                if (!$discordService->isUserInGuilds($guilds)) {
                     return $this->throwError('not_member_guild_only');
                 }
             } catch (\Exception $e) {
@@ -72,7 +72,7 @@ class DiscordController extends Controller
 
         // Trying to create or update the user in the database.
         try {
-            $user = $userService->createOrUpdateUser($user, $accessToken->access_token);
+            $user = $discordService->createOrUpdateUser($user, $accessToken->access_token);
         } catch (\Exception $e) {
             return $this->throwError('database_error', $e);
         }
@@ -87,9 +87,9 @@ class DiscordController extends Controller
             // Verifying if the user has the required roles.
             try {
                 foreach (config('larascord.guild_roles') as $guild => $roles) {
-                    $guildMember = $userService->getDiscordGuildMember($accessToken->access_token, $guild);
+                    $guildMember = $discordService->getDiscordGuildMember($accessToken->access_token, $guild);
 
-                    if (!$userService->hasRoleInGuild($user, $guildMember, $guild, $roles)) {
+                    if (!$discordService->hasRoleInGuild($user, $guildMember, $guild, $roles)) {
                         return $this->throwError('missing_role');
                     }
                 }
@@ -134,7 +134,7 @@ class DiscordController extends Controller
     {
         // Revoking the OAuth2 access token.
         try {
-            (new UserService())->revokeAccessToken(auth()->user()->refresh_token);
+            (new DiscordService())->revokeAccessToken(auth()->user()->refresh_token);
         } catch (\Exception $e) {
             return $this->throwError('revoke_token_failed', $e);
         }
