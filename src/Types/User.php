@@ -97,6 +97,118 @@ class User
     }
 
     /**
+     * Get the user's id.
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the user's username.
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * Get the user's discriminator.
+     */
+    public function getDiscriminator(): string
+    {
+        return $this->discriminator;
+    }
+
+    /**
+     * Get the user's tag.
+     */
+    public function getTag(): string
+    {
+        return $this->username . '#' . $this->discriminator;
+    }
+
+    /**
+     * Get the user's avatar hash.
+     */
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * Get the user's email.
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * Get the user's email verification status.
+     */
+    public function getVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    /**
+     * Get the user's banner hash.
+     */
+    public function getBanner(): ?string
+    {
+        return $this->banner;
+    }
+
+    /**
+     * Get the user's banner color.
+     */
+    public function getBannerColor(): ?string
+    {
+        return $this->banner_color;
+    }
+
+    /**
+     * Get the user's accent color.
+     */
+    public function getAccentColor(): ?string
+    {
+        return $this->accent_color;
+    }
+
+    /**
+     * Get the user's locale.
+     */
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Get the user's multifactor authentication status.
+     */
+    public function getMfaEnabled(): bool
+    {
+        return $this->mfa_enabled;
+    }
+
+    /**
+     * Get the user's premium type.
+     */
+    public function getPremiumType(): ?int
+    {
+        return $this->premium_type;
+    }
+
+    /**
+     * Get the user's public flags.
+     */
+    public function getPublicFlags(): ?int
+    {
+        return $this->public_flags;
+    }
+
+    /**
      * Get the user's access token.
      */
     public function getAccessToken(): ?AccessToken
