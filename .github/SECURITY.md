@@ -8,4 +8,4 @@ Only the latest major version receives security fixes.
 
 ## Reporting a Vulnerability
 
-Report security vulnerabilities to **[jakyeru@gmail.com](mailto:jakyeru@gmail.com)**.
+Report security vulnerabilities to **[jakyeru@gmail.com](mailto:jakyeru@gmail.com)** or using [**this formular**](https://github.com/JakyeRU/Larascord/security/advisories/new).
