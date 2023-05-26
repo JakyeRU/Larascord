@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Jakyeru\Larascord\Types\AccessToken;
+use Jakyeru\Larascord\Types\GuildMember;
 
 class DiscordService
 {
@@ -92,13 +93,13 @@ class DiscordService
      *
      * @throws RequestException
      */
-    public function getGuildMember(AccessToken $accessToken, string $guildId): object
+    public function getGuildMember(AccessToken $accessToken, string $guildId): GuildMember
     {
         $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
 
         $response->throw();
 
-        return json_decode($response->body());
+        return new GuildMember(json_decode($response->body()));
     }
 
     /**
@@ -137,7 +138,7 @@ class DiscordService
     /**
      * Verify if the user has the specified role(s) in the specified guild.
      */
-    public function hasRoleInGuild(User $user, object $guildMember, int $guildId, array $roles): bool
+    public function hasRoleInGuild(User $user, GuildMember $guildMember, int $guildId, array $roles): bool
     {
         // Updating the user's roles in the database.
         $updatedRoles = $user->roles;
