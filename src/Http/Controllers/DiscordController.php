@@ -42,7 +42,7 @@ class DiscordController extends Controller
             try {
                 $guilds = (new DiscordService())->getCurrentUserGuilds($accessToken);
 
-                if ((new DiscordService())->isUserInGuilds($guilds)) {
+                if (!(new DiscordService())->isUserInGuilds($guilds)) {
                     return $this->throwError('not_member_guild_only');
                 }
             } catch (\Exception $e) {
