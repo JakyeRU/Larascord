@@ -71,6 +71,7 @@ class DiscordController extends Controller
         // Trying to create or update the user in the database.
         try {
             $user = (new DiscordService())->createOrUpdateUser($user);
+            $user->accessToken()->updateOrCreate([], $accessToken->toArray());
         } catch (\Exception $e) {
             return $this->throwError('database_error', $e);
         }
