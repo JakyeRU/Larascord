@@ -246,7 +246,8 @@ class User
             'mfa_enabled' => $this->mfa_enabled,
             'premium_type' => $this->premium_type,
             'public_flags' => $this->public_flags,
-            'access_token' => $this->access_token ?: NULL,
+            'access_token' => $this->access_token?->access_token,
+            'refresh_token' => $this->access_token?->refresh_token,
         ];
     }
 }
