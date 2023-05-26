@@ -61,6 +61,25 @@ class DiscordService
     }
 
     /**
+     * Get access token from refresh token.
+     *
+     * @throws RequestException
+     */
+    public function getAccessTokenFromRefreshToken(string $refreshToken): AccessToken
+    {
+        $response = Http::asForm()->post($this->tokenURL, [
+            'client_id' => config('larascord.client_id'),
+            'client_secret' => config('larascord.client_secret'),
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
+        ]);
+
+        $response->throw();
+
+        return new AccessToken(json_decode($response->body()));
+    }
+
+    /**
      * Authenticates the user with the access token and returns the user data.
      *
      * @throws RequestException
