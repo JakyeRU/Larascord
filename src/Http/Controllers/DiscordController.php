@@ -22,9 +22,6 @@ class DiscordController extends Controller
             }
         }
 
-        // Creating a new instance of the UserService.
-        $discordService = new DiscordService();
-
         // Getting the accessToken from the Discord API.
         try {
             $accessToken = (new DiscordService())->getAccessTokenFromCode($request->get('code'));
@@ -43,9 +40,9 @@ class DiscordController extends Controller
         // Verifying if the user is in any of "larascord.guilds" if there are any guilds specified in "larascord.guilds"
         if (count(config('larascord.guilds'))) {
             try {
-                $guilds = $discordService->getCurrentUserGuilds($accessToken);
+                $guilds = (new DiscordService())->getCurrentUserGuilds($accessToken);
 
-                if (!$discordService->isUserInGuilds($guilds)) {
+                if ((new DiscordService())->isUserInGuilds($guilds)) {
                     return $this->throwError('not_member_guild_only');
                 }
             } catch (\Exception $e) {
@@ -73,24 +70,24 @@ class DiscordController extends Controller
 
         // Trying to create or update the user in the database.
         try {
-            $user = $discordService->createOrUpdateUser($user, $accessToken->access_token);
+            $user = (new DiscordService())->createOrUpdateUser($user);
         } catch (\Exception $e) {
             return $this->throwError('database_error', $e);
         }
 
         // Verifying if the user has the required roles if "larascord.roles" is set.
         if (count(config('larascord.guild_roles'))) {
-            // Verifying if an access token is set.
-            if (!in_array('guilds', explode('&', config('larascord.scopes'))) || !in_array('guilds.members.read', explode('&', config('larascord.scopes')))) {
+            // Verifying if the "guilds" and "guilds.members.read" scopes are set.
+            if (!$accessToken->hasScopes(['guilds', 'guilds.members.read'])) {
                 return $this->throwError('missing_guilds_members_read_scope');
             }
 
             // Verifying if the user has the required roles.
             try {
-                foreach (config('larascord.guild_roles') as $guild => $roles) {
-                    $guildMember = $discordService->getDiscordGuildMember($accessToken->access_token, $guild);
+                foreach (config('larascord.guild_roles') as $guildId => $roles) {
+                    $guildMember = (new DiscordService())->getGuildMember($accessToken, $guildId);
 
-                    if (!$discordService->hasRoleInGuild($user, $guildMember, $guild, $roles)) {
+                    if (!(new DiscordService())->hasRoleInGuild($user, $guildMember, $guildId, $roles)) {
                         return $this->throwError('missing_role');
                     }
                 }

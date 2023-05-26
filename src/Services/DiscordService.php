@@ -92,9 +92,9 @@ class DiscordService
      *
      * @throws RequestException
      */
-    public function getDiscordGuildMember(string $accessToken, string $guildId): object
+    public function getGuildMember(AccessToken $accessToken, string $guildId): object
     {
-        $response = Http::withToken($accessToken, 'Bearer')->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
+        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
 
         $response->throw();
 
