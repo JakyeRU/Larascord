@@ -6,19 +6,16 @@ class AccessToken
 {
     /**
      * The access token.
-     * @var string $access_token
      */
     public string $access_token;
 
     /**
      * The type of token.
-     * @var string $token_type
      */
     public string $token_type;
 
     /**
      * The time in seconds when the token expires.
-     * @var int $expires_in
      */
     public int $expires_in;
 
@@ -29,19 +26,16 @@ class AccessToken
 
     /**
      * The refresh token.
-     * @var string $refresh_token
      */
     public string $refresh_token;
 
     /**
      * The scopes the token has access to.
-     * @var string $scope
      */
     public string $scope;
 
     /**
      * AccessToken constructor.
-     * @param object $data
      */
     public function __construct(object $data)
     {
@@ -55,7 +49,6 @@ class AccessToken
 
     /**
      * Returns true if the token is expired.
-     * @return bool
      */
     public function isExpired(): bool
     {
@@ -64,7 +57,6 @@ class AccessToken
 
     /**
      * Returns true if the token is not expired.
-     * @return bool
      */
     public function isValid(): bool
     {
