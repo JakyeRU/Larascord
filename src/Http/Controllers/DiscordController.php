@@ -35,6 +35,7 @@ class DiscordController extends Controller
         // Get the user from the Discord API.
         try {
             $user = (new DiscordService())->getCurrentUser($accessToken);
+            $user->setAccessToken($accessToken);
         } catch (\Exception $e) {
             return $this->throwError('authorization_failed', $e);
         }
