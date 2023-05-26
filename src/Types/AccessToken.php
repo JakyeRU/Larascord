@@ -78,4 +78,12 @@ class AccessToken
     {
         return array_diff($scopes, explode(' ', $this->scope)) === [];
     }
+
+    /**
+     * Converts the access token to a string.
+     */
+    public function __toString(): string
+    {
+        return $this->access_token;
+    }
 }
