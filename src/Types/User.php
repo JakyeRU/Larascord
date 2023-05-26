@@ -69,4 +69,22 @@ class User
      */
     public ?int $public_flags;
 
+    /**
+     * User constructor.
+     */
+    public function __construct(object $data)
+    {
+        $this->id = $data->id;
+        $this->username = $data->username;
+        $this->discriminator = $data->discriminator;
+        $this->avatar = $data->avatar ?? NULL;
+        $this->email = $data->email ?? NULL;
+        $this->verified = $data->verified ?? FALSE;
+        $this->banner = $data->banner ?? NULL;
+        $this->banner_color = $data->banner_color ?? NULL;
+        $this->accent_color = $data->accent_color ?? NULL;
+        $this->locale = $data->locale;
+        $this->mfa_enabled = $data->mfa_enabled;
+        $this->premium_type = $data->premium_type ?? NULL;
+        $this->public_flags = $data->public_flags ?? NULL;    }
 }
