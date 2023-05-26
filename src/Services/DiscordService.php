@@ -46,7 +46,7 @@ class DiscordService
      *
      * @throws RequestException
      */
-    public function getDiscordAccessToken(string $code): object
+    public function getAccessTokenFromCode(string $code): object
     {
         $this->tokenData['code'] = $code;
 
