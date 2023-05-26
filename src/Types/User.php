@@ -92,6 +92,7 @@ class User
         $this->mfa_enabled = $data->mfa_enabled;
         $this->premium_type = $data->premium_type ?? NULL;
         $this->public_flags = $data->public_flags ?? NULL;
+        $this->access_token = NULL;
 
         return $this;
     }
@@ -224,5 +225,28 @@ class User
         $this->access_token = $accessToken;
 
         return $this;
+    }
+
+    /**
+     * Convert the user to an array.
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'discriminator' => $this->discriminator,
+            'avatar' => $this->avatar,
+            'email' => $this->email,
+            'verified' => $this->verified,
+            'banner' => $this->banner,
+            'banner_color' => $this->banner_color,
+            'accent_color' => $this->accent_color,
+            'locale' => $this->locale,
+            'mfa_enabled' => $this->mfa_enabled,
+            'premium_type' => $this->premium_type,
+            'public_flags' => $this->public_flags,
+            'access_token' => $this->access_token ?: NULL,
+        ];
     }
 }
