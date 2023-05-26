@@ -62,4 +62,20 @@ class AccessToken
     {
         return !$this->isExpired();
     }
+
+    /**
+     * Returns true if the token has the given scope.
+     */
+    public function hasScope(string $scope): bool
+    {
+        return in_array($scope, explode(' ', $this->scope));
+    }
+
+    /**
+     * Returns true if the token has the given scopes.
+     */
+    public function hasScopes(array $scopes): bool
+    {
+        return array_diff($scopes, explode(' ', $this->scope)) === [];
+    }
 }
