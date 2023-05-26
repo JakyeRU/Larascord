@@ -92,5 +92,7 @@ class User
         $this->mfa_enabled = $data->mfa_enabled;
         $this->premium_type = $data->premium_type ?? NULL;
         $this->public_flags = $data->public_flags ?? NULL;
+
+        return $this;
     }
 }
