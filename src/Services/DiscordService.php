@@ -63,13 +63,13 @@ class DiscordService
      *
      * @throws RequestException
      */
-    public function getDiscordUser(string $accessToken): object
+    public function getCurrentUser(AccessToken $accessToken): \Jakyeru\Larascord\Types\User
     {
-        $response = Http::withToken($accessToken)->get($this->baseApi . '/users/@me');
+        $response = Http::withToken($accessToken->access_token)->get($this->baseApi . '/users/@me');
 
         $response->throw();
 
-        return json_decode($response->body());
+        return new \Jakyeru\Larascord\Types\User(json_decode($response->body()));
     }
 
     /**
