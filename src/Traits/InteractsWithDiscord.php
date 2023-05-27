@@ -11,7 +11,7 @@ use Jakyeru\Larascord\Types\AccessToken;
 trait InteractsWithDiscord
 {
     /**
-     * Get the user's access token.
+     * Get the user's access token relationship.
      */
     public function accessToken(): HasOne
     {
