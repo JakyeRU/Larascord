@@ -17,4 +17,18 @@ trait InteractsWithDiscord
     {
         return $this->hasOne(DiscordAccessToken::class);
     }
+
+    /**
+     * Get the user's access token.
+     */
+    public function getAccessToken(): ?AccessToken
+    {
+        $accessToken = $this->accessToken()->first();
+
+        if ($accessToken && $accessToken->expires_at->isPast()) {
+            $this->refreshAccessToken();
+        }
+
+        return new AccessToken($accessToken);
+    }
 }
