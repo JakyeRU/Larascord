@@ -27,7 +27,6 @@ class User extends Authenticatable
         'verified',
         'locale',
         'mfa_enabled',
-        'refresh_token'
     ];
 
     /**
@@ -36,7 +35,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'refresh_token',
         'remember_token',
     ];
 
@@ -54,7 +52,6 @@ class User extends Authenticatable
         'verified' => 'boolean',
         'locale' => 'string',
         'mfa_enabled' => 'boolean',
-        'refresh_token' => 'encrypted',
         'roles' => 'json',
     ];
 }
