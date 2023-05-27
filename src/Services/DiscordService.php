@@ -65,7 +65,7 @@ class DiscordService
      *
      * @throws RequestException
      */
-    public function getAccessTokenFromRefreshToken(string $refreshToken): AccessToken
+    public function refreshAccessToken(string $refreshToken): AccessToken
     {
         $response = Http::asForm()->post($this->tokenURL, [
             'client_id' => config('larascord.client_id'),
