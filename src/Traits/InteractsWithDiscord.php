@@ -17,18 +17,4 @@ trait InteractsWithDiscord
     {
         return $this->hasOne(DiscordAccessToken::class);
     }
-
-    /**
-     * @throws RequestException
-     */
-    public function getGuilds(): AccessToken
-    {
-        $accessToken = (new DiscordService())->getAccessTokenFromRefreshToken($this);
-
-        $this->update([
-            'refresh_token' => $accessToken->refresh_token,
-        ]);
-
-        return $accessToken;
-    }
 }
