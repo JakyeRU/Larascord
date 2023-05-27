@@ -27,6 +27,18 @@ class DiscordAccessToken extends Model
      * @var array
      */
     protected $casts = [
+        'access_token' => 'encrypted',
+        'refresh_token' => 'encrypted',
         'expires_at' => 'timestamp',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var string[]
+     */
+    protected $hidden = [
+        'access_token',
+        'refresh_token',
     ];
 }
