@@ -21,7 +21,7 @@ trait InteractsWithDiscord
     /**
      * Get the user's access token.
      */
-    public function getAccessToken(): AccessToken | null
+    public function getAccessToken(): ?AccessToken
     {
         $accessToken = $this->accessToken()->first();
 
