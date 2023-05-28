@@ -119,6 +119,8 @@ class DiscordService
      */
     public function getGuildMember(AccessToken $accessToken, string $guildId): GuildMember
     {
+        if (!$accessToken->hasScopes(['guilds', 'guilds.members.read'])) throw new Exception(config('larascord.error_messages.missing_guilds_members_read_scope.message'));
+
         $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
 
         $response->throw();
