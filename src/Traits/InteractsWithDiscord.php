@@ -65,13 +65,14 @@ trait InteractsWithDiscord
      * Get the user's guilds.
      *
      * @throws RequestException
+     * @throws \Exception
      */
     public function getGuilds(): Collection
     {
         $accessToken = $this->getAccessToken();
 
         if (!$accessToken) {
-            return collect();
+            throw new \Exception('The access token is invalid.');
         }
 
         $response = (new DiscordService())->getCurrentUserGuilds($accessToken);
