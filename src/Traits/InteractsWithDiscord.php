@@ -5,6 +5,7 @@ namespace Jakyeru\Larascord\Traits;
 use App\Models\DiscordAccessToken;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Collection;
 use Jakyeru\Larascord\Services\DiscordService;
 use Jakyeru\Larascord\Types\AccessToken;
 
@@ -58,5 +59,23 @@ trait InteractsWithDiscord
         }
 
         return null;
+    }
+
+    /**
+     * Get the user's guilds.
+     *
+     * @throws RequestException
+     */
+    public function getGuilds(): Collection
+    {
+        $accessToken = $this->getAccessToken();
+
+        if (!$accessToken) {
+            return collect();
+        }
+
+        $response = (new DiscordService())->getCurrentUserGuilds($accessToken);
+
+        return collect($response);
     }
 }
