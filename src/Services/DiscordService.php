@@ -107,7 +107,9 @@ class DiscordService
 
         $response->throw();
 
-        return json_decode($response->body());
+        return array_map(function ($guild) {
+            return new \Jakyeru\Larascord\Types\Guild($guild);
+        }, json_decode($response->body()));
     }
 
     /**
