@@ -21,14 +21,42 @@ trait InteractsWithDiscord
     /**
      * Get the user's access token.
      */
-    public function getAccessToken(): ?AccessToken
+    public function getAccessToken(): AccessToken | null
     {
         $accessToken = $this->accessToken()->first();
 
         if ($accessToken && $accessToken->expires_at->isPast()) {
-            $this->refreshAccessToken();
+            $accessToken = $this->refreshAccessToken();
+
+            return $accessToken ? new AccessToken($accessToken) : null;
         }
 
         return new AccessToken($accessToken);
+    }
+
+    /**
+     * Refresh the user's access token.
+     */
+    public function refreshAccessToken(): ?AccessToken
+    {
+        $accessToken = $this->accessToken()->first();
+        
+        if ($accessToken) {
+            try {
+                $response = (new DiscordService())->refreshAccessToken($accessToken->refresh_token);
+            } catch (RequestException $e) {
+                return null;
+            }
+
+            $accessToken->update([
+                'access_token' => $response->access_token,
+                'refresh_token' => $response->refresh_token,
+                'expires_at' => $response->expires_at,
+            ]);
+
+            return new AccessToken($accessToken);
+        }
+
+        return null;
     }
 }
