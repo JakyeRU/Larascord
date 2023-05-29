@@ -3,6 +3,7 @@
 namespace Jakyeru\Larascord\Traits;
 
 use App\Models\DiscordAccessToken;
+use Exception;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Collection;
@@ -65,14 +66,14 @@ trait InteractsWithDiscord
      * Get the user's guilds.
      *
      * @throws RequestException
-     * @throws \Exception
+     * @throws Exception
      */
     public function getGuilds(): Collection
     {
         $accessToken = $this->getAccessToken();
 
         if (!$accessToken) {
-            throw new \Exception('The access token is invalid.');
+            throw new Exception('The access token is invalid.');
         }
 
         $response = (new DiscordService())->getCurrentUserGuilds($accessToken);
