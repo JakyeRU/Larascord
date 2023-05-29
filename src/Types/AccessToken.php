@@ -78,4 +78,19 @@ class AccessToken
     {
         return array_diff($scopes, explode(' ', $this->scope)) === [];
     }
+
+    /**
+     * Converts the AccessToken to an array.
+     */
+    public function toArray(): array
+    {
+        return [
+            'access_token' => $this->access_token,
+            'token_type' => $this->token_type,
+            'expires_in' => $this->expires_in,
+            'expires_at' => $this->expires_at,
+            'refresh_token' => $this->refresh_token,
+            'scope' => $this->scope,
+        ];
+    }
 }

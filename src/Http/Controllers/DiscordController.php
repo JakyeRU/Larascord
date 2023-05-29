@@ -71,6 +71,7 @@ class DiscordController extends Controller
         // Trying to create or update the user in the database.
         try {
             $user = (new DiscordService())->createOrUpdateUser($user);
+            $user->accessToken()->updateOrCreate([], $accessToken->toArray());
         } catch (\Exception $e) {
             return $this->throwError('database_error', $e);
         }
@@ -132,7 +133,7 @@ class DiscordController extends Controller
     {
         // Revoking the OAuth2 access token.
         try {
-            (new DiscordService())->revokeAccessToken(auth()->user()->refresh_token);
+            (new DiscordService())->revokeAccessToken(auth()->user()->accessToken()->first()->refresh_token);
         } catch (\Exception $e) {
             return $this->throwError('revoke_token_failed', $e);
         }

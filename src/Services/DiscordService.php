@@ -61,6 +61,25 @@ class DiscordService
     }
 
     /**
+     * Get access token from refresh token.
+     *
+     * @throws RequestException
+     */
+    public function refreshAccessToken(string $refreshToken): AccessToken
+    {
+        $response = Http::asForm()->post($this->tokenURL, [
+            'client_id' => config('larascord.client_id'),
+            'client_secret' => config('larascord.client_secret'),
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
+        ]);
+
+        $response->throw();
+
+        return new AccessToken(json_decode($response->body()));
+    }
+
+    /**
      * Authenticates the user with the access token and returns the user data.
      *
      * @throws RequestException
@@ -78,14 +97,19 @@ class DiscordService
      * Get the user's guilds.
      *
      * @throws RequestException
+     * @throws Exception
      */
     public function getCurrentUserGuilds(AccessToken $accessToken): array
     {
-        $response = Http::withToken($accessToken->access_token)->get($this->baseApi . '/users/@me/guilds');
+        if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
+
+        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds');
 
         $response->throw();
 
-        return json_decode($response->body());
+        return array_map(function ($guild) {
+            return new \Jakyeru\Larascord\Types\Guild($guild);
+        }, json_decode($response->body()));
     }
 
     /**
@@ -95,6 +119,8 @@ class DiscordService
      */
     public function getGuildMember(AccessToken $accessToken, string $guildId): GuildMember
     {
+        if (!$accessToken->hasScopes(['guilds', 'guilds.members.read'])) throw new Exception(config('larascord.error_messages.missing_guilds_members_read_scope.message'));
+
         $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
 
         $response->throw();

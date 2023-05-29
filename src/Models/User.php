@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Jakyeru\Larascord\Traits\InteractsWithDiscord;
 use Laravel\Sanctum\HasApiTokens;
 
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithDiscord;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +27,6 @@ class User extends Authenticatable
         'verified',
         'locale',
         'mfa_enabled',
-        'refresh_token'
     ];
 
     /**
@@ -35,7 +35,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'refresh_token',
         'remember_token',
     ];
 
@@ -53,7 +52,6 @@ class User extends Authenticatable
         'verified' => 'boolean',
         'locale' => 'string',
         'mfa_enabled' => 'boolean',
-        'refresh_token' => 'encrypted',
         'roles' => 'json',
     ];
 }
