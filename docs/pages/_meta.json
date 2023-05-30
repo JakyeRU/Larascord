@@ -1,0 +1,25 @@
+{
+  "index": "Introduction",
+  "version_compatibility": "Version Compatibility",
+
+  "---": {
+    "type": "separator"
+  },
+
+  "getting_started": "Getting Started",
+
+  "configuration": "Configuration",
+
+  "events": "Larascord Events",
+
+  "routes": "Routes",
+
+  "errors": "Possible Errors",
+
+  "contact": {
+    "title": "Contact ↗",
+    "type": "page",
+    "href": "mailto:jakye@jakye.me",
+    "newWindow": true
+  }
+}

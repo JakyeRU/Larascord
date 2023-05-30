@@ -1,0 +1,78 @@
+import { Steps, Callout } from 'nextra-theme-docs'
+
+<Callout type="warning">
+    Events were deprecated after version [4.1.3](https://github.com/JakyeRU/Larascord/releases/tag/v4.1.3) in favour of [Model Observers](https://laravel.com/docs/master/eloquent#observers).
+</Callout>
+
+<Callout type="info">
+    Events are created in `App\Events` during installation.
+</Callout>
+
+# Listening
+<Steps>
+    ### Create an event listener
+    To listen to an event you will have to create a listener. You can do this by running the following command:
+    ```bash
+    php artisan make:listener ListenerName --event=EventName
+    ```
+    Example:
+    ```bash
+    php artisan make:listener UserCreated --event=UserWasCreated
+    ```
+
+    ### Register the listener
+    You will have to register the listener mappings in `App\Providers\EventListenerProvider` in the `$listen` property.
+
+    ```php filename="EventListenerProvider.php" showLineNumbers {11-13}
+    /**
+    * The event to listener mappings for the application.
+    *
+    * @var array<class-string, array<int, class-string>>
+    */
+    protected $listen = [
+        Registered::class => [
+            SendEmailVerificationNotification::class,
+        ],
+
+        UserWasCreated::class => [
+            UserCreated::class
+        ]
+    ];
+    ```
+</Steps>
+
+Now the `handle` method of `UserCreated` listener will be executed every time a new user is created.
+```php filename="UserCreated.php" showLineNumbers
+<?php
+
+namespace App\Listeners;
+
+use App\Events\UserWasCreated;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Log;
+
+class UserCreated
+{
+    /**
+     * Create the event listener.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  \App\Events\UserWasCreated  $event
+     * @return void
+     */
+    public function handle(UserWasCreated $event)
+    {
+        Log::info('User was created: ' . $event->user->username);
+    }
+}
+```

@@ -1,0 +1,5 @@
+{
+  "invalid_oauth2_redirect_url": "Invalid OAuth2 redirect URL",
+  "curl_error_60": "cURL error 60: SSL certificate problem: unable to get local issuer certificate",
+  "the_authorization_code_is_invalid": "The Authorization Code is Invalid"
+}
