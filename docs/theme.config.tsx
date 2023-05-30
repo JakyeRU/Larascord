@@ -2,7 +2,7 @@ import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
-  logo: <span>Larascord</span>,
+  logo: <span>Larascorda</span>,
 
   navigation: true,
 
@@ -16,7 +16,7 @@ const config: DocsThemeConfig = {
     }
   },
 
-  docsRepositoryBase: 'https://github.com/Larascord/docs/blob/main',
+  docsRepositoryBase: 'https://github.com/JakyeRU/Larascord/blob/main/docs',
 
   footer: {
     text: 'Larascord © 2023 by Jakye',
