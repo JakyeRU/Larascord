@@ -14,16 +14,7 @@
 Larascord is a package that allows you to authenticate users in your Laravel application using Discord's OAuth2 protocol. It allows users to log in to your platform using their Discord account without the need to handle/store any of the user's sensitive credentials. It also seamlessly integrates with Discord, providing a secure and user-friendly way to authenticate users in your application. With the added feature of the "guild_only" mode, you can restrict authentication to only users from certain Discord servers (guilds), providing an added layer of security and access control for your application.
 
 # Installation
-Please read our [Installation Wiki](https://github.com/JakyeRU/Larascord/wiki/Installation) if you have trouble installing Larascord.
-
-# Version Compatibility
-> **Note** Larascord follows [Laravel's Support Policy](https://laravel.com/docs/9.x/releases#support-policy).
-
-| Laravel Version |  Larascord Version  | PHP Version | Active Support | Security Fixes |
-|:---------------:|:-------------------:|:-----------:|:--------------:|:--------------:|
-|       10        |        ^4.1         |   8.1-8.2   |       ✅        |       ✅      |
-|        9        |     4.0.0-4.0.3     |   8.0-8.1   |       ❌        |       ✅      |
-|        8        | 1.X.X, 2.X.X, 3.X.X |     8.0     |       ❌        |       ❌      |
+Please read our [Documentation](https://larascord.jakye.me) for installation instructions.
 
 # Contributing
 Thank you for considering contributing to Larascord! You can read the contribution guide [here](https://github.com/JakyeRU/Larascord/blob/main/.github/CONTRIBUTING.md).
