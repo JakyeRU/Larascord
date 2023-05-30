@@ -1,0 +1,23 @@
+import { Steps, Callout } from 'nextra-theme-docs'
+
+# Publishing Configuration
+<Callout type="info">
+    The configuration is published automatically during the installation process to `config/larascord.php`.
+</Callout>
+You can publish Larascord's configuration using the following commands:
+```bash
+php artisan larascord:publish
+```
+```bash
+php artisan vendor:publish --provider="Jakyeru\Larascord\LarascordServiceProvider" --tag="config"
+```
+#### You can also forcefully publish Larascord's configuration, overwriting any existing configuration:
+```bash
+php artisan larascord:publish --force
+```
+
+# Publishing Migrations
+You can publish Larascord's migrations using the following command:
+```shell
+php artisan vendor:publish --provider="Jakyeru\Larascord\LarascordServiceProvider" --tag="migrations"
+```

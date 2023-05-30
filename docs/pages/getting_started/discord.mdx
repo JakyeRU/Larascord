@@ -1,0 +1,20 @@
+import { Steps, Callout } from 'nextra-theme-docs'
+
+<Callout type="info">
+    This step can be skipped if you already have a Discord application.
+</Callout>
+
+<Steps>
+    ### Create a new Discord application
+    * Go to the [Discord Developer Portal](https://discord.com/developers/applications) and press the `New Application` button.
+    * Choose a name for your application and click on `Create`.
+
+    ### Create a OAuth2 redirect URL
+    * Go to the `OAuth2` tab of your application and press the `Add Redirect` button.
+    <Callout type="info">
+        The redirect URL should be your application's callback URL. Here is an example:
+        * http://localhost:8000/larascord/callback
+        * https://myapplication.com/larascord/callback
+    </Callout>
+    * Press the `Save Changes` button.
+</Steps>

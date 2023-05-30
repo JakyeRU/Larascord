@@ -1,0 +1,23 @@
+import { Steps, Callout } from 'nextra-theme-docs'
+
+<Callout type="warning">
+    You must install Larascord in a fresh Laravel application otherwise unexpected behavior may occur.
+</Callout>
+
+<Steps>
+    ### Install Larascord using Composer
+    ```bash
+    composer require jakyeru/larascord
+    ```
+
+    ### Run the installation command
+    ```bash
+    php artisan larascord:install
+    ```
+
+    ### Follow the instructions from the command
+</Steps>
+
+<Callout type="info">
+    You can get your Discord application's `CLIENT ID` and `CLIENT SECRET` from the `OAuth2` tab of your application.
+</Callout>
