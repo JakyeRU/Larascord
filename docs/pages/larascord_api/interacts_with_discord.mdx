@@ -1,0 +1,66 @@
+import { Callout } from 'nextra-theme-docs'
+
+## What is InteractsWithDiscord Trait?
+The `InteractsWithDiscord.php` trait adds useful methods to the `User` model that can be used to interact with `Discord`'s API.
+
+## accessToken
+```php copy=false
+/**
+* Returns the user's access token relationship.
+*
+* @return \Illuminate\Database\Eloquent\Relations\HasOne
+*/
+```
+
+## getAccessToken
+<Callout type="info">
+    This method will try getting a new `access_token` using the `refresh_token` if the current `access_token` is expired.
+</Callout>
+```php copy=false
+/**
+* Returns the user's access token.
+*
+* @return Jakyeru\Larascord\Types\AccessToken|null
+*/
+```
+
+## getGuilds
+```php copy=false
+/**
+* Returns the user's guilds from Discord's API.
+*
+* @return Illuminate\Support\Collection
+* @throws Illuminate\Http\Client\RequestException
+* @throws Exception
+*/
+```
+
+### Example
+```php showLineNumbers
+use \Illuminate\Support\Facades\Log;
+
+$user = auth()->user();
+
+try {
+    $guilds = $user->getGuilds();
+
+    Log::info(json_encode($guilds->first()));
+    /*
+    * {
+    *   "id": "81384788765712384",
+    *   "name": "Discord API",
+    *   "icon": "a363a84e969bcbe1353eb2fdfb2e50e6",
+    *   "owner": false,
+    *   "permissions": 104189632,
+    *   "features": [
+    *     "ANIMATED_ICON",
+    *     "INVITE_SPLASH"
+    *   ],
+    *   "permissions_new": "110917634608832"
+    * }
+    */
+ } catch (\Exception $exception) {
+    Log::error('Something went wrong.');
+ }
+```
+

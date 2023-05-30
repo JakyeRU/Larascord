@@ -2,7 +2,8 @@
   "index": "Introduction",
   "version_compatibility": "Version Compatibility",
 
-  "---": {
+  "installation_separator": {
+    "title": "Installation",
     "type": "separator"
   },
 
@@ -15,6 +16,13 @@
   "routes": "Routes",
 
   "errors": "Possible Errors",
+
+  "api_separator": {
+    "title": "API",
+    "type": "separator"
+  },
+
+  "larascord_api": "Larascord API",
 
   "contact": {
     "title": "Contact ↗",
