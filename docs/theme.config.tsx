@@ -2,7 +2,7 @@ import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
-  logo: <span>Larascorda</span>,
+  logo: <span>Larascord</span>,
 
   navigation: true,
 
