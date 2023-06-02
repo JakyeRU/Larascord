@@ -22,7 +22,7 @@
     "type": "separator"
   },
 
-  "larascord_api": "Larascord API",
+  "interacts_with_discord": "InteractsWithDiscord Trait",
 
   "contact": {
     "title": "Contact ↗",
