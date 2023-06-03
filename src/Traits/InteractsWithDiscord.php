@@ -2,7 +2,7 @@
 
 namespace Jakyeru\Larascord\Traits;
 
-use App\Models\DiscordAccessToken;
+use Jakyeru\Larascord\Models\DiscordAccessToken;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Client\RequestException;
