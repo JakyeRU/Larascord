@@ -15,7 +15,7 @@ trait InteractsWithDiscord
     /**
      * Get the user's access token relationship.
      */
-    public function accessToken(): HasOne
+    protected function accessToken(): HasOne
     {
         return $this->hasOne(DiscordAccessToken::class);
     }
