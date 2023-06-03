@@ -69,7 +69,6 @@ class InstallCommand extends Command
 
         // Installing laravel/breeze
         $this->info('Installing Larascord...');
-        $this->requireComposerPackages('laravel/breeze:^1.19', '-q');
         if ($this->darkMode) {
             shell_exec('php artisan breeze:install blade --dark');
         } else {
@@ -228,34 +227,6 @@ class InstallCommand extends Command
         (new Filesystem())->ensureDirectoryExists(resource_path('routes'));
         (new Filesystem())->copy(__DIR__ . '/../../routes/web.php', base_path('routes/web.php'));
         (new Filesystem())->delete(base_path('routes/auth.php'));
-    }
-
-    /**
-     * Installs the given Composer Packages into the application.
-     */
-    protected function requireComposerPackages(mixed $packages): void
-    {
-        $composer = $this->option('composer');
-
-        if ($composer !== 'global') {
-            $command = ['php', $composer, 'require'];
-        }
-
-        $command = array_merge(
-            $command ?? ['composer', 'require'],
-            is_array($packages) ? $packages : func_get_args()
-        );
-
-        (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
-            ->setTimeout(null)
-            ->run(function ($type, $output) {
-                if ($type === Process::ERR) {
-                    $this->error(trim($output));
-                    exit(1);
-                } else {
-                    $this->output->write($output);
-                }
-            });
     }
 
     /**
