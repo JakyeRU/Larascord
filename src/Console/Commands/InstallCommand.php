@@ -190,7 +190,7 @@ class InstallCommand extends Command
     public function createModelFiles(): void
     {
         (new Filesystem())->ensureDirectoryExists(app_path('Models'));
-        (new Filesystem())->copyDirectory(__DIR__ . '/../../Models/', app_path('Models/'));
+        (new Filesystem())->copy(__DIR__ . '/../../Models/User.php', app_path('Models/User.php'));
     }
 
     /**
