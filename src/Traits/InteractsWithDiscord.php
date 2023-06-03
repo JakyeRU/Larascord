@@ -39,7 +39,7 @@ trait InteractsWithDiscord
     /**
      * Refresh the user's access token.
      */
-    public function refreshAccessToken(): ?AccessToken
+    protected function refreshAccessToken(): ?AccessToken
     {
         $accessToken = $this->accessToken()->first();
         
