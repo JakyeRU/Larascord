@@ -25,6 +25,9 @@ The `InteractsWithDiscord.php` trait adds useful methods to the `User` model tha
 ```
 
 ## getGuilds
+<Callout type="warning">
+    This method will make a request to Discord's API.
+</Callout>
 ```php copy=false
 /**
 * Returns the user's guilds from Discord's API.
