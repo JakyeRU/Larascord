@@ -27,6 +27,7 @@ class User extends Authenticatable
         'verified',
         'locale',
         'mfa_enabled',
+        'roles',
     ];
 
     /**
