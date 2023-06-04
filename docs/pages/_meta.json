@@ -1,6 +1,7 @@
 {
   "index": "Introduction",
   "version_compatibility": "Version Compatibility",
+  "upgrade_v4_to_v5": "Upgrading from v4 to v5",
 
   "installation_separator": {
     "title": "Installation",
