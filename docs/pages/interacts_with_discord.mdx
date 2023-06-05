@@ -67,3 +67,50 @@ try {
  }
 ```
 
+## joinGuild
+<Callout type="info">
+    The bot must belong to the same application used for authorization and must be a member of the guild with `CREATE_INSTANT_INVITE` permission.
+</Callout>
+<Callout type="info">
+    The OAuth2 access token must have the `guilds.join` scope.
+</Callout>
+```php copy=false
+/**
+* Join a guild.
+*
+* @return Jakyeru\Larascord\Types\GuildMember|null
+* @throws Illuminate\Http\Client\RequestException
+* @throws Exception
+*/
+```
+
+### Parameters
+<Callout type="info">
+    The `options` parameter is optional.
+</Callout>
+| Parameter     | Type   | Description                    |
+|:--------------|:-------|:-------------------------------|
+| guildId       | string | The guild ID.                  |
+| options       | array  | The options.                   |
+| options.nick  | string | The nickname to give the user. |
+| options.roles | array  | The roles to give the user.    |
+| options.mute  | bool   | Whether to mute the user.      |
+| options.deaf  | bool   | Whether to deafen the user.    |
+
+### Example
+```php showLineNumbers
+use \Illuminate\Support\Facades\Log;
+
+$user = auth()->user();
+
+try {
+    $guilds = $user->joinGuild('81384788765712384', [
+        'roles' => ['81384788765712384'],
+        'nick' => 'Test'
+    ]);
+
+    Log::info('Joined guild.');
+ } catch (\Exception $exception) {
+    Log::error('Something went wrong.');
+ }
+```

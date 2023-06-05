@@ -1,9 +1,6 @@
 import { Steps, Callout } from 'nextra-theme-docs'
 
 <Steps>
-    ### Remove `LARASCORD_DISCORD_TOKEN` from your .env file
-    More details on this can be found [here](https://github.com/JakyeRU/Larascord/issues/37#issuecomment-1562736403).
-
     ### Publish and run the migrations
     ```bash
     php artisan vendor:publish --provider="Jakyeru\Larascord\LarascordServiceProvider" --tag="migrations"
@@ -18,7 +15,7 @@ import { Steps, Callout } from 'nextra-theme-docs'
     ```
 
     ### Add the `InteractsWithDiscord` trait to your `User` model
-    ```php filename="app/Models/User.php" {7, 12}
+    ```php filename="app/Models/User.php" showLineNumbers {7, 12}
     namespace App\Models;
 
     use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -80,7 +77,7 @@ import { Steps, Callout } from 'nextra-theme-docs'
     ```
 
     ### Remove the `refresh_token` from the `User` model
-    ```php filename="app/Models/User.php"
+    ```php filename="app/Models/User.php" showLineNumbers
     namespace App\Models;
 
     use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -127,6 +124,66 @@ import { Steps, Callout } from 'nextra-theme-docs'
          */
         protected $casts = [
             'id' => 'string',
+            'username' => 'string',
+            'discriminator' => 'string',
+            'email' => 'string',
+            'avatar' => 'string',
+            'verified' => 'boolean',
+            'locale' => 'string',
+            'mfa_enabled' => 'boolean',
+            'roles' => 'json',
+        ];
+    }
+    ```
+
+    ### Cast the `id` attribute to an `integer`
+    ```php filename="app/Models/User.php" showLineNumbers {46}
+    namespace App\Models;
+
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Foundation\Auth\User as Authenticatable;
+    use Illuminate\Notifications\Notifiable;
+    use Laravel\Sanctum\HasApiTokens;
+    use Jakyeru\Larascord\Traits\InteractsWithDiscord;
+
+
+    class User extends Authenticatable
+    {
+        use HasApiTokens, HasFactory, Notifiable, InteractsWithDiscord;
+
+        /**
+         * The attributes that are mass assignable.
+         *
+         * @var string[]
+         */
+        protected $fillable = [
+            'id',
+            'username',
+            'discriminator',
+            'email',
+            'avatar',
+            'verified',
+            'locale',
+            'mfa_enabled',
+            'roles',
+        ];
+
+        /**
+         * The attributes that should be hidden for serialization.
+         *
+         * @var array
+         */
+        protected $hidden = [
+            'remember_token',
+        ];
+
+        /**
+         * The attributes that should be cast.
+         *
+         * @var array
+         */
+        protected $casts = [
+            'id' => 'integer',
             'username' => 'string',
             'discriminator' => 'string',
             'email' => 'string',

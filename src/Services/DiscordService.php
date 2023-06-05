@@ -116,6 +116,7 @@ class DiscordService
      * Get the Guild Member object for a user.
      *
      * @throws RequestException
+     * @throws Exception
      */
     public function getGuildMember(AccessToken $accessToken, string $guildId): GuildMember
     {
@@ -124,6 +125,28 @@ class DiscordService
         $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds/' . $guildId . '/member');
 
         $response->throw();
+
+        return new GuildMember(json_decode($response->body()));
+    }
+
+    /**
+     * Join a guild.
+     *
+     * @throws RequestException
+     * @throws Exception
+     */
+    public function joinGuild(AccessToken $accessToken, User $user, string $guildId, array $options = []): GuildMember
+    {
+        if (!config('larascord.access_token')) throw new Exception(config('larascord.error_messages.missing_access_token.message'));
+        if (!$accessToken->hasScopes(['guilds', 'guilds.join'])) throw new Exception(config('larascord.error_messages.missing_guilds_join_scope.message'));
+
+        $response = Http::withToken(config('larascord.access_token'), 'Bot')->put($this->baseApi . '/guilds/' . $guildId . '/members/' . $user->id, array_merge([
+            'access_token' => $accessToken->access_token,
+        ], $options));
+
+        $response->throw();
+
+        if ($response->status() === 204) return throw new Exception('User is already in the guild.');
 
         return new GuildMember(json_decode($response->body()));
     }

@@ -9,6 +9,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Collection;
 use Jakyeru\Larascord\Services\DiscordService;
 use Jakyeru\Larascord\Types\AccessToken;
+use Jakyeru\Larascord\Types\GuildMember;
 
 trait InteractsWithDiscord
 {
@@ -79,5 +80,22 @@ trait InteractsWithDiscord
         $response = (new DiscordService())->getCurrentUserGuilds($accessToken);
 
         return collect($response);
+    }
+
+    /**
+     * Join a guild.
+     *
+     * @throws RequestException
+     * @throws Exception
+     */
+    public function joinGuild(string $guildId, array $options = []): GuildMember|null
+    {
+        $accessToken = $this->getAccessToken();
+
+        if (!$accessToken) {
+            throw new Exception('The access token is invalid.');
+        }
+
+        return (new DiscordService())->joinGuild($accessToken, $this, $guildId, $options);
     }
 }
