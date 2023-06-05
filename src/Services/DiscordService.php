@@ -130,7 +130,7 @@ class DiscordService
     }
 
     /**
-     * Join a guild as the current user.
+     * Join a guild.
      *
      * @throws RequestException
      * @throws Exception
