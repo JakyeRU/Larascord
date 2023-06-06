@@ -24,6 +24,48 @@ The `InteractsWithDiscord.php` trait adds useful methods to the `User` model tha
 */
 ```
 
+## getConnections
+<Callout type="warning">
+    This method will make a request to Discord's API. It is recommended to cache the response.
+</Callout>
+```php copy=false
+/**
+* Get the user's connections.
+*
+* @return Illuminate\Support\Collection
+* @throws Illuminate\Http\Client\RequestException
+* @throws Exception
+*/
+```
+
+### Example
+```php showLineNumbers
+use \Illuminate\Support\Facades\Log;
+
+$user = auth()->user();
+
+try {
+    $connections = $user->getConnections();
+
+    Log::info(json_encode($connections->first()));
+    /*
+      {
+        "type": "github",
+        "id": "36800842",
+        "name": "JakyeRU",
+        "visibility": true,
+        "friend_sync": false,
+        "show_activity": false,
+        "verified": true,
+        "two_way_link": false,
+        "metadata_visibility": 1
+      }
+    */
+ } catch (\Exception $exception) {
+    Log::error('Something went wrong.');
+ }
+```
+
 ## getGuilds
 <Callout type="warning">
     This method will make a request to Discord's API. It is recommended to cache the response.
@@ -49,18 +91,18 @@ try {
 
     Log::info(json_encode($guilds->first()));
     /*
-    * {
-    *   "id": "81384788765712384",
-    *   "name": "Discord API",
-    *   "icon": "a363a84e969bcbe1353eb2fdfb2e50e6",
-    *   "owner": false,
-    *   "permissions": 104189632,
-    *   "features": [
-    *     "ANIMATED_ICON",
-    *     "INVITE_SPLASH"
-    *   ],
-    *   "permissions_new": "110917634608832"
-    * }
+      {
+        "id": "81384788765712384",
+        "name": "Discord API",
+        "icon": "a363a84e969bcbe1353eb2fdfb2e50e6",
+        "owner": false,
+        "permissions": 104189632,
+        "features": [
+          "ANIMATED_ICON",
+          "INVITE_SPLASH"
+        ],
+        "permissions_new": "110917634608832"
+      }
     */
  } catch (\Exception $exception) {
     Log::error('Something went wrong.');
