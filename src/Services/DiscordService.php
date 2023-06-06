@@ -130,6 +130,25 @@ class DiscordService
     }
 
     /**
+     * Get the User's connections.
+     *
+     * @throws RequestException
+     * @throws Exception
+     */
+    public function getCurrentUserConnections(AccessToken $accessToken): array
+    {
+        if (!$accessToken->hasScope('connections')) throw new Exception(config('larascord.error_messages.missing_connections_scope.message'));
+
+        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/connections');
+
+        $response->throw();
+
+        return array_map(function ($connection) {
+            return new \Jakyeru\Larascord\Types\Connection($connection);
+        }, json_decode($response->body()));
+    }
+
+    /**
      * Join a guild.
      *
      * @throws RequestException
