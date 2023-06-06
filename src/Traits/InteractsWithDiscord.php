@@ -98,4 +98,23 @@ trait InteractsWithDiscord
 
         return (new DiscordService())->joinGuild($accessToken, $this, $guildId, $options);
     }
+
+    /**
+     * Get the user's connections.
+     *
+     * @throws RequestException
+     * @throws Exception
+     */
+    public function getConnections(): Collection
+    {
+        $accessToken = $this->getAccessToken();
+
+        if (!$accessToken) {
+            throw new Exception('The access token is invalid.');
+        }
+
+        $response = (new DiscordService())->getCurrentUserConnections($accessToken);
+
+        return collect($response);
+    }
 }
