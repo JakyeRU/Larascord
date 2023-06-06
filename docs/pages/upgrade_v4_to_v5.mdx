@@ -1,6 +1,13 @@
 import { Steps, Callout } from 'nextra-theme-docs'
 
 <Steps>
+    ### Update the following dependencies in `composer.json`
+        * `jakyeru/larascord` to `^5.0`
+    #### Run the `composer update` command
+    ```bash
+    composer update
+    ```
+
     ### Publish and run the migrations
     ```bash
     php artisan vendor:publish --provider="Jakyeru\Larascord\LarascordServiceProvider" --tag="migrations"
@@ -18,7 +25,7 @@ import { Steps, Callout } from 'nextra-theme-docs'
     ```php filename="app/Models/User.php" showLineNumbers {7, 12}
     namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Factories\HasFactory;U
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Illuminate\Notifications\Notifiable;
     use Laravel\Sanctum\HasApiTokens;
