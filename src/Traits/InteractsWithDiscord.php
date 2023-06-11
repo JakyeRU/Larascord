@@ -14,6 +14,18 @@ use Jakyeru\Larascord\Types\GuildMember;
 trait InteractsWithDiscord
 {
     /**
+     * Get the user's tag attribute.
+     */
+    public function getTagAttribute(): string
+    {
+        if ($this->global_name) {
+            return $this->global_name;
+        }
+
+        return $this->username . '#' . $this->discriminator;
+    }
+
+    /**
      * Get the user's access token relationship.
      */
     public function accessToken(): HasOne
