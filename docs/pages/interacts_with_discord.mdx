@@ -3,6 +3,18 @@ import { Callout } from 'nextra-theme-docs'
 ## What is InteractsWithDiscord Trait?
 The `InteractsWithDiscord.php` trait adds useful methods to the `User` model that can be used to interact with `Discord`'s API.
 
+## getTagAttribute
+<Callout type="info">
+    This method will return the user's tag in the format of `username#discriminator`. If the user migrated to the new username system, it will return the user's display name, for example `Jakye`.
+</Callout>
+```php copy=false
+/**
+* Get the user's tag attribute.
+*
+* @return string
+*/
+```
+
 ## accessToken
 ```php copy=false
 /**
