@@ -35,171 +35,27 @@ import { Steps, Callout } from 'nextra-theme-docs'
     class User extends Authenticatable
     {
         use HasApiTokens, HasFactory, Notifiable, InteractsWithDiscord;
-
-        /**
-         * The attributes that are mass assignable.
-         *
-         * @var string[]
-         */
-        protected $fillable = [
-            'id',
-            'username',
-            'discriminator',
-            'email',
-            'avatar',
-            'verified',
-            'locale',
-            'mfa_enabled',
-            'refresh_token'
-        ];
-
-        /**
-         * The attributes that should be hidden for serialization.
-         *
-         * @var array
-         */
-        protected $hidden = [
-            'refresh_token',
-            'remember_token',
-        ];
-
-        /**
-         * The attributes that should be cast.
-         *
-         * @var array
-         */
-        protected $casts = [
-            'id' => 'string',
-            'username' => 'string',
-            'discriminator' => 'string',
-            'email' => 'string',
-            'avatar' => 'string',
-            'verified' => 'boolean',
-            'locale' => 'string',
-            'mfa_enabled' => 'boolean',
-            'refresh_token' => 'encrypted',
-            'roles' => 'json',
-        ];
     }
     ```
 
-    ### Remove the `refresh_token` from the `User` model
-    ```php filename="app/Models/User.php" showLineNumbers
-    namespace App\Models;
+    ### Remove the `refresh_token` from the `User` model's `$fillable` and `$hidden` arrays
 
-    use Illuminate\Database\Eloquent\Factories\HasFactory;
-    use Illuminate\Foundation\Auth\User as Authenticatable;
-    use Illuminate\Notifications\Notifiable;
-    use Laravel\Sanctum\HasApiTokens;
-    use Jakyeru\Larascord\Traits\InteractsWithDiscord;
-
-
-    class User extends Authenticatable
-    {
-        use HasApiTokens, HasFactory, Notifiable, InteractsWithDiscord;
-
-        /**
-         * The attributes that are mass assignable.
-         *
-         * @var string[]
-         */
-        protected $fillable = [
-            'id',
-            'username',
-            'discriminator',
-            'email',
-            'avatar',
-            'verified',
-            'locale',
-            'mfa_enabled',
-            'roles',
-        ];
-
-        /**
-         * The attributes that should be hidden for serialization.
-         *
-         * @var array
-         */
-        protected $hidden = [
-            'remember_token',
-        ];
-
-        /**
-         * The attributes that should be cast.
-         *
-         * @var array
-         */
-        protected $casts = [
-            'id' => 'string',
-            'username' => 'string',
-            'discriminator' => 'string',
-            'email' => 'string',
-            'avatar' => 'string',
-            'verified' => 'boolean',
-            'locale' => 'string',
-            'mfa_enabled' => 'boolean',
-            'roles' => 'json',
-        ];
-    }
-    ```
-
-    ### Cast the `id` attribute to an `integer`
-    ```php filename="app/Models/User.php" showLineNumbers {46}
-    namespace App\Models;
-
-    use Illuminate\Database\Eloquent\Factories\HasFactory;
-    use Illuminate\Foundation\Auth\User as Authenticatable;
-    use Illuminate\Notifications\Notifiable;
-    use Laravel\Sanctum\HasApiTokens;
-    use Jakyeru\Larascord\Traits\InteractsWithDiscord;
-
-
-    class User extends Authenticatable
-    {
-        use HasApiTokens, HasFactory, Notifiable, InteractsWithDiscord;
-
-        /**
-         * The attributes that are mass assignable.
-         *
-         * @var string[]
-         */
-        protected $fillable = [
-            'id',
-            'username',
-            'discriminator',
-            'email',
-            'avatar',
-            'verified',
-            'locale',
-            'mfa_enabled',
-            'roles',
-        ];
-
-        /**
-         * The attributes that should be hidden for serialization.
-         *
-         * @var array
-         */
-        protected $hidden = [
-            'remember_token',
-        ];
-
-        /**
-         * The attributes that should be cast.
-         *
-         * @var array
-         */
-        protected $casts = [
-            'id' => 'integer',
-            'username' => 'string',
-            'discriminator' => 'string',
-            'email' => 'string',
-            'avatar' => 'string',
-            'verified' => 'boolean',
-            'locale' => 'string',
-            'mfa_enabled' => 'boolean',
-            'roles' => 'json',
-        ];
-    }
-    ```
+    ### Make sure the following values are in your `$fillable` array and are casted to the correct type
+    | Attribute | Cast |
+    | --- | --- |
+    | `id` | `integer` |
+    | `username` | `string` |
+    | `global_name` | `string` |
+    | `discriminator` | `string` |
+    | `email` | `string` |
+    | `avatar` | `string` |
+    | `verified` | `boolean` |
+    | `banner` | `string` |
+    | `banner_color` | `string` |
+    | `accent_color` | `string` |
+    | `locale` | `string` |
+    | `mfa_enabled` | `boolean` |
+    | `premium_type` | `integer` |
+    | `public_flags` | `integer` |
+    | `roles` | `array` |
 </Steps>
