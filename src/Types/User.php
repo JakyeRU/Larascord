@@ -10,14 +10,19 @@ class User
     public string $id;
 
     /**
-     * The user's username.
+     * The user's unique username.
      */
     public string $username;
 
     /**
+     * The user's global display name.
+     */
+    public ?string $global_name;
+
+    /**
      * The user's discriminator.
      */
-    public string $discriminator;
+    public ?string $discriminator;
 
     /**
      * The user's avatar hash.
@@ -81,7 +86,8 @@ class User
     {
         $this->id = $data->id;
         $this->username = $data->username;
-        $this->discriminator = $data->discriminator;
+        $this->global_name = $data->global_name ?? NULL;
+        $this->discriminator = $data->discriminator ?? NULL;
         $this->avatar = $data->avatar ?? NULL;
         $this->email = $data->email ?? NULL;
         $this->verified = $data->verified ?? FALSE;
@@ -114,6 +120,14 @@ class User
     }
 
     /**
+     * Get the user's global display name.
+     */
+    public function getGlobalName(): string
+    {
+        return $this->global_name;
+    }
+
+    /**
      * Get the user's discriminator.
      */
     public function getDiscriminator(): string
@@ -126,6 +140,10 @@ class User
      */
     public function getTag(): string
     {
+        if ($this->discriminator == '0' && $this->global_name) {
+            return $this->global_name;
+        }
+
         return $this->username . '#' . $this->discriminator;
     }
 
@@ -235,6 +253,7 @@ class User
         return [
             'id' => $this->id,
             'username' => $this->username,
+            'global_name' => $this->global_name,
             'discriminator' => $this->discriminator,
             'avatar' => $this->avatar,
             'email' => $this->email,
