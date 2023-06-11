@@ -90,7 +90,7 @@ class User
         $this->discriminator = $data->discriminator ?? NULL;
         $this->avatar = $data->avatar ?? NULL;
         $this->email = $data->email ?? NULL;
-        $this->verified = $data->verified ?? FALSE;
+        $this->verified = $data->verified ?? NULL;
         $this->banner = $data->banner ?? NULL;
         $this->banner_color = $data->banner_color ?? NULL;
         $this->accent_color = $data->accent_color ?? NULL;
