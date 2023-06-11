@@ -21,6 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'id',
         'username',
+        'global_name',
         'discriminator',
         'email',
         'avatar',
@@ -47,6 +48,7 @@ class User extends Authenticatable
     protected $casts = [
         'id' => 'integer',
         'username' => 'string',
+        'global_name' => 'string',
         'discriminator' => 'string',
         'email' => 'string',
         'avatar' => 'string',
