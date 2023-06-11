@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('accent_color')->nullable()->after('banner_color');
             $table->string('premium_type')->nullable()->after('mfa_enabled');
             $table->string('public_flags')->nullable()->after('premium_type');
+            $table->boolean('verified')->nullable()->change();
         });
     }
 
@@ -35,6 +36,7 @@ return new class extends Migration
             $table->dropColumn('accent_color');
             $table->dropColumn('premium_type');
             $table->dropColumn('public_flags');
+            $table->boolean('verified')->change();
         });
     }
 };
