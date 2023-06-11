@@ -140,7 +140,7 @@ class User
      */
     public function getTag(): string
     {
-        if ($this->discriminator == '0' && $this->global_name) {
+        if ($this->hasMigratedToUsernames()) {
             return $this->global_name;
         }
 
@@ -243,6 +243,14 @@ class User
         $this->access_token = $accessToken;
 
         return $this;
+    }
+
+    /**
+     * Whether the user has migrated to the new username system.
+     */
+    public function hasMigratedToUsernames(): bool
+    {
+        return $this->discriminator == '0' && $this->global_name;
     }
 
     /**
