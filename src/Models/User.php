@@ -26,8 +26,13 @@ class User extends Authenticatable
         'email',
         'avatar',
         'verified',
+        'banner',
+        'banner_color',
+        'accent_color',
         'locale',
         'mfa_enabled',
+        'premium_type',
+        'public_flags',
         'roles',
     ];
 
@@ -53,8 +58,13 @@ class User extends Authenticatable
         'email' => 'string',
         'avatar' => 'string',
         'verified' => 'boolean',
+        'banner' => 'string',
+        'banner_color' => 'string',
+        'accent_color' => 'string',
         'locale' => 'string',
         'mfa_enabled' => 'boolean',
+        'premium_type' => 'integer',
+        'public_flags' => 'integer',
         'roles' => 'json',
     ];
 }
