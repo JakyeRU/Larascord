@@ -10,17 +10,26 @@
     </header>
 
     <div class="mt-6 space-y-6">
+        @if (Auth::user()->global_name)
+            <div>
+                <x-input-label for="global_name" :value="__('Display Name')" />
+                <x-text-input id="global_name" name="global_name" type="text" class="mt-1 block w-full" :value="old('global_name', $user->global_name)" required autocomplete="global_name" disabled />
+                <x-input-error class="mt-2" :messages="$errors->get('global_name')" />
+            </div>
+        @endif
         <div>
             <x-input-label for="username" :value="__('Username')" />
             <x-text-input id="username" name="username" type="text" class="mt-1 block w-full" :value="old('username', $user->username)" required autocomplete="username" disabled />
             <x-input-error class="mt-2" :messages="$errors->get('username')" />
         </div>
 
-        <div>
-            <x-input-label for="discriminator" :value="__('Discriminator')" />
-            <x-text-input id="discriminator" name="discriminator" type="text" class="mt-1 block w-full" :value="old('discriminator', $user->discriminator)" required autocomplete="discriminator" disabled />
-            <x-input-error class="mt-2" :messages="$errors->get('discriminator')" />
-        </div>
+        @if (!Auth::user()->global_name)
+            <div>
+                <x-input-label for="discriminator" :value="__('Discriminator')" />
+                <x-text-input id="discriminator" name="discriminator" type="text" class="mt-1 block w-full" :value="old('discriminator', $user->discriminator)" required autocomplete="discriminator" disabled />
+                <x-input-error class="mt-2" :messages="$errors->get('discriminator')" />
+            </div>
+        @endif
 
         <div>
             <x-input-label for="email" :value="__('Email')" />
