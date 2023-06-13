@@ -157,7 +157,7 @@ class DiscordService
     public function joinGuild(AccessToken $accessToken, User $user, string $guildId, array $options = []): GuildMember
     {
         if (!config('larascord.access_token')) throw new Exception(config('larascord.error_messages.missing_access_token.message'));
-        if (!$accessToken->hasScopes(['guilds', 'guilds.join'])) throw new Exception(config('larascord.error_messages.missing_guilds_join_scope.message'));
+        if (!$accessToken->hasScope('guilds.join')) throw new Exception(config('larascord.error_messages.missing_guilds_join_scope.message'));
 
         $response = Http::withToken(config('larascord.access_token'), 'Bot')->put($this->baseApi . '/guilds/' . $guildId . '/members/' . $user->id, array_merge([
             'access_token' => $accessToken->access_token,
