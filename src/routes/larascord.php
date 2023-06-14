@@ -35,7 +35,7 @@ Route::group(['prefix' => config('larascord.route_prefix', 'larascord'), 'middle
     Route::get('/callback', [DiscordController::class, 'handle'])
         ->name('larascord.login');
 
-    Route::redirect('/refresh-token', '/login')
+    Route::redirect('/refresh-token', url('login'))
         ->name('larascord.refresh_token');
 });
 
