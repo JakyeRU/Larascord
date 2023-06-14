@@ -13,6 +13,9 @@
 # About Larascord
 Larascord is a package that allows you to authenticate users in your Laravel application using Discord's OAuth2 protocol. It allows users to log in to your platform using their Discord account without the need to handle/store any of the user's sensitive credentials. It also seamlessly integrates with Discord, providing a secure and user-friendly way to authenticate users in your application. With the added feature of the "guild_only" mode, you can restrict authentication to only users from certain Discord servers (guilds), providing an added layer of security and access control for your application.
 
+# Demo
+You can see a demo of Larascord in action on [demo.jakye.me/larascord](https://demo.jakye.me/larascord).
+
 # Installation
 Please read our [Documentation](https://larascord.jakye.me/getting_started) for installation instructions.
 
