@@ -11,7 +11,7 @@ class LarascordServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '5.0.1';
+    const VERSION = '5.0.2';
 
     /*
      * Register the application services.
