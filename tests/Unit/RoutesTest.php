@@ -43,7 +43,7 @@ class RoutesTest extends TestCase
 
         $request->assertStatus(302);
 
-        $request->assertHeader('Location', '/login');
+        $request->assertHeader('Location', config('app.url') . '/login');
     }
 
     public function test_callback_route()
