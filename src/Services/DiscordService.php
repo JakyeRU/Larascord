@@ -137,7 +137,7 @@ class DiscordService
      */
     public function getCurrentUserConnections(AccessToken $accessToken): array
     {
-        if (!$accessToken->hasScope('connections')) throw new Exception(config('larascord.error_messages.missing_connections_scope.message'));
+        if (!$accessToken->hasScope('connections')) throw new Exception('The "connections" scope is required.');
 
         $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/connections');
 
