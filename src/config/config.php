@@ -205,10 +205,6 @@ return [
             'message' => 'The "guilds" and "guilds.join" scopes are required.',
             'redirect' => '/'
         ],
-        'missing_connections_scope' => [
-            'message' => 'The "connections" scope is required.',
-            'redirect' => '/'
-        ],
         'authorization_failed_guilds' => [
             'message' => 'Couldn\'t get the servers you\'re in.',
             'redirect' => '/'
