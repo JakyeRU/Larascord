@@ -130,7 +130,7 @@ class DiscordService
     }
 
     /**
-     * Get the User's connections.
+     * Get the user's connections.
      *
      * @throws RequestException
      * @throws Exception
