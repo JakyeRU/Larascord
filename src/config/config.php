@@ -201,10 +201,6 @@ return [
             'message' => 'The "guilds" and "guilds.members.read" scopes are required.',
             'redirect' => '/'
         ],
-        'missing_guilds_join_scope' => [
-            'message' => 'The "guilds" and "guilds.join" scopes are required.',
-            'redirect' => '/'
-        ],
         'missing_connections_scope' => [
             'message' => 'The "connections" scope is required.',
             'redirect' => '/'
