@@ -213,10 +213,6 @@ return [
             'message' => 'You are not a member of the required guilds.',
             'redirect' => '/'
         ],
-        'missing_access_token' => [
-            'message' => 'The access token is missing.',
-            'redirect' => '/'
-        ],
         'authorization_failed_roles' => [
             'message' => 'Couldn\'t get the roles you have.',
             'redirect' => '/'
