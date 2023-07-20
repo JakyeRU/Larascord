@@ -86,7 +86,11 @@ class DiscordController extends Controller
             // Verifying if the user has the required roles.
             try {
                 foreach (config('larascord.guild_roles') as $guildId => $roles) {
-                    $guildMember = (new DiscordService())->getGuildMember($accessToken, $guildId);
+                    try {
+                        $guildMember = (new DiscordService())->getGuildMember($accessToken, $guildId);
+                    } catch (\Exception $e) {
+                        return $this->throwError('not_member_guild_only', $e);
+                    }
 
                     if (!(new DiscordService())->hasRoleInGuild($user, $guildMember, $guildId, $roles)) {
                         return $this->throwError('missing_role');
