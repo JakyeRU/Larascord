@@ -95,6 +95,25 @@ trait InteractsWithDiscord
     }
 
     /**
+     * Get the user's guild member.
+     *
+     * @throws RequestException
+     * @throws Exception
+     */
+    public function getGuildMember(string $guildId): GuildMember|null
+    {
+        $accessToken = $this->getAccessToken();
+
+        if (!$accessToken) {
+            throw new Exception('The access token is invalid.');
+        }
+
+        $response = (new DiscordService())->getGuildMember($accessToken, $guildId);
+
+        return new GuildMember($response);
+    }
+
+    /**
      * Join a guild.
      *
      * @throws RequestException
