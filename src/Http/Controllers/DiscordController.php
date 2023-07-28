@@ -68,14 +68,6 @@ class DiscordController extends Controller
             $request->session()->put('auth.password_confirmed_at', time());
         }
 
-        // Trying to create or update the user in the database.
-        try {
-            $user = (new DiscordService())->createOrUpdateUser($user);
-            $user->accessToken()->updateOrCreate([], $accessToken->toArray());
-        } catch (\Exception $e) {
-            return $this->throwError('database_error', $e);
-        }
-
         // Verifying if the user has the required roles if "larascord.roles" is set.
         if (count(config('larascord.guild_roles'))) {
             // Verifying if the "guilds" and "guilds.members.read" scopes are set.
@@ -99,6 +91,14 @@ class DiscordController extends Controller
             } catch (\Exception $e) {
                 return $this->throwError('authorization_failed_roles', $e);
             }
+        }
+
+        // Trying to create or update the user in the database.
+        try {
+            $user = (new DiscordService())->createOrUpdateUser($user);
+            $user->accessToken()->updateOrCreate([], $accessToken->toArray());
+        } catch (\Exception $e) {
+            return $this->throwError('database_error', $e);
         }
 
         // Authenticating the user if the user is not logged in.
