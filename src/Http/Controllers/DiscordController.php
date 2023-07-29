@@ -5,6 +5,7 @@ namespace Jakyeru\Larascord\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\DB;
 use Jakyeru\Larascord\Http\Requests\StoreUserRequest;
 use Jakyeru\Larascord\Services\DiscordService;
 
@@ -57,10 +58,33 @@ class DiscordController extends Controller
             }
         }
 
+        if (auth()->check()) {
+            // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
+            if (auth()->id() !== (int)$user->id) {
+                auth()->logout();
+                return $this->throwError('invalid_user');
+            }
+
+            // Confirming the session in case the user was redirected from the password.confirm middleware.
+            $request->session()->put('auth.password_confirmed_at', time());
+        }
+
+        // Trying to create or update the user in the database.
+        // Initiating a database transaction in case something goes wrong.
+        DB::beginTransaction();
+        try {
+            $user = (new DiscordService())->createOrUpdateUser($user);
+            $user->accessToken()->updateOrCreate([], $accessToken->toArray());
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->throwError('database_error', $e);
+        }
+
         // Verifying if the user has the required roles if "larascord.roles" is set.
         if (count(config('larascord.guild_roles'))) {
             // Verifying if the "guilds" and "guilds.members.read" scopes are set.
             if (!$accessToken->hasScopes(['guilds', 'guilds.members.read'])) {
+                DB::rollBack();
                 return $this->throwError('missing_guilds_members_read_scope');
             }
 
@@ -70,39 +94,29 @@ class DiscordController extends Controller
                     try {
                         $guildMember = (new DiscordService())->getGuildMember($accessToken, $guildId);
                     } catch (\Exception $e) {
+                        DB::rollBack();
                         return $this->throwError('not_member_guild_only', $e);
                     }
 
                     if (!(new DiscordService())->hasRoleInGuild($guildMember, $roles)) {
+                        DB::rollBack();
                         return $this->throwError('missing_role');
                     }
+
+                    (new DiscordService())->updateUserRoles($user, $guildMember, $guildId);
                 }
             } catch (\Exception $e) {
+                DB::rollBack();
                 return $this->throwError('authorization_failed_roles', $e);
             }
         }
 
-        // Trying to create or update the user in the database.
-        try {
-            $user = (new DiscordService())->createOrUpdateUser($user);
-            $user->accessToken()->updateOrCreate([], $accessToken->toArray());
-            (new DiscordService())->updateUserRoles($user, $guildMember, $guildId);
-        } catch (\Exception $e) {
-            return $this->throwError('database_error', $e);
-        }
+        // Committing the database transaction.
+        DB::commit();
 
         // Authenticating the user if the user is not logged in.
         if (!auth()->check()) {
             auth()->login($user, config('larascord.remember_me', false));
-        } else {
-            // Making sure the current logged-in user's ID is matching the ID retrieved from the Discord API.
-            if (auth()->id() !== (int)$user->id) {
-                auth()->logout();
-                return $this->throwError('invalid_user');
-            }
-
-            // Confirming the session in case the user was redirected from the password.confirm middleware.
-            $request->session()->put('auth.password_confirmed_at', time());
         }
 
         // Redirecting the user to the intended page or to the home page.
