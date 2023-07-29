@@ -206,16 +206,22 @@ class DiscordService
     /**
      * Verify if the user has the specified role(s) in the specified guild.
      */
-    public function hasRoleInGuild(User $user, GuildMember $guildMember, int $guildId, array $roles): bool
+    public function hasRoleInGuild(GuildMember $guildMember, array $roles): bool
+    {
+        // Verify if the user has any of the specified roles.
+        return !empty(array_intersect($roles, $guildMember->roles));
+    }
+
+    /**
+     * Updates the user's roles in the database.
+     */
+    public function updateUserRoles(User $user, GuildMember $guildMember, int $guildId): void
     {
         // Updating the user's roles in the database.
         $updatedRoles = $user->roles;
         $updatedRoles[$guildId] = $guildMember->roles;
         $user->roles = $updatedRoles;
         $user->save();
-
-        // Verify if the user has any of the specified roles.
-        return !empty(array_intersect($roles, $guildMember->roles));
     }
 
     /**

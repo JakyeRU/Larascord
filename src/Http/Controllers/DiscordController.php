@@ -5,6 +5,7 @@ namespace Jakyeru\Larascord\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\DB;
 use Jakyeru\Larascord\Http\Requests\StoreUserRequest;
 use Jakyeru\Larascord\Services\DiscordService;
 
@@ -69,10 +70,13 @@ class DiscordController extends Controller
         }
 
         // Trying to create or update the user in the database.
+        // Initiating a database transaction in case something goes wrong.
+        DB::beginTransaction();
         try {
             $user = (new DiscordService())->createOrUpdateUser($user);
             $user->accessToken()->updateOrCreate([], $accessToken->toArray());
         } catch (\Exception $e) {
+            DB::rollBack();
             return $this->throwError('database_error', $e);
         }
 
@@ -80,6 +84,7 @@ class DiscordController extends Controller
         if (count(config('larascord.guild_roles'))) {
             // Verifying if the "guilds" and "guilds.members.read" scopes are set.
             if (!$accessToken->hasScopes(['guilds', 'guilds.members.read'])) {
+                DB::rollBack();
                 return $this->throwError('missing_guilds_members_read_scope');
             }
 
@@ -89,17 +94,25 @@ class DiscordController extends Controller
                     try {
                         $guildMember = (new DiscordService())->getGuildMember($accessToken, $guildId);
                     } catch (\Exception $e) {
+                        DB::rollBack();
                         return $this->throwError('not_member_guild_only', $e);
                     }
 
-                    if (!(new DiscordService())->hasRoleInGuild($user, $guildMember, $guildId, $roles)) {
+                    if (!(new DiscordService())->hasRoleInGuild($guildMember, $roles)) {
+                        DB::rollBack();
                         return $this->throwError('missing_role');
                     }
+
+                    (new DiscordService())->updateUserRoles($user, $guildMember, $guildId);
                 }
             } catch (\Exception $e) {
+                DB::rollBack();
                 return $this->throwError('authorization_failed_roles', $e);
             }
         }
+
+        // Committing the database transaction.
+        DB::commit();
 
         // Authenticating the user if the user is not logged in.
         if (!auth()->check()) {
