@@ -121,6 +121,54 @@ try {
  }
 ```
 
+## getGuildsWithMemberCounts
+<Callout type="warning">
+    This method will make a request to Discord's API. It is recommended to cache the response.
+</Callout>
+<Callout type="info">
+    This method will retrieve all of the same information as the "getGuilds" method. This method only adds the approximate member counts, and approximate presence counts to the response.
+</Callout>
+```php copy=false
+/**
+* Returns the user's guilds from Discord's API.
+*
+* @return Illuminate\Support\Collection
+* @throws Illuminate\Http\Client\RequestException
+* @throws Exception
+*/
+```
+
+### Example
+```php showLineNumbers
+use \Illuminate\Support\Facades\Log;
+
+$user = auth()->user();
+
+try {
+    $guilds = $user->getGuildsWithMemberCounts();
+
+    Log::info(json_encode($guilds->first()));
+    /*
+      {
+        "id": "81384788765712384",
+        "name": "Discord API",
+        "icon": "a363a84e969bcbe1353eb2fdfb2e50e6",
+        "owner": false,
+        "permissions": 104189632,
+        "features": [
+          "ANIMATED_ICON",
+          "INVITE_SPLASH"
+        ],
+        "permissions_new": "110917634608832",
+        "approximate_member_count": 451,
+        "approximate_presence_count": 246
+      }
+    */
+ } catch (\Exception $exception) {
+    Log::error('Something went wrong.');
+ }
+```
+
 ## getGuildMember
 <Callout type="warning">
     This method will make a request to Discord's API. It is recommended to cache the response.
