@@ -101,9 +101,37 @@ class DiscordService
      */
     public function getCurrentUserGuilds(AccessToken $accessToken): array
     {
+        return $this->fetchUserGuildsWithOptionalCounts($accessToken);
+    }
+
+    /**
+    * Get the user's guilds with member counts.
+    *
+    * @throws RequestException
+    * @throws Exception
+    */
+    public function getCurrentUserGuildsWithMemberCounts(AccessToken $accessToken): array
+    {
+        return $this->fetchUserGuildsWithOptionalCounts($accessToken, true);
+    }
+
+    /**
+    * Helper method to fetch user's guilds.
+    *
+    * @throws Request Exception
+    * @throws Exception
+    */
+    private function fetchUserGuildsWithOptionalCounts(AccessToken $accessToken, bool $withCounts = false): array
+    {
         if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
 
-        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds');
+        $endpoint = '/users/@me/guilds';
+
+        if ($withCounts) {
+            $endpoint .= '?with_counts=true';
+        }
+
+        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . $endpoint);
 
         $response->throw();
 
