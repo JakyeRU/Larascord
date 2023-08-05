@@ -95,6 +95,25 @@ trait InteractsWithDiscord
     }
 
     /**
+    * Get the user's guilds with member counts.
+    *
+    * @throws RequestException
+    * @throws Exception
+    */
+    public function getGuildsWithMemberCounts(): Collection
+    {
+        $accessToken = $this->getAccessToken();
+
+        if (!$accessToken) {
+            throw new Exception('The access token is invalid.');
+        }
+
+        $response = (new DiscordService())->getCurrentUserGuildsWithMemberCounts($accessToken);
+
+        return collect($response);
+    }
+
+    /**
      * Get the user's guild member.
      *
      * @throws RequestException
