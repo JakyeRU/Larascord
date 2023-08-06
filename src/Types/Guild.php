@@ -63,7 +63,7 @@ class Guild
         $this->permissions = $data->permissions;
         $this->features = $data->features;
         $this->permissions_new = $data->permissions_new;
-        $this->approximate_member_count = $data->approximate_member_count;
-        $this->approximate_presence_count = $data->approximate_presence_count;
+        $this->approximate_member_count = $data->approximate_member_count ?? null;
+        $this->approximate_presence_count = $data->approximate_presence_count ?? null;
     }
 }
