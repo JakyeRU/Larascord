@@ -81,7 +81,7 @@ trait InteractsWithDiscord
      * @throws RequestException
      * @throws Exception
      */
-    public function getGuilds(): Collection
+    public function getGuilds(bool $withCounts = false): Collection
     {
         $accessToken = $this->getAccessToken();
 
@@ -89,7 +89,7 @@ trait InteractsWithDiscord
             throw new Exception('The access token is invalid.');
         }
 
-        $response = (new DiscordService())->getCurrentUserGuilds($accessToken);
+        $response = (new DiscordService())->getCurrentUserGuilds($accessToken, $withCounts);
 
         return collect($response);
     }

@@ -42,6 +42,16 @@ class Guild
     public string $permissions_new;
 
     /*
+    * The approximate count of members in the guild.
+    */
+    public ?int $approximate_member_count;
+
+    /*
+    * The approximate count of active members in the guild.
+    */
+    public ?int $approximate_presence_count;
+
+    /*
      * Guild constructor.
      */
     public function __construct(object $data)
@@ -53,5 +63,7 @@ class Guild
         $this->permissions = $data->permissions;
         $this->features = $data->features;
         $this->permissions_new = $data->permissions_new;
+        $this->approximate_member_count = $data->approximate_member_count ?? null;
+        $this->approximate_presence_count = $data->approximate_presence_count ?? null;
     }
 }

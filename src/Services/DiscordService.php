@@ -99,11 +99,17 @@ class DiscordService
      * @throws RequestException
      * @throws Exception
      */
-    public function getCurrentUserGuilds(AccessToken $accessToken): array
+    public function getCurrentUserGuilds(AccessToken $accessToken, bool $withCounts = false): array
     {
         if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
 
-        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . '/users/@me/guilds');
+        $endpoint = '/users/@me/guilds';
+
+        if ($withCounts) {
+            $endpoint .= '?with_counts=true';
+        }
+
+        $response = Http::withToken($accessToken->access_token, $accessToken->token_type)->get($this->baseApi . $endpoint);
 
         $response->throw();
 

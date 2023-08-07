@@ -92,6 +92,14 @@ try {
 */
 ```
 
+### Parameters
+<Callout type="info">
+    The `withCounts` parameter is optional.
+</Callout>
+| Parameter     | Type   | Description                    |
+|:--------------|:-------|:-------------------------------|
+| withCounts    | bool   | Include member counts          |
+
 ### Example
 ```php showLineNumbers
 use \Illuminate\Support\Facades\Log;
@@ -99,7 +107,7 @@ use \Illuminate\Support\Facades\Log;
 $user = auth()->user();
 
 try {
-    $guilds = $user->getGuilds();
+    $guilds = $user->getGuilds(true);
 
     Log::info(json_encode($guilds->first()));
     /*
@@ -113,7 +121,9 @@ try {
           "ANIMATED_ICON",
           "INVITE_SPLASH"
         ],
-        "permissions_new": "110917634608832"
+        "permissions_new": "110917634608832",
+        "approximate_member_count": 425,
+        "approximate_presence_count": 312
       }
     */
  } catch (\Exception $exception) {
