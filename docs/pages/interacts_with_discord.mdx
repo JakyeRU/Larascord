@@ -83,8 +83,11 @@ try {
     This method will make a request to Discord's API. It is recommended to cache the response.
 </Callout>
 <Callout type="info">
-    This method accepts a type "bool" as a parameter, true will return member counts.
+    The `withCounts` parameter is optional.
 </Callout>
+| Parameter     | Type   | Description                    |
+|:--------------|:-------|:-------------------------------|
+| withCounts    | bool   | Include member counts          |
 ```php copy=false
 /**
 * Returns the user's guilds from Discord's API.
