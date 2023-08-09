@@ -82,7 +82,7 @@ trait InteractsWithDiscord
     {
         $baseUrl = 'https://cdn.discordapp.com/';
         $sizeParam = $size ? "?size={$size}" : '';
-        $colorParam = $color ?? rand(0, 4);
+        $colorParam = $color ?? rand(0, 5);
 
         if ($this->avatar) {
             return "{$baseUrl}avatars/{$this->id}/{$this->avatar}.{$extension}{$sizeParam}";
