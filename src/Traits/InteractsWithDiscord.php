@@ -76,6 +76,22 @@ trait InteractsWithDiscord
     }
 
     /**
+    * Get the user's Avatar url
+    */
+    public function getAvatar(?string $extension = 'png', ?int $size = null, ?int $color = null): string
+    {
+        $baseUrl = 'https://cdn.discordapp.com/';
+        $sizeParam = $size ? "?size={$size}" : '';
+        $colorParam = $color ?? rand(0, 4);
+
+        if ($this->avatar) {
+            return "{$baseUrl}avatars/{$this->id}/{$this->avatar}.{$extension}{$sizeParam}";
+        }
+
+        return "{$baseUrl}embed/avatars/{$colorParam}.png";
+    }
+
+    /**
      * Get the user's guilds.
      *
      * @throws RequestException
