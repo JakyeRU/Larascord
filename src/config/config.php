@@ -228,7 +228,7 @@ return [
         'user_deleted' => [
             'message' => 'Your account is deleted and you can\'t log in.',
             'redirect' => '/'
-        ]
+        ],
     ],
 
     /*
