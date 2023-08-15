@@ -80,6 +80,12 @@ class DiscordController extends Controller
             return $this->throwError('database_error', $e);
         }
 
+        // Verifying if the user is soft-deleted.
+        if ($user->trashed()) {
+            DB::rollBack();
+            return $this->throwError('user_deleted');
+        }
+
         // Verifying if the user has the required roles if "larascord.roles" is set.
         if (count(config('larascord.guild_roles'))) {
             // Verifying if the "guilds" and "guilds.members.read" scopes are set.
