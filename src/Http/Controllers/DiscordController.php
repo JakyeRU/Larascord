@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Jakyeru\Larascord\Http\Requests\StoreUserRequest;
 use Jakyeru\Larascord\Services\DiscordService;
 
@@ -78,6 +79,14 @@ class DiscordController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->throwError('database_error', $e);
+        }
+
+        // Verifying if the user is soft-deleted.
+        if (Schema::hasColumn('users', 'deleted_at')) {
+            if ($user->trashed()) {
+                DB::rollBack();
+                return $this->throwError('user_deleted');
+            }
         }
 
         // Verifying if the user has the required roles if "larascord.roles" is set.
