@@ -225,6 +225,10 @@ return [
             'message' => 'An error occurred while trying to revoke your access token.',
             'redirect' => '/'
         ],
+        'user_deleted' => [
+            'message' => 'Your account is deleted and you can\'t log in.',
+            'redirect' => '/'
+        ]
     ],
 
     /*
