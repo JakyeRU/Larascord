@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 use Jakyeru\Larascord\Types\AccessToken;
 use Jakyeru\Larascord\Types\GuildMember;
 
@@ -185,6 +186,15 @@ class DiscordService
     {
         if (!$user->getAccessToken()) {
             throw new Exception('User access token is missing.');
+        }
+
+        if (Schema::hasColumn('users', 'deleted_at')) {
+            return User::withTrashed()->updateOrCreate(
+                [
+                    'id' => $user->id,
+                ],
+                $user->toArray(),
+            );
         }
 
         return User::updateOrCreate(
