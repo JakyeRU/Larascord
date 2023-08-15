@@ -21,6 +21,7 @@ Route::redirect('/login', 'https://discord.com/oauth2/authorize?client_id=' . co
     . '&redirect_uri=' . config('larascord.redirect_uri')
     . '&response_type=code&scope=' . implode('%20', explode('&', config('larascord.scopes')))
     . '&prompt=' . config('larascord.prompt', 'none'))
+    ->middleware(['web', 'guest'])
     ->name('login');
 
 Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])
