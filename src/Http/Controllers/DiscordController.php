@@ -13,6 +13,27 @@ use Jakyeru\Larascord\Services\DiscordService;
 class DiscordController extends Controller
 {
     /**
+     * Handle the Discord OAuth2 redirect.
+     */
+    public function login(): RedirectResponse
+    {
+        // Preventing the redirection to Discord if the user's account gets soft deleted and is authenticated.
+        if (auth()->check()) {
+            // Verifying if the user is soft-deleted.
+            if (Schema::hasColumn('users', 'deleted_at')) {
+                if (auth()->user()->trashed()) {
+                    return $this->throwError('user_deleted');
+                }
+            }
+        }
+
+        return redirect()->away('https://discord.com/oauth2/authorize?client_id=' . config('larascord.client_id')
+            . '&redirect_uri=' . config('larascord.redirect_uri')
+            . '&response_type=code&scope=' . implode('%20', explode('&', config('larascord.scopes')))
+            . '&prompt=' . config('larascord.prompt', 'none'));
+    }
+
+    /**
      * Handles the Discord OAuth2 login.
      */
     public function handle(StoreUserRequest $request): RedirectResponse | JsonResponse
