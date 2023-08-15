@@ -84,13 +84,14 @@ try {
 </Callout>
 ### Parameters
 <Callout type="info">
-    Parameters are optional.
+    The `options` parameter is optional.
 </Callout>
-| Parameter     | Type   | Default | Description                                                                                       |
-|:--------------|:-------|:--------|:--------------------------------------------------------------------------------------------------|
-| extension     | string | 'png'   | Accepted image extensions: 'png', 'jpg', 'jpeg', 'webp', 'gif'. Fallback image can only be 'png'. |
-| size          | int    | 128     | Image size can be any power of two between 16 and 4096. Fallback image will be 256.               |
-| color         | int    | random  | Color of fallback image: 0:blue 1:gray 2:green 3:orange 4:red 5:magenta.                          |
+| Parameter             | Type   | Default | Description                                                                                       |
+|:----------------------|:-------|:--------|:--------------------------------------------------------------------------------------------------|
+| options               | array  | []      | Options for the image.                                                                            |
+| options.extension     | string | png     | Accepted image extensions: `png`, `jpg`, `jpeg`, `webp`, `gif`. Fallback image can only be `png`. |
+| options.size          | int    | 128     | Image size can be any power of two between 16 and 4096. Fallback image will be 256.               |
+| options.color         | int    | random  | Color of fallback image: 0:blue 1:gray 2:green 3:orange 4:red 5:magenta.                          |
 
 ### Example
 ```php showLineNumbers
