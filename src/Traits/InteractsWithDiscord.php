@@ -14,6 +14,11 @@ use Jakyeru\Larascord\Types\GuildMember;
 trait InteractsWithDiscord
 {
     /**
+     * The Discord CDN base URL.
+     */
+    protected string $cdn = "https://cdn.discordapp.com";
+
+    /**
      * Get the user's tag attribute.
      */
     public function getTagAttribute(): string
@@ -78,17 +83,18 @@ trait InteractsWithDiscord
     /**
     * Get the user's Avatar url
     */
-    public function getAvatar(?string $extension = 'png', ?int $size = null, ?int $color = null): string
+    public function getAvatar(array $options = []): string
     {
-        $baseUrl = 'https://cdn.discordapp.com/';
-        $sizeParam = $size ? "?size={$size}" : '';
-        $colorParam = $color ?? rand(0, 5);
+        $extension = $options['extension'] ?? 'png';
+        $size = $options['size'] ?? 128;
+        $color = $options['color'] ?? 0;
 
         if ($this->avatar) {
-            return "{$baseUrl}avatars/{$this->id}/{$this->avatar}.{$extension}{$sizeParam}";
+            return $this->cdn . '/avatars/' . $this->id . '/' . $this->avatar . '.' . $extension . ($size ? '?size=' . $size : '');
         }
 
-        return "{$baseUrl}embed/avatars/{$colorParam}.png";
+
+        return $this->cdn . '/embed/avatars/' . $color . '.png';
     }
 
     /**
