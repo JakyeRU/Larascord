@@ -229,18 +229,6 @@ class DiscordService
     }
 
     /**
-     * Updates the user's roles in the database.
-     */
-    public function updateUserRoles(User $user, GuildMember $guildMember, int $guildId): void
-    {
-        // Updating the user's roles in the database.
-        $updatedRoles = $user->roles;
-        $updatedRoles[$guildId] = $guildMember->roles;
-        $user->roles = $updatedRoles;
-        $user->save();
-    }
-
-    /**
      * Revoke the user's access token.
      *
      * @throws RequestException
