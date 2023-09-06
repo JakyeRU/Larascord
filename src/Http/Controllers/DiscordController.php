@@ -111,8 +111,6 @@ class DiscordController extends Controller
                         DB::rollBack();
                         return $this->throwError('missing_role');
                     }
-
-                    (new DiscordService())->updateUserRoles($user, $guildMember, $guildId);
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
