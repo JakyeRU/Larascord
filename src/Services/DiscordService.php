@@ -135,21 +135,15 @@ class DiscordService
 
     public function getGuild(AccessToken $accessToken, string $guildId, bool $withCounts)
     {
-        if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
 
-        $endpoint = '/guilds/' . $guildId;
+        //execute the getCurrentUserGuilds function
+        $guilds = $this->getCurrentUserGuilds($accessToken, $withCounts);
 
-        if ($withCounts) {
-            $endpoint .= '?with_counts=true';
+        foreach($guilds as $guild){
+            if($guild->id == $guildId){
+                return new Guild($guild);
+            }
         }
-
-        $response = Http::withToken(config('larascord.access_token'), 'Bot')->get($this->baseApi . $endpoint, array_merge([
-            'access_token' => $accessToken->access_token,
-        ]));
-
-        $response->throw();
-
-        return new Guild(json_decode($response->body()));
     }
 
     /**
