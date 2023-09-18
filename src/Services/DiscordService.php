@@ -8,7 +8,11 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Jakyeru\Larascord\Types\AccessToken;
+use Jakyeru\Larascord\Types\Channel;
+use Jakyeru\Larascord\Types\Guild;
 use Jakyeru\Larascord\Types\GuildMember;
+use Jakyeru\Larascord\Types\GuildPreview;
+use Jakyeru\Larascord\Types\GuildRoles;
 
 class DiscordService
 {
@@ -115,7 +119,82 @@ class DiscordService
         $response->throw();
 
         return array_map(function ($guild) {
-            return new \Jakyeru\Larascord\Types\Guild($guild);
+            return new Guild($guild);
+        }, json_decode($response->body()));
+    }
+
+    /**
+     * Get a specific guild from the user's guilds.
+     *
+     * @param AccessToken $accessToken
+     * @param string $guildId
+     * @param bool $withCounts
+     * @return Guild
+     * @throws RequestException
+     */
+
+    public function getGuild(AccessToken $accessToken, string $guildId, bool $withCounts)
+    {
+        if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
+
+        $endpoint = '/guilds/' . $guildId;
+
+        if ($withCounts) {
+            $endpoint .= '?with_counts=true';
+        }
+
+        $response = Http::withToken(config('larascord.access_token'), 'Bot')->get($this->baseApi . $endpoint, array_merge([
+            'access_token' => $accessToken->access_token,
+        ]));
+
+        $response->throw();
+
+        return new Guild(json_decode($response->body()));
+    }
+
+    /**
+     * Get a specific guilds channels
+     *
+     * @param AccessToken $accessToken
+     * @param string $guildId
+     * @return array
+     * @throws RequestException
+     */
+
+    public function getGuildChannels(AccessToken $accessToken, string $guildId): array
+    {
+        if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
+
+        $response = Http::withToken(config('larascord.access_token'), 'Bot')->get($this->baseApi . '/guilds/' . $guildId . '/channels', array_merge([
+            'access_token' => $accessToken->access_token,
+        ]));
+
+        $response->throw();
+
+        return json_decode($response->body());
+    }
+
+    /**
+     * Get a specific guilds roles
+     *
+     * @param AccessToken $accessToken
+     * @param string $guildId
+     * @return array
+     * @throws RequestException
+     */
+
+    public function getGuildRoles(AccessToken $accessToken, string $guildId): array
+    {
+        if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
+
+        $response = Http::withToken(config('larascord.access_token'), 'Bot')->get($this->baseApi . '/guilds/' . $guildId . '/roles', array_merge([
+            'access_token' => $accessToken->access_token,
+        ]));
+
+        $response->throw();
+
+        return array_map(function ($connection) {
+            return new \Jakyeru\Larascord\Types\GuildRoles($connection);
         }, json_decode($response->body()));
     }
 
@@ -134,6 +213,19 @@ class DiscordService
         $response->throw();
 
         return new GuildMember(json_decode($response->body()));
+    }
+
+    public function getGuildPreview(AccessToken $accessToken, string $guildId): GuildPreview
+    {
+        if (!$accessToken->hasScope('guilds')) throw new Exception(config('larascord.error_messages.missing_guilds_scope.message'));
+
+        $response = Http::withToken(config('larascord.access_token'), 'Bot')->get($this->baseApi . '/guilds/' . $guildId . '/preview', array_merge([
+            'access_token' => $accessToken->access_token,
+        ]));
+
+        $response->throw();
+
+        return new GuildPreview(json_decode($response->body()));
     }
 
     /**

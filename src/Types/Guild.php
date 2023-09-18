@@ -59,10 +59,10 @@ class Guild
         $this->id = $data->id;
         $this->name = $data->name;
         $this->icon = $data->icon;
-        $this->owner = $data->owner;
-        $this->permissions = $data->permissions;
+        $this->owner = $data->owner ?? false;
+        $this->permissions = $data->permissions ?? 0;
         $this->features = $data->features;
-        $this->permissions_new = $data->permissions_new;
+        $this->permissions_new = $data->permissions_new ?? 0;
         $this->approximate_member_count = $data->approximate_member_count ?? null;
         $this->approximate_presence_count = $data->approximate_presence_count ?? null;
     }
