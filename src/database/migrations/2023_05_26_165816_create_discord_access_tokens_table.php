@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('expires_in');
             $table->timestamp('expires_at');
             $table->string('scope');
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('discord_user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

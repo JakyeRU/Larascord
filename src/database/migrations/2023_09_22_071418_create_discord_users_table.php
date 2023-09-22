@@ -11,16 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('discord_users', function (Blueprint $table) {
             $table->id();
             $table->string('username');
             $table->string('discriminator');
+            $table->string('global_name')->nullable();
             $table->string('email')->nullable()->unique();
             $table->string('avatar')->nullable();
-            $table->boolean('verified');
+            $table->boolean('verified')->default(false);
+            $table->string('banner')->nullable();
+            $table->integer('accent_color')->nullable();
+            $table->integer('public_flags')->nullable();
+            $table->integer('flags')->nullable();
             $table->string('locale');
-            $table->boolean('mfa_enabled');
-            $table->string('refresh_token')->nullable();
+            $table->integer('premium_type')->nullable();
+            $table->boolean('mfa_enabled')->default(false);
             $table->timestamps();
         });
     }
@@ -30,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('discord_users');
     }
 };
