@@ -25,6 +25,14 @@
             ]
         }
     },
+    "scripts": {
+        "test": [
+            "@php vendor/bin/phpunit --testdox"
+        ],
+        "phpstan": [
+            "@php vendor/bin/phpstan analyse -c phpstan.neon"
+        ]
+    },
     "require-dev": {
         "orchestra/testbench": "^8",
         "phpstan/phpstan": "^1.10"
