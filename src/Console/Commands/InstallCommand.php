@@ -68,7 +68,7 @@ class InstallCommand extends Command
         try {$this->validateInput();} catch (\Exception $e) {$this->error($e->getMessage()); return;}
 
         // Installing laravel/breeze
-        $this->info('Installing Larascord...');
+        $this->info('Installing Laravel Breeze...');
         if ($this->darkMode) {
             shell_exec('php artisan breeze:install blade --dark');
         } else {
@@ -76,21 +76,27 @@ class InstallCommand extends Command
         }
 
         // Appending the secrets to the .env file
+        $this->info('Appending the secrets to the .env file...');
         $this->appendToEnvFile();
 
         // Creating the user migration files
+        $this->info('Creating the user migration files...');
         $this->createUserMigrationFiles();
 
         // Create the model files
+        $this->info('Creating the user model files...');
         $this->createModelFiles();
 
         // Create the view files
+        $this->info('Creating the view files...');
         $this->createViewFiles();
 
         // Create the event files
+        $this->info('Creating the event files...');
         $this->createEventFiles();
 
         // Remove Laravel Breeze routes
+        $this->info('Replacing the Laravel Breeze routes...');
         $this->replaceBreezeRoutes();
 
         // Asking the user to build the assets
@@ -121,6 +127,7 @@ class InstallCommand extends Command
         }
 
         // Automatically publishing the configuration file
+        $this->info('Publishing the configuration file...');
         $this->call('larascord:publish');
 
         $this->alert('Please make sure you add "' . env('APP_URL', 'http://localhost:8000') . '/' . env('LARASCORD_PREFIX', 'larascord') . '/callback' . '" to your Discord application\'s redirect urls in the OAuth2 tab.');
