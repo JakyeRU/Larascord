@@ -113,8 +113,9 @@ class InstallCommand extends Command
         }
 
         // Asking the user to migrate the database
-        if ($this->confirm('Do you want to run the migrations?', true)) {
+        if ($this->confirm('Do you want to run the migrations? This will delete all the data in the database.', true)) {
             try {
+                $this->call('migrate:reset');
                 $this->call('migrate:fresh');
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
