@@ -4,7 +4,6 @@ namespace Jakyeru\Larascord\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Jakyeru\Larascord\Http\Requests\StoreUserRequest;
@@ -127,7 +126,7 @@ class DiscordController extends Controller
         }
 
         // Redirecting the user to the intended page or to the home page.
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended();
     }
 
     /**
