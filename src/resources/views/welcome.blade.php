@@ -71,7 +71,7 @@
 
                         <span class="font-medium">
                                     <strong>{{ __('Success') }}!</strong>
-                                </span> {!! session()->get('error') !!}
+                                </span> {!! session()->get('success') !!}
                     </div>
                 @endif
 
