@@ -36,7 +36,11 @@ Route::group(['prefix' => config('larascord.route_prefix', 'larascord'), 'middle
     Route::get('/callback', [DiscordController::class, 'handle'])
         ->name('larascord.login');
 
-    Route::redirect('/refresh-token', url('login'))
+    Route::redirect('/refresh-token', 'https://discord.com/oauth2/authorize?client_id=' . config('larascord.client_id')
+        . '&redirect_uri=' . config('larascord.redirect_uri')
+        . '&response_type=code&scope=' . implode('%20', explode('&', config('larascord.scopes')))
+        . '&prompt=' . config('larascord.prompt', 'none'))
+        ->middleware(['web', 'auth'])
         ->name('larascord.refresh_token');
 });
 
