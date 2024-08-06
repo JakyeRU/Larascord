@@ -126,7 +126,7 @@ class DiscordController extends Controller
         }
 
         // Redirecting the user to the intended page or to the home page.
-        return redirect()->intended();
+        return redirect()->intended(config('larascord.redirect_login', '/'));
     }
 
     /**
