@@ -23,11 +23,19 @@ trait InteractsWithDiscord
      */
     public function getTagAttribute(): string
     {
-        if ($this->global_name) {
-            return $this->global_name;
+        if ($this->discriminator != 0) {
+            return $this->username . '#' . $this->discriminator;
         }
 
-        return $this->username . '#' . $this->discriminator;
+        if (!$this->global_name) {
+            return $this->username;
+        }
+
+        if ($this->username == $this->global_name) {
+            return $this->username;
+        }
+
+        return $this->username . ' (' . $this->global_name . ')';
     }
 
     /**
